@@ -1,0 +1,86 @@
+{
+  "name": "paintball-alfoldon-dashboard",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/paintball-alfoldon-dashboard/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/paintball-alfoldon-dashboard",
+        "browser": "apps/paintball-alfoldon-dashboard/src/main.ts",
+        "tsConfig": "apps/paintball-alfoldon-dashboard/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/paintball-alfoldon-dashboard/public"
+          }
+        ],
+        "styles": ["apps/paintball-alfoldon-dashboard/src/styles.scss"],
+        "server": "apps/paintball-alfoldon-dashboard/src/main.server.ts",
+        "ssr": {
+          "entry": "apps/paintball-alfoldon-dashboard/src/server.ts"
+        },
+        "outputMode": "server"
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      }
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "defaultConfiguration": "development",
+      "configurations": {
+        "production": {
+          "buildTarget": "paintball-alfoldon-dashboard:build:production"
+        },
+        "development": {
+          "buildTarget": "paintball-alfoldon-dashboard:build:development"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "watch": false
+      }
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "paintball-alfoldon-dashboard:build",
+        "staticFilePath": "dist/apps/paintball-alfoldon-dashboard/browser",
+        "spa": true
+      }
+    }
+  }
+}
