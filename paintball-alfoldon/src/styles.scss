@@ -1,0 +1,926 @@
+/* =============================================================================
+   Paintball Alföldön — global design system (dark-only, minimal)
+   Order: tokens → reset → typography → layout → shared components → map theme
+   ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+   1. Tokens
+   All text tokens meet WCAG AA (≥ 4.5:1) on every surface token below:
+   --fg-3 on --bg-3 is the weakest pair at ≈ 5.2:1.
+   --------------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces: true black → elevated */
+  --bg: #000000;
+  --bg-1: #0a0a0a;
+  --bg-2: #111111;
+  --bg-3: #171717;
+  --bg-4: #1f1f1f;
+
+  /* Lines */
+  --line: #1f1f1f;
+  --line-2: #2a2a2a;
+  --line-3: #383838;
+
+  /* Text */
+  --fg: #f2f2f2;
+  --fg-2: #a8a8a8;
+  --fg-3: #8a8a8a;
+
+  /* Accent — a single electric blue (≈ 6.7:1 on black, ≈ 5.7:1 on --bg-3, dark text on it ≈ 6.3:1) */
+  --accent: #4a8fff;
+  --accent-2: #6ea6ff;
+  --on-accent: #06101f;
+  --accent-a10: rgba(74, 143, 255, 0.10);
+  --accent-a20: rgba(74, 143, 255, 0.20);
+  --accent-a40: rgba(74, 143, 255, 0.40);
+
+  /* Semantic */
+  --danger: #ff6b6b;
+  --warn: #ffc466;
+
+  /* Type */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Shape & layout */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+  --container: 1200px;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --section-y: clamp(4rem, 9vw, 7rem);
+  --header-h: 72px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur: 180ms;
+}
+
+/* ---------------------------------------------------------------------------
+   2. Reset & base
+   --------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 1rem/1.6 var(--font-sans);
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+
+  &.menu-open {
+    overflow: hidden;
+  }
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+
+p {
+  color: var(--fg-2);
+}
+
+strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Keyboard focus: visible everywhere, invisible for mouse clicks */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   3. Typography
+   --------------------------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4 {
+  color: var(--fg);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 1.6rem + 4.2vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+h2 {
+  font-size: clamp(1.875rem, 1.3rem + 2vw, 2.75rem);
+  letter-spacing: -0.03em;
+}
+
+h3 {
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+h4 {
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+}
+
+.lead {
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--fg-2);
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: 500 0.75rem/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.muted {
+  color: var(--fg-3);
+}
+
+.prose {
+  display: grid;
+  gap: 1rem;
+  max-width: 65ch;
+
+  p {
+    color: var(--fg-2);
+    text-wrap: pretty;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   4. Layout
+   --------------------------------------------------------------------------- */
+.container {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--section-y);
+
+  &--alt {
+    background: var(--bg-1);
+  }
+
+  &--line {
+    border-top: 1px solid var(--line);
+  }
+}
+
+.section-head {
+  display: grid;
+  gap: 1rem;
+  max-width: 720px;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+
+  &--center {
+    margin-inline: auto;
+    text-align: center;
+    justify-items: center;
+  }
+
+  p {
+    color: var(--fg-2);
+    text-wrap: pretty;
+  }
+}
+
+.page-header {
+  padding: clamp(3rem, 8vw, 6rem) 0 clamp(2.5rem, 6vw, 4rem);
+  border-bottom: 1px solid var(--line);
+
+  &__title {
+    margin-top: 0.75rem;
+  }
+
+  &__lead {
+    margin-top: 1.25rem;
+  }
+
+  &--center {
+    text-align: center;
+
+    .page-header__lead {
+      margin-inline: auto;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   5. Shared components
+   --------------------------------------------------------------------------- */
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1.25rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &__icon {
+    width: 1.05em;
+    height: 1.05em;
+    flex: none;
+  }
+
+  &--primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+
+    &:hover {
+      background: var(--accent-2);
+      border-color: var(--accent-2);
+    }
+  }
+
+  &--secondary {
+    background: transparent;
+    border-color: var(--line-3);
+    color: var(--fg);
+
+    &:hover {
+      border-color: var(--fg-2);
+      background: var(--bg-2);
+    }
+  }
+
+  &--ghost {
+    color: var(--fg-2);
+
+    &:hover {
+      color: var(--fg);
+      background: var(--bg-2);
+    }
+  }
+
+  &--sm {
+    min-height: 36px;
+    padding: 0 0.9rem;
+    font-size: 0.875rem;
+  }
+
+  &--lg {
+    min-height: 52px;
+    padding: 0 1.75rem;
+    font-size: 1rem;
+  }
+
+  &--block {
+    width: 100%;
+  }
+}
+
+/* Pills */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 24px;
+  padding: 0 0.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-2);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--fg-2);
+  white-space: nowrap;
+
+  &--accent {
+    color: var(--accent);
+    border-color: var(--accent-a40);
+    background: var(--accent-a10);
+  }
+}
+
+/* Cards */
+.card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.25rem, 3vw, 2rem);
+
+  &--interactive {
+    display: flex;
+    flex-direction: column;
+    transition:
+      border-color var(--dur) var(--ease),
+      background-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--line-3);
+      background: var(--bg-3);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* Stats */
+.stat {
+  display: grid;
+  gap: 0.35rem;
+
+  &__num {
+    font-size: clamp(2rem, 1.5rem + 1.5vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--fg);
+
+    em {
+      color: var(--accent);
+      font-style: normal;
+    }
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    color: var(--fg-3);
+  }
+}
+
+/* Arrow links */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  color: var(--fg);
+
+  svg {
+    width: 1em;
+    height: 1em;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  &:hover svg {
+    transform: translateX(3px);
+  }
+}
+
+/* Forms */
+.field {
+  display: grid;
+  gap: 0.5rem;
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  &__error {
+    font-size: 0.8125rem;
+    color: var(--danger);
+  }
+}
+
+.input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  background: var(--bg-1);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius);
+  color: var(--fg);
+  transition:
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+
+  &::placeholder {
+    color: var(--fg-3);
+  }
+
+  &:hover {
+    border-color: var(--line-3);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-a20);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--danger);
+  }
+}
+
+textarea.input {
+  min-height: 150px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* Accessibility helpers */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 3000;
+  padding: 0.65rem 1rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  transform: translateY(-200%);
+  transition: transform var(--dur) var(--ease);
+
+  &:focus-visible {
+    transform: none;
+    outline-offset: 2px;
+  }
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-4);
+  border: 2px solid var(--bg);
+  border-radius: 5px;
+
+  &:hover {
+    background: var(--line-3);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   6. Map theme (MapLibre GL). Global on purpose: MapLibre renders controls,
+   markers and popups outside Angular's view encapsulation.
+   --------------------------------------------------------------------------- */
+.map-shell {
+  position: relative;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  isolation: isolate;
+
+  &__canvas {
+    position: absolute;
+    inset: 0;
+  }
+
+  &__status {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--fg-2);
+    background: var(--bg-1);
+    font-size: 0.9375rem;
+    pointer-events: none;
+    z-index: 2;
+
+    a {
+      pointer-events: auto;
+    }
+  }
+}
+
+.maplibregl-map {
+  font-family: var(--font-sans);
+  background: var(--bg);
+}
+
+.maplibregl-canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* Controls */
+.maplibregl-ctrl-group {
+  background: rgba(10, 10, 10, 0.92);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+
+  button {
+    width: 36px;
+    height: 36px;
+    background: transparent;
+
+    & + button {
+      border-top: 1px solid var(--line-2);
+    }
+
+    &:hover {
+      background: var(--bg-3);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: -3px;
+      box-shadow: none;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+    }
+  }
+}
+
+.maplibregl-ctrl button .maplibregl-ctrl-icon {
+  filter: invert(0.88);
+}
+
+.maplibregl-ctrl-attrib {
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--fg-3);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  border-radius: var(--radius-sm) 0 0 0;
+
+  a {
+    color: var(--fg-2);
+
+    &:hover {
+      color: var(--fg);
+    }
+  }
+
+  &.maplibregl-compact {
+    background: rgba(0, 0, 0, 0.72);
+  }
+}
+
+.maplibregl-ctrl-attrib-button {
+  background-color: transparent !important;
+  filter: invert(0.88);
+}
+
+.maplibregl-cooperative-gesture-screen {
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--fg);
+  font: 500 0.9375rem/1.4 var(--font-sans);
+  backdrop-filter: blur(4px);
+}
+
+/* Popups */
+.pb-popup {
+  pointer-events: none;
+  /* Re-added to the map on every highlight, so this replays each time.
+     Opacity only — MapLibre positions this container with an inline
+     `transform`, and an animated transform here would override it. */
+  animation: pb-fade-in 200ms var(--ease) both;
+
+  .maplibregl-popup-content {
+    background: rgba(12, 12, 12, 0.96);
+    border: 1px solid var(--line-3);
+    border-radius: var(--radius);
+    padding: 0.625rem 0.875rem;
+    color: var(--fg);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    font-family: var(--font-sans);
+  }
+
+  &.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+  &.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+  &.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+    border-top-color: var(--line-3);
+  }
+
+  &.maplibregl-popup-anchor-top .maplibregl-popup-tip,
+  &.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+  &.maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+    border-bottom-color: var(--line-3);
+  }
+
+  &.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+    border-right-color: var(--line-3);
+  }
+
+  &.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+    border-left-color: var(--line-3);
+  }
+
+  &__body {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 140px;
+  }
+
+  &__eyebrow {
+    font: 500 0.75rem/1.2 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
+
+  &__meta {
+    font-size: 0.8125rem;
+    color: var(--fg-2);
+  }
+}
+
+/* Markers: `[pin][label chip]`, positioned by `.maplibregl-marker` (anchor on the pin centre) */
+.pb-marker {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  /* Pins are added to the map as a cluster splits, so they fade in rather than
+     blink into place. Opacity only: MapLibre writes the marker's position to
+     this element's inline `transform`, which an animated transform would win
+     against and strand every pin at the map origin. The movement goes on
+     `__pin` below, which nothing else positions. */
+  animation: pb-fade-in 240ms var(--ease) both;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--fg);
+
+  &:focus-visible {
+    outline: none; /* focus is shown on the pin and chip below */
+  }
+
+  &.is-active {
+    z-index: 2;
+  }
+
+  &__pin {
+    position: relative;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    animation: pb-rise-in 240ms var(--ease) both;
+  }
+
+  &__ring {
+    position: absolute;
+    inset: 10px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    opacity: 0.5;
+    animation: pb-pulse 2.6s var(--ease) infinite;
+  }
+
+  &__dot {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #000;
+    box-shadow:
+      0 0 0 1px var(--accent-a40),
+      0 0 16px var(--accent-a40);
+    transition:
+      transform var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease),
+      background-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  &__label {
+    margin-left: -6px;
+    padding: 5px 10px;
+    border-radius: var(--radius-pill);
+    background: rgba(8, 8, 10, 0.88);
+    border: 1px solid var(--line-2);
+    color: var(--fg);
+    font: 500 0.75rem/1 var(--font-sans);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    transition:
+      border-color var(--dur) var(--ease),
+      background-color var(--dur) var(--ease);
+
+    /* On phones the venues sit closer together than the chips are wide, so the
+       chips would overlap each other. The list underneath names every venue.
+       Keep this breakpoint in sync with LABEL_BREAKPOINT in hungary-map. */
+    @media (max-width: 700px) {
+      display: none;
+    }
+  }
+
+  &:hover &__dot,
+  &:focus-visible &__dot,
+  &.is-active &__dot {
+    transform: scale(1.3);
+    box-shadow:
+      0 0 0 2px var(--accent-a40),
+      0 0 24px var(--accent);
+  }
+
+  &:hover &__label,
+  &:focus-visible &__label,
+  &.is-active &__label {
+    border-color: var(--accent);
+    background: rgba(8, 8, 10, 0.96);
+  }
+
+  &--cluster &__dot {
+    width: 26px;
+    height: 26px;
+    background: #000;
+    border-color: var(--accent);
+    color: var(--accent);
+    font: 600 0.75rem/1 var(--font-mono);
+  }
+
+  &--cluster:hover &__dot,
+  &--cluster:focus-visible &__dot,
+  &--cluster.is-active &__dot {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+}
+
+@keyframes pb-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pb-rise-in {
+  from {
+    transform: translateY(4px) scale(0.92);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+@keyframes pb-pulse {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-marker__ring {
+    animation: none;
+    opacity: 0.35;
+  }
+}

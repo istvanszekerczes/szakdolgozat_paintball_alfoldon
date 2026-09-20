@@ -1,0 +1,52 @@
+<div class="venue-map">
+  <!-- Map canvas -->
+  <div class="map-shell venue-map__map">
+    <div #mapContainer class="map-shell__canvas" role="region" aria-label="Pályáink térképe az Alföldön"></div>
+
+    @switch (status()) {
+      @case ('loading') {
+        <div class="map-shell__status" aria-live="polite">Térkép betöltése…</div>
+      }
+      @case ('error') {
+        <div class="map-shell__status" role="status">
+          A térkép nem jeleníthető meg ebben a böngészőben. A pályákat a listából továbbra is kiválaszthatod.
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Venue list: accessible alternative to the map and its hover companion -->
+  <aside class="venue-map__list" aria-label="Pályák listája">
+    <header class="venue-map__list-head">
+      <span class="eyebrow">Helyszínek</span>
+      <span class="venue-map__count mono">{{ venues.length }} pálya</span>
+    </header>
+
+    <ul class="venue-list">
+      @for (venue of venues; track venue.id) {
+        <li>
+          <a
+            class="venue-list__item"
+            [class.is-active]="activeId() === venue.id"
+            [href]="hrefFor(venue)"
+            (click)="onLegendClick($event, venue)"
+            (mouseenter)="onLegendEnter(venue)"
+            (mouseleave)="onLegendLeave()"
+            (focus)="onLegendEnter(venue)"
+            (blur)="onLegendLeave()"
+          >
+            <span class="venue-list__dot" aria-hidden="true"></span>
+            <span class="venue-list__text">
+              <span class="venue-list__city">{{ venue.city }}</span>
+              <span class="venue-list__venue">{{ venue.venue }}</span>
+            </span>
+            <span class="pill" [class.pill--accent]="venue.indoor">{{ fieldType(venue) }}</span>
+            <svg class="venue-list__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </li>
+      }
+    </ul>
+  </aside>
+</div>

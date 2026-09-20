@@ -1,101 +1,101 @@
-# PaintballAlfoldon
+# Paintball Alföldön
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+Marketing site for a paintball operator with seven fields across the Great Hungarian Plain.
+Angular 21 (standalone, signals, zoneless) with server-side rendering / prerendering, a dark-only
+minimal design system and a MapLibre GL venue map recolored to pure black.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## Quick start
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
-
-## Run tasks
-
-To run the dev server for your app, use:
-
-```sh
-npx nx serve paintball-alfoldon
+```bash
+npm install          # also generates src/environments/environment.ts (see "Configuration")
+npm start            # dev server on http://localhost:4200
+npm run build        # production build + prerender → dist/paintball_alfoldon
+npm test             # unit tests (Vitest)
+npm run serve:ssr:paintball_alfoldon   # serve the built SSR app on :4000
 ```
 
-To create a production bundle:
+## Configuration (environment variables)
 
-```sh
-npx nx build paintball-alfoldon
+No configuration is required: the map uses CARTO's free **Dark Matter** vector tiles
+(attribution is shown on the map) and recolors them to black at load time.
+
+API keys are never hardcoded. `scripts/set-env.mjs` reads `.env` and `process.env` and writes
+`src/environments/environment.ts`, which is git-ignored. It runs automatically on
+`npm install`, `npm start`, `npm run build`, `npm run watch` and `npm test`; run `npm run env` to
+regenerate it by hand (for example before a bare `ng serve`).
+
+| Variable           | Purpose                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| `MAPTILER_API_KEY` | Optional. Switches the basemap to MapTiler's `dataviz-dark` style (still recolored black).  |
+| `MAP_STYLE_URL`    | Optional. Any MapLibre-compatible `style.json` URL; overrides both defaults.                |
+
+Copy `.env.example` to `.env` to get started. Real environment variables win over `.env` values,
+so CI can inject keys without a file (e.g. `MAPTILER_API_KEY=… npm run build`).
+
+To get a MapTiler key: create a free account at <https://cloud.maptiler.com/>, open
+**Account → API keys**, create a key and restrict it to your domain(s).
+
+## Map architecture
+
+```
+src/app/map/
+  map-config.ts   provider resolution (custom URL → MapTiler → CARTO)
+  map-style.ts    fetches the provider style once and recolors every layer to the black theme;
+                  falls back to CARTO raster tiles if the vector style cannot be fetched
+  map-core.ts     lazy MapLibre loader, themed map factory, marker/popup builders, geo helpers
+src/app/components/hungary-map/   overview map + synced venue list (home page)
+src/app/components/venue-map/     single-venue map with pinned label (field pages)
 ```
 
-To see all available targets to run for a project, run:
+MapLibre is loaded with a dynamic `import()` inside `isPlatformBrowser` guards, so SSR and
+prerendering never touch it.
 
-```sh
-npx nx show project paintball-alfoldon
+MapLibre 6 is ESM-only and parses vector tiles in a web worker that it would normally locate
+next to its own bundle. That guess fails under bundlers (Vite's dependency cache in `ng serve`,
+a hashed chunk in production): the style and attribution load but no tiles ever render.
+Therefore `angular.json` copies `maplibre-gl-worker.mjs` and `maplibre-gl-shared.mjs` from
+`node_modules/maplibre-gl/dist` into the output root as assets, and `loadMapLibre()` in
+`map-core.ts` calls `setWorkerUrl()` with the root-relative worker URL (resolved against
+`<base href>`). `src/server.ts` serves both files with `Cache-Control: no-cache` so a MapLibre
+upgrade never pairs a stale worker with a new main chunk. If you host the `browser/` folder on a
+static CDN instead of the Node server, keep those two files at the site root. After changing
+`angular.json` assets, restart `ng serve` so the dev server picks them up. Marker, popup and control styling lives in `src/styles.scss`
+(`.pb-marker`, `.pb-popup`, `.maplibregl-*`) because MapLibre renders outside Angular's view
+encapsulation. Accent colors come from the site's CSS custom properties.
+
+Behaviour preserved from the previous Leaflet implementation: per-venue markers, a numbered
+cluster for the two Szeged fields that splits at zoom 13, hover tooltips, click-to-navigate,
+zoom controls, attribution, and the side list that highlights markers on hover. New: keyboard
+reachable markers and list rows, Ctrl/⌘ + wheel zoom (no scroll hijacking), Hungarian control
+labels, and an "Útvonalterv" directions link on field pages.
+
+## Project layout
+
+```
+src/app/
+  app.ts / app.html / app.scss   shell: header, venues dropdown, mobile menu, footer
+  app.routes.ts                  lazy routes; field pages share LocationComponent via route data
+  services/location.service.ts   single source of truth for the seven fields
+  pages/                         home, about, faq, gallery, booking, contact, location
+  components/                    accordion, contact-form, gallery, hungary-map, venue-map
+src/styles.scss                  design tokens, reset, typography, shared components, map theme
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+## Design system notes
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
-```
-
-To generate a new library, use:
-
-```sh
-npx nx g @nx/angular:lib mylib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- Dark-only. Surfaces `#000 → #1f1f1f`, text `#f2f2f2 / #a8a8a8 / #8a8a8a`, one accent `#4a8fff`.
+  Every text/surface pairing meets WCAG AA (weakest ≈ 5.2:1).
+- Map theme (`MAP_THEME` in `map-style.ts`): near-black land, roads as faint structure
+  (`#141416`–`#3d3d40`, casings carry the overview network), thin `#3a3a3e` country borders with
+  the provider's glow halo hidden, deep-blue water, tiered gray labels on black halos, and no
+  forest/park fills below zoom 10 so the overview stays calm. Every land surface is neutral gray
+  — water is the only colored one, since a hue on forest/grass tints the whole frame at street zoom. Markers are labelled pins
+  (`.pb-marker`: blue dot + name chip) and the only saturated element on the map. Venue cities
+  are dropped from the basemap's own labels so each name appears once.
+- Below 700px the name chips are hidden (the venues sit closer together than the chips are
+  wide) and the overview uses a tighter frame; the venue list underneath names every field.
+  That breakpoint lives in both `.pb-marker__label` and `LABEL_BREAKPOINT` — change them together.
+- Typography: Inter (UI) + JetBrains Mono (labels, coordinates), fluid `clamp()` scale.
+- Shared classes: `.container`, `.section`, `.section-head`, `.page-header`, `.card`, `.btn--*`,
+  `.pill`, `.stat`, `.eyebrow`, `.field` / `.input`, `.skip-link`, `.sr-only`.
+- Motion respects `prefers-reduced-motion`; focus is always visible via `:focus-visible`.
