@@ -1,0 +1,15 @@
+# Local PostgreSQL for development: docker compose up -d
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: paintball
+      POSTGRES_USER: paintball
+      POSTGRES_PASSWORD: paintball
+    ports:
+      - "5432:5432"
+    volumes:
+      - paintball-db:/var/lib/postgresql/data
+
+volumes:
+  paintball-db:
