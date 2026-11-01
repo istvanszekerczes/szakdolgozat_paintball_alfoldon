@@ -25,6 +25,7 @@ import {
   prefersReducedMotion,
   reframeUntilInteraction,
   toLngLat,
+  trackMapLoad,
   waitForSize,
 } from '../../map/map-core';
 import { LocationService, PaintballLocation } from '../../services/location.service';
@@ -172,17 +173,7 @@ export class HungaryMapComponent implements AfterViewInit {
         map.fitBounds(bounds, { ...fit(), duration: 0 }),
       );
 
-      // Reveal the canvas as soon as the (black) style is on screen; `load` additionally
-      // waits for every initial tile, which a single slow request could delay indefinitely.
-      map.once('style.load', () => this.status.set('ready'));
-      map.once('load', () => this.status.set('ready'));
-      map.on('error', (event) => {
-        // Tile 404s also surface here; only a failed GL context is fatal.
-        const message = String((event as { error?: { message?: string } }).error?.message ?? '');
-        if (this.status() === 'loading' && /webgl/i.test(message)) {
-          this.status.set('error');
-        }
-      });
+      trackMapLoad(map, (status) => this.status.set(status));
 
       this.buildMarkers(map);
       // `zoom`, not `zoomend`: a cluster that only breaks apart on the last frame

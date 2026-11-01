@@ -98,9 +98,44 @@ function setColor(paint: Record<string, unknown>, key: string, color: unknown): 
   paint[key] = color;
 }
 
-/** Legacy-syntax filter (matching CARTO's own filters) that drops features with the given names. */
+/**
+ * Same classification MapLibre applies to a filter. An `all` that mixes the legacy and the
+ * expression syntax is invalid and fails the whole style, so the two must never be combined.
+ */
+function isExpressionFilter(filter: unknown): boolean {
+  if (typeof filter === 'boolean') return true;
+  if (!Array.isArray(filter) || filter.length === 0) return false;
+  switch (filter[0]) {
+    case 'has':
+      return filter.length >= 2 && filter[1] !== '$id' && filter[1] !== '$type';
+    case 'in':
+      return filter.length >= 3 && (typeof filter[1] !== 'string' || Array.isArray(filter[2]));
+    case '!in':
+    case '!has':
+    case 'none':
+      return false;
+    case '==':
+    case '!=':
+    case '>':
+    case '>=':
+    case '<':
+    case '<=':
+      return filter.length !== 3 || Array.isArray(filter[1]) || Array.isArray(filter[2]);
+    case 'any':
+    case 'all':
+      return filter.slice(1).every(isExpressionFilter);
+    default:
+      return true;
+  }
+}
+
+/** Drops features with the given names, in the syntax of the layer's existing filter. */
 function excludeNames(layer: LooseLayer, names: readonly string[]): void {
-  const exclusion: unknown[] = ['!in', 'name', ...names];
+  if (layer.filter && !isExpressionFilter(layer.filter)) {
+    layer.filter = ['all', layer.filter, ['!in', 'name', ...names]];
+    return;
+  }
+  const exclusion: unknown[] = ['!', ['in', ['get', 'name'], ['literal', [...names]]]];
   layer.filter = layer.filter ? ['all', layer.filter, exclusion] : exclusion;
 }
 

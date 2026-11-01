@@ -92,8 +92,11 @@ describe('applyBlackTheme', () => {
   it('suppresses basemap labels for the given place names', () => {
     const themed = applyBlackTheme(sampleStyle(), { hideLabels: ['Szeged', 'Szolnok'] });
     // No existing filter → the exclusion becomes the filter.
-    expect((layer(themed, 'place_city_r5') as unknown as { filter: unknown }).filter).toEqual(['!in', 'name', 'Szeged', 'Szolnok']);
-    // Existing filter → wrapped in a legacy `all`.
+    expect((layer(themed, 'place_city_r5') as unknown as { filter: unknown }).filter).toEqual([
+      '!',
+      ['in', ['get', 'name'], ['literal', ['Szeged', 'Szolnok']]],
+    ]);
+    // Existing legacy filter → wrapped in a legacy `all`, since the syntaxes cannot be mixed.
     expect((layer(themed, 'place_villages') as unknown as { filter: unknown }).filter).toEqual([
       'all',
       ['==', 'class', 'village'],
@@ -101,6 +104,18 @@ describe('applyBlackTheme', () => {
     ]);
     // Non-place symbols are untouched.
     expect((layer(themed, 'poi_park') as unknown as { filter?: unknown }).filter).toBeUndefined();
+  });
+
+  it('adds label exclusions to expression filters in the expression syntax', () => {
+    const existing = ['==', ['get', 'kind'], 'locality'];
+    const style = sampleStyle();
+    (layer(style, 'place_villages') as unknown as { filter: unknown }).filter = existing;
+    const themed = applyBlackTheme(style, { hideLabels: ['Szeged'] });
+    expect((layer(themed, 'place_villages') as unknown as { filter: unknown }).filter).toEqual([
+      'all',
+      existing,
+      ['!', ['in', ['get', 'name'], ['literal', ['Szeged']]]],
+    ]);
   });
 
   it('leaves place filters alone when no names are given', () => {

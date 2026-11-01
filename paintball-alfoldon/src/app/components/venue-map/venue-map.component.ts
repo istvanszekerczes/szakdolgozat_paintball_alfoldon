@@ -20,6 +20,7 @@ import {
   reframeUntilInteraction,
   setMarkerCaption,
   toLngLat,
+  trackMapLoad,
   waitForSize,
 } from '../../map/map-core';
 import { PaintballLocation } from '../../services/location.service';
@@ -115,15 +116,7 @@ export class VenueMapComponent implements AfterViewInit {
         map.jumpTo({ center: toLngLat(this.location()), zoom: VENUE_ZOOM }),
       );
 
-      // Reveal the canvas once the style is on screen; `load` also waits for every tile.
-      map.once('style.load', () => this.status.set('ready'));
-      map.once('load', () => this.status.set('ready'));
-      map.on('error', (event) => {
-        const message = String((event as { error?: { message?: string } }).error?.message ?? '');
-        if (this.status() === 'loading' && /webgl/i.test(message)) {
-          this.status.set('error');
-        }
-      });
+      trackMapLoad(map, (status) => this.status.set(status));
 
       this.marker = createMarker(
         ml,

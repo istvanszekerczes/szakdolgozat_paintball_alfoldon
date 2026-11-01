@@ -159,6 +159,45 @@ export async function createBlackMap(ml: MapLibre, opts: BlackMapOptions): Promi
   return map;
 }
 
+/** How long a map may take to show its style before the user is told it is not coming. */
+export const MAP_LOAD_TIMEOUT_MS = 15000;
+
+/**
+ * Reports when a map is ready or has failed. A style that never loads raises no fatal
+ * event of its own, so a timeout ends the wait; if the style still arrives after that
+ * (a very slow connection), `ready` replaces the error.
+ */
+export function trackMapLoad(map: MapLibreMap, setStatus: (status: 'ready' | 'error') => void): void {
+  let ready = false;
+  const timer = setTimeout(() => {
+    console.error(`[map] The style did not load within ${MAP_LOAD_TIMEOUT_MS / 1000} seconds.`);
+    setStatus('error');
+  }, MAP_LOAD_TIMEOUT_MS);
+  const onReady = () => {
+    ready = true;
+    clearTimeout(timer);
+    setStatus('ready');
+  };
+
+  // Reveal the canvas as soon as the (black) style is on screen; `load` additionally
+  // waits for every initial tile, which a single slow request could delay indefinitely.
+  map.once('style.load', onReady);
+  map.once('load', onReady);
+  map.once('remove', () => clearTimeout(timer));
+  map.on('error', (event) => {
+    const error = (event as { error?: { message?: string } }).error;
+    // Only a failed GL context is fatal right away; tile 404s also surface here.
+    if (/webgl/i.test(String(error?.message ?? ''))) {
+      if (!ready) {
+        clearTimeout(timer);
+        setStatus('error');
+      }
+    } else {
+      console.error('[map]', error);
+    }
+  });
+}
+
 /* ---------------------------------------------------------------- markers */
 
 export interface MarkerElementOptions {
