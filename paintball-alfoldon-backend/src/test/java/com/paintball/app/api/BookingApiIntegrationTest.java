@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -73,6 +74,87 @@ class BookingApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON).content("{\"status\":\"ACCEPTED\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("ACCEPTED"));
+    }
+
+    @Test
+    void staffCarsAssignmentAndSchedule() throws Exception {
+        String token = login();
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(bookingJson("10:00")))
+                .andExpect(status().isCreated());
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(bookingJson("12:00")))
+                .andExpect(status().isCreated());
+        for (int id = 1; id <= 2; id++) {
+            mvc.perform(patch("/api/admin/bookings/" + id + "/status").header("Authorization", "Bearer " + token)
+                    .contentType(MediaType.APPLICATION_JSON).content("{\"status\":\"ACCEPTED\"}"))
+                    .andExpect(status().isOk());
+        }
+
+        mvc.perform(post("/api/admin/cars").header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON).content("{\"plate\":\"abc-123\",\"seats\":5}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.plate").value("ABC-123"));
+        mvc.perform(post("/api/admin/employees").header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"Nagy Anna\",\"phone\":\"+36 30 111 2222\",\"employmentType\":\"FULL_TIME\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.active").value(true));
+
+        // Same venue, back to back: one car and crew can do both games.
+        for (int id = 1; id <= 2; id++) {
+            mvc.perform(put("/api/admin/bookings/" + id + "/assignment").header("Authorization", "Bearer " + token)
+                    .contentType(MediaType.APPLICATION_JSON).content("{\"carId\":1,\"employeeIds\":[1]}"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.car.plate").value("ABC-123"))
+                    .andExpect(jsonPath("$.employees[0].name").value("Nagy Anna"));
+        }
+
+        mvc.perform(get("/api/admin/schedule").param("date", playDate.toString())
+                .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cars[0].segments[0].type").value("TRAVEL_OUT"))
+                .andExpect(jsonPath("$.cars[0].segments[0].start").value("09:00:00"))
+                .andExpect(jsonPath("$.staff[0].from").value("09:00:00"))
+                .andExpect(jsonPath("$.staff[0].to").value("14:45:00"))
+                .andExpect(jsonPath("$.unassigned", hasSize(0)));
+
+        // Away on that day: the assignment is refused.
+        mvc.perform(post("/api/admin/employees/1/exclusions").header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"dateFrom\":\"%s\",\"dateTo\":\"%s\",\"reason\":\"szabadság\"}".formatted(playDate, playDate)))
+                .andExpect(status().isCreated());
+        mvc.perform(put("/api/admin/bookings/1/assignment").header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON).content("{\"carId\":1,\"employeeIds\":[1]}"))
+                .andExpect(status().isConflict());
+        mvc.perform(get("/api/admin/alerts").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.type == 'EMPLOYEE_AWAY')]", hasSize(2)));
+    }
+
+    @Test
+    void venueBlockClosesSlotsAndPasswordCanBeChanged() throws Exception {
+        String token = login();
+        mvc.perform(post("/api/admin/venues/1/blocks").header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"startsAt\":\"%sT09:00:00\",\"endsAt\":\"%sT13:00:00\",\"reason\":\"karbantartás\"}"
+                        .formatted(playDate, playDate)))
+                .andExpect(status().isCreated());
+        mvc.perform(get("/api/venues/szeged/availability").param("date", playDate.toString()))
+                .andExpect(jsonPath("$.slots[?(@.start == '08:00:00')].available").value(false))
+                .andExpect(jsonPath("$.slots[?(@.start == '14:00:00')].available").value(true));
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(bookingJson("10:00")))
+                .andExpect(status().isConflict());
+
+        mvc.perform(post("/api/admin/auth/password").header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"currentPassword\":\"wrong\",\"newPassword\":\"new-password-1\"}"))
+                .andExpect(status().isUnprocessableContent());
+        mvc.perform(post("/api/admin/auth/password").header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"currentPassword\":\"admin-password\",\"newPassword\":\"new-password-1\"}"))
+                .andExpect(status().isNoContent());
+        mvc.perform(post("/api/admin/auth/login").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\":\"admin\",\"password\":\"new-password-1\"}"))
+                .andExpect(status().isOk());
     }
 
     @Test

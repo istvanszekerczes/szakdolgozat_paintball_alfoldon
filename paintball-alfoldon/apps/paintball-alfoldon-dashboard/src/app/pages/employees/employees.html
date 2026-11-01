@@ -1,0 +1,121 @@
+<header class="page-head">
+  <div>
+    <h1>Alkalmazottak</h1>
+    <p class="muted">{{ loading() ? 'Betöltés…' : visible().length + ' alkalmazott' }}</p>
+  </div>
+  <div class="filter">
+    @if (inactiveCount()) {
+      <label class="check">
+        <input type="checkbox" [checked]="showInactive()" (change)="showInactive.set(checked($event))" />
+        Inaktívak is ({{ inactiveCount() }})
+      </label>
+    }
+    <button class="btn btn-primary" type="button" (click)="openNew()">+ Új alkalmazott</button>
+  </div>
+</header>
+
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}
+
+<app-data-table
+  label="Alkalmazottak listája"
+  [columns]="columns"
+  [rows]="visible().length"
+  [loading]="loading()"
+  emptyText="Még nincs alkalmazott. Vegyél fel egyet az „Új alkalmazott” gombbal."
+>
+  @for (e of visible(); track e.id) {
+    <tr [class.inactive]="!e.active">
+      <td class="name">{{ e.name }}</td>
+      <td>
+        @if (e.phone) {
+          <a [href]="'tel:' + e.phone">{{ e.phone }}</a>
+        } @else {
+          <span class="muted">–</span>
+        }
+      </td>
+      <td><app-status-badge [label]="labels[e.employmentType]" [tone]="e.employmentType === 'FULL_TIME' ? 'info' : 'muted'" /></td>
+      <td><app-status-badge [label]="e.active ? 'Aktív' : 'Inaktív'" [tone]="e.active ? 'ok' : 'muted'" /></td>
+      <td class="actions-cell">
+        <button class="btn btn-ghost btn-sm" type="button" (click)="openAbsences(e)">Távollétek</button>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="openEdit(e)">Szerkesztés</button>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="toggleActive(e)">{{ e.active ? 'Inaktiválás' : 'Aktiválás' }}</button>
+      </td>
+    </tr>
+  }
+</app-data-table>
+
+<app-form-dialog
+  [open]="formOpen()"
+  [title]="editing() ? 'Alkalmazott szerkesztése' : 'Új alkalmazott'"
+  [busy]="formBusy()"
+  [error]="formError()"
+  (save)="save()"
+  (closed)="formOpen.set(false)"
+>
+  <label class="field">
+    Név
+    <input class="input" name="name" required autocomplete="off" [value]="form().name" (input)="set('name', value($event))" />
+  </label>
+  <label class="field">
+    Telefon
+    <input class="input" name="phone" type="tel" autocomplete="off" placeholder="+36 30 123 4567" [value]="form().phone ?? ''" (input)="set('phone', value($event))" />
+  </label>
+  <label class="field">
+    Foglalkoztatás
+    <select class="input" [value]="form().employmentType" (change)="set('employmentType', $any(value($event)))">
+      @for (t of types; track t) {
+        <option [value]="t">{{ labels[t] }}</option>
+      }
+    </select>
+  </label>
+  <label class="check">
+    <input type="checkbox" [checked]="form().active" (change)="set('active', checked($event))" />
+    Aktív (beosztható)
+  </label>
+</app-form-dialog>
+
+<app-form-dialog
+  [open]="!!absenceOf()"
+  [title]="'Távollétek · ' + (absenceOf()?.name ?? '')"
+  [busy]="exclusionBusy()"
+  [error]="exclusionError()"
+  saveLabel="Hozzáadás"
+  cancelLabel="Bezárás"
+  (save)="addExclusion()"
+  (closed)="absenceOf.set(null)"
+>
+  <p class="sub">Ezeken a napokon nem lehet beosztani. Szabadság, vizsga, „nem ér rá”.</p>
+  <div class="form-row">
+    <label class="field">
+      Első nap
+      <input class="input" type="date" [min]="today" [value]="exclusionForm().dateFrom" (change)="setExclusion('dateFrom', $event)" />
+    </label>
+    <label class="field">
+      Utolsó nap
+      <input class="input" type="date" [min]="exclusionForm().dateFrom || today" [value]="exclusionForm().dateTo" (change)="setExclusion('dateTo', $event)" />
+    </label>
+  </div>
+  <label class="field">
+    Indoklás (nem kötelező)
+    <input class="input" maxlength="300" [value]="exclusionForm().reason" (input)="setExclusion('reason', $event)" />
+  </label>
+
+  <h3>Rögzített távollétek</h3>
+  <ul class="x-list">
+    @for (x of exclusions(); track x.id) {
+      <li [class.past]="x.dateTo < today">
+        <div class="grow">
+          <span>{{ longDay(x.dateFrom) }}{{ x.dateTo !== x.dateFrom ? ' – ' + longDay(x.dateTo) : '' }}</span>
+          @if (x.reason) {
+            <span class="muted">{{ x.reason }}</span>
+          }
+        </div>
+        <button class="btn btn-ghost btn-sm" type="button" [attr.aria-label]="'Távollét törlése: ' + x.dateFrom" (click)="deleteExclusion(x)">Törlés</button>
+      </li>
+    } @empty {
+      <li class="muted">Nincs rögzített távollét.</li>
+    }
+  </ul>
+</app-form-dialog>

@@ -22,12 +22,16 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
     List<Booking> findByVenueAndPlayDateAndStatusIn(Venue venue, LocalDate playDate,
             Collection<BookingStatus> statuses);
 
-    /** Single booking with venue and customer, for the admin views. */
-    @EntityGraph(attributePaths = { "venue", "customer" })
+    /** Single booking with venue, customer and assignment, for the admin views. */
+    @EntityGraph(attributePaths = { "venue", "customer", "car", "employees" })
     Optional<Booking> findWithDetailsById(Long id);
 
-    /** Admin list: loads venue and customer in the same query. */
+    /** Admin list: loads venue, customer and assignment in the same query. */
     @Override
-    @EntityGraph(attributePaths = { "venue", "customer" })
+    @EntityGraph(attributePaths = { "venue", "customer", "car", "employees" })
     List<Booking> findAll(Specification<Booking> spec, Sort sort);
+
+    /** Games of one day with what the schedule needs (venue times, car, staff). */
+    @EntityGraph(attributePaths = { "venue", "customer", "car", "employees" })
+    List<Booking> findByPlayDateAndStatusIn(LocalDate playDate, Collection<BookingStatus> statuses);
 }

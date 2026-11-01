@@ -52,4 +52,16 @@ public class Venue {
     /** Inactive venues stay in the database for old bookings but cannot be booked. */
     @Column(nullable = false)
     private boolean active = true;
+
+    /** Driving time from the base in Szeged, one way. */
+    @Column(name = "travel_minutes", nullable = false)
+    private int travelMinutes;
+
+    /** Setting up the field before the game (kipakolás). */
+    @Column(name = "setup_minutes", nullable = false)
+    private int setupMinutes = 45;
+
+    /** Packing up after the game (elpakolás). */
+    @Column(name = "teardown_minutes", nullable = false)
+    private int teardownMinutes = 30;
 }

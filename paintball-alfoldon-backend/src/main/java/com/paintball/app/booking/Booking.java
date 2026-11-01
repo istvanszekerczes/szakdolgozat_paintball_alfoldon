@@ -3,8 +3,12 @@ package com.paintball.app.booking;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.paintball.app.car.Car;
 import com.paintball.app.customer.Customer;
+import com.paintball.app.employee.Employee;
 import com.paintball.app.venue.Venue;
 
 import jakarta.persistence.Column;
@@ -16,6 +20,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -66,4 +72,15 @@ public class Booking {
 
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    /** The car assigned to the game (beosztás), null until an admin assigns one. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "car_id")
+    private Car car;
+
+    /** The employees assigned to the game. */
+    @ManyToMany
+    @JoinTable(name = "booking_employee", joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    private Set<Employee> employees = new HashSet<>();
 }

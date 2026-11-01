@@ -27,6 +27,8 @@ import com.paintball.app.config.AppProperties;
 import com.paintball.app.customer.Customer;
 import com.paintball.app.customer.CustomerRepository;
 import com.paintball.app.venue.Venue;
+import com.paintball.app.venue.VenueBlock;
+import com.paintball.app.venue.VenueBlockRepository;
 import com.paintball.app.venue.VenueRepository;
 
 class BookingServiceTest {
@@ -38,6 +40,7 @@ class BookingServiceTest {
     private final BookingRepository bookingRepository = mock(BookingRepository.class);
     private final VenueRepository venueRepository = mock(VenueRepository.class);
     private final CustomerRepository customerRepository = mock(CustomerRepository.class);
+    private final VenueBlockRepository venueBlockRepository = mock(VenueBlockRepository.class);
     private BookingService service;
     private Venue venue;
 
@@ -49,6 +52,7 @@ class BookingServiceTest {
                         Duration.ofHours(2), "Europe/Budapest"),
                 null, null);
         service = new BookingService(bookingRepository, venueRepository, customerRepository,
+                venueBlockRepository,
                 new BookingRules(properties, clock), clock);
 
         venue = new Venue();
@@ -107,6 +111,15 @@ class BookingServiceTest {
 
         assertThatThrownBy(() -> service.create(request(TODAY.plusDays(10), LocalTime.of(8, 0), 20)))
                 .isInstanceOf(ConflictException.class);
+    }
+
+    @Test
+    void rejectsSlotOnBlockedVenue() {
+        when(venueBlockRepository.findOverlapping(eq(venue), any(), any())).thenReturn(List.of(new VenueBlock()));
+
+        assertThatThrownBy(() -> service.create(request(TODAY.plusDays(10), LocalTime.of(8, 0), 20)))
+                .isInstanceOf(ConflictException.class)
+                .hasMessageContaining("zárva");
     }
 
     @Test

@@ -14,6 +14,7 @@ import com.paintball.app.common.NotFoundException;
 import com.paintball.app.customer.Customer;
 import com.paintball.app.customer.CustomerRepository;
 import com.paintball.app.venue.Venue;
+import com.paintball.app.venue.VenueBlockRepository;
 import com.paintball.app.venue.VenueRepository;
 
 @Service
@@ -22,14 +23,17 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final VenueRepository venueRepository;
     private final CustomerRepository customerRepository;
+    private final VenueBlockRepository venueBlockRepository;
     private final BookingRules rules;
     private final Clock clock;
 
     public BookingService(BookingRepository bookingRepository, VenueRepository venueRepository,
-            CustomerRepository customerRepository, BookingRules rules, Clock clock) {
+            CustomerRepository customerRepository, VenueBlockRepository venueBlockRepository, BookingRules rules,
+            Clock clock) {
         this.bookingRepository = bookingRepository;
         this.venueRepository = venueRepository;
         this.customerRepository = customerRepository;
+        this.venueBlockRepository = venueBlockRepository;
         this.rules = rules;
         this.clock = clock;
     }
@@ -47,6 +51,10 @@ public class BookingService {
         if (bookingRepository.existsByVenueAndPlayDateAndStartTimeAndStatusIn(venue, request.date(),
                 request.startTime(), BookingStatus.OCCUPYING)) {
             throw new ConflictException("Ez az időpont már foglalt, kérjük válassz másikat.");
+        }
+        if (!venueBlockRepository.findOverlapping(venue, request.date().atTime(request.startTime()),
+                request.date().atTime(rules.slotEnd(request.startTime()))).isEmpty()) {
+            throw new ConflictException("A pálya ebben az időpontban zárva van, kérjük válassz másikat.");
         }
 
         Instant now = Instant.now(clock);

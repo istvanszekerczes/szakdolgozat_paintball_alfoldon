@@ -1,1 +1,378 @@
-/* You can add global styles to this file, and also import other style files */
+/* Theme tokens shared with the public site design: black with electric blue, Inter + JetBrains Mono. */
+
+:root,
+.theme-dark {
+  --bg: #0a0a0a;
+  --bg-1: #111111;
+  --bg-2: #171717;
+  --bg-3: #1f1f1f;
+  --line: #262626;
+  --line-2: #333333;
+  --fg: #f2f2f2;
+  --fg-2: #a8a8a8;
+  --accent: #4a8fff;
+  --accent-2: #6ea6ff;
+  --on-accent: #06101f;
+  --accent-a: rgba(74, 143, 255, 0.14);
+  --danger: #ff6b6b;
+  --danger-a: rgba(255, 107, 107, 0.14);
+  --warn: #ffc466;
+  --warn-a: rgba(255, 196, 102, 0.14);
+  --ok: #5fd39a;
+  --ok-a: rgba(95, 211, 154, 0.14);
+  color-scheme: dark;
+}
+
+.theme-light {
+  --bg: #f4f5f7;
+  --bg-1: #ffffff;
+  --bg-2: #f7f8fa;
+  --bg-3: #eef0f3;
+  --line: #e2e5ea;
+  --line-2: #d3d7de;
+  --fg: #121418;
+  --fg-2: #555b65;
+  --accent: #1f63d6;
+  --accent-2: #174fae;
+  --on-accent: #ffffff;
+  --accent-a: rgba(31, 99, 214, 0.1);
+  --danger: #c62828;
+  --danger-a: rgba(198, 40, 40, 0.1);
+  --warn: #8a5a00;
+  --warn-a: rgba(242, 181, 68, 0.22);
+  --ok: #1b7a4b;
+  --ok-a: rgba(27, 122, 75, 0.1);
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+}
+
+a {
+  color: var(--accent);
+}
+a:hover {
+  color: var(--accent-2);
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+h2 {
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+.muted {
+  color: var(--fg-2);
+}
+
+.card {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.link {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid transparent;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--line-2);
+}
+.btn-danger {
+  background: transparent;
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: transparent;
+  color: var(--fg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--fg-2);
+}
+.input {
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: var(--bg-2);
+  color: var(--fg);
+  font: inherit;
+  font-size: 14px;
+}
+.input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.st-PENDING {
+  background: var(--warn-a);
+  color: var(--warn);
+}
+.st-ACCEPTED {
+  background: var(--ok-a);
+  color: var(--ok);
+}
+.st-REJECTED {
+  background: var(--danger-a);
+  color: var(--danger);
+}
+.st-CANCELLED {
+  background: var(--bg-3);
+  color: var(--fg-2);
+}
+
+.sev {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.sev-danger {
+  background: var(--danger-a);
+  color: var(--danger);
+}
+.sev-warn {
+  background: var(--warn-a);
+  color: var(--warn);
+}
+.sev-info {
+  background: var(--accent-a);
+  color: var(--accent);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.empty {
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  color: var(--fg-2);
+}
+
+.error {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--danger-a);
+  color: var(--danger);
+  font-size: 13px;
+}
+
+/* Tone badges (app-status-badge) */
+.tone-ok {
+  background: var(--ok-a);
+  color: var(--ok);
+}
+.tone-warn {
+  background: var(--warn-a);
+  color: var(--warn);
+}
+.tone-danger {
+  background: var(--danger-a);
+  color: var(--danger);
+}
+.tone-info {
+  background: var(--accent-a);
+  color: var(--accent);
+}
+.tone-muted {
+  background: var(--bg-3);
+  color: var(--fg-2);
+}
+
+/* app-data-table: rows are projected from the page, so the cell styles are global */
+.dt-card {
+  padding: 0;
+  overflow: hidden;
+}
+.dt-scroll {
+  overflow-x: auto;
+}
+.dt {
+  width: 100%;
+  border-collapse: collapse;
+}
+.dt th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-2);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.dt td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.dt tbody tr:last-child td {
+  border-bottom: 0;
+}
+.dt tbody tr:hover {
+  background: var(--bg-2);
+}
+.dt .num {
+  text-align: right;
+}
+.dt .actions-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+.dt tr.inactive td {
+  color: var(--fg-2);
+}
+
+.btn-sm {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+/* Page header shared by the list pages */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-right: 56px;
+}
+.page-head p {
+  margin: 4px 0 0;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--fg);
+}
+.check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+/* app-form-dialog */
+.dialog {
+  width: min(480px, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid var(--line-2);
+  border-radius: 16px;
+  background: var(--bg-1);
+  color: var(--fg);
+}
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
