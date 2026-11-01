@@ -5,7 +5,6 @@ import {
   effect,
   signal,
   viewChild,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 
 export interface GalleryItem {
@@ -108,7 +107,6 @@ export interface GalleryItem {
       </div>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host {

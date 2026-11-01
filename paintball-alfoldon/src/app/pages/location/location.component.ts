@@ -4,7 +4,6 @@ import {
   OnInit,
   inject,
   signal,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Meta, Title } from '@angular/platform-browser';
@@ -117,7 +116,6 @@ import { LocationService, PaintballLocation } from '../../services/location.serv
       </section>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .loc-meta {

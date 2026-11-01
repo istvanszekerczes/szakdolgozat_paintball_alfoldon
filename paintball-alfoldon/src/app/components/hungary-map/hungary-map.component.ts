@@ -9,7 +9,6 @@ import {
   inject,
   signal,
   viewChild,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import type { Map as MapLibreMap, Marker, PaddingOptions, Popup } from 'maplibre-gl';
@@ -68,7 +67,6 @@ type MapStatus = 'loading' | 'ready' | 'error';
   selector: 'app-hungary-map',
   standalone: true,
   templateUrl: './hungary-map.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hungary-map.component.scss',
 })
 export class HungaryMapComponent implements AfterViewInit {

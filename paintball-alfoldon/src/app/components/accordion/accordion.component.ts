@@ -1,4 +1,4 @@
-import { Component, computed, input, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 
 /**
  * Disclosure row (FAQ). Implements the WAI-ARIA accordion pattern:
@@ -46,7 +46,6 @@ import { Component, computed, input, signal, ChangeDetectionStrategy } from '@an
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host {

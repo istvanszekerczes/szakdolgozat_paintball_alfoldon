@@ -10,7 +10,6 @@ import {
   input,
   signal,
   viewChild,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import type { Map as MapLibreMap, Marker } from 'maplibre-gl';
 import {
@@ -52,7 +51,6 @@ const VENUE_ZOOM = 15;
       }
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host {

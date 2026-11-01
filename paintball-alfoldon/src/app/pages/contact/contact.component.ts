@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ContactFormComponent } from '../../components/contact-form/contact-form.component';
 
@@ -55,7 +55,6 @@ import { ContactFormComponent } from '../../components/contact-form/contact-form
       </div>
     </section>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .contact {
