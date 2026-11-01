@@ -46,9 +46,10 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              // TODO: add the production domain here before deploying.
               "allowedHosts": [
-                "localhost"
+                "localhost",
+                "paintball-alfoldon.hu",
+                "www.paintball-alfoldon.hu"
               ]
             },
             "ssr": {
@@ -130,9 +131,9 @@
             },
             "outputMode": "server",
             "security": {
-              // TODO: add the production domain here before deploying.
               "allowedHosts": [
-                "localhost"
+                "localhost",
+                "admin.paintball-alfoldon.hu"
               ]
             }
           },

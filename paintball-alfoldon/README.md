@@ -35,8 +35,8 @@ npm run serve:ssr:dashboard  # serve the built SSR app (uses PORT, default 4000)
 ## Allowed hosts
 
 The SSR servers answer requests for hosts that are not on the allowlist with `400 Bad Request`.
-`angular.json` only allows `localhost` for now (`security.allowedHosts` of each project), so add
-the production domain before deploying, or set `NG_ALLOWED_HOSTS` on the server. See
+`security.allowedHosts` of each project in `angular.json` lists `localhost` and that app's
+production domains. To allow another host, add it there or set `NG_ALLOWED_HOSTS` on the server. See
 <https://angular.dev/best-practices/security#preventing-server-side-request-forgery-ssrf>.
 
 ## Configuration (environment variables)
