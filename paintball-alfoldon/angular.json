@@ -92,6 +92,83 @@
           "builder": "@angular/build:unit-test"
         }
       }
+    },
+    "paintball-alfoldon-dashboard": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/paintball-alfoldon-dashboard",
+      "sourceRoot": "apps/paintball-alfoldon-dashboard/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "defaultConfiguration": "production",
+          "options": {
+            "outputPath": "dist/apps/paintball-alfoldon-dashboard",
+            "browser": "apps/paintball-alfoldon-dashboard/src/main.ts",
+            "tsConfig": "apps/paintball-alfoldon-dashboard/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "apps/paintball-alfoldon-dashboard/public"
+              }
+            ],
+            "styles": [
+              "apps/paintball-alfoldon-dashboard/src/styles.scss"
+            ],
+            "server": "apps/paintball-alfoldon-dashboard/src/main.server.ts",
+            "ssr": {
+              "entry": "apps/paintball-alfoldon-dashboard/src/server.ts"
+            },
+            "outputMode": "server"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kb",
+                  "maximumError": "8kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 4300
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "paintball-alfoldon-dashboard:build:production"
+            },
+            "development": {
+              "buildTarget": "paintball-alfoldon-dashboard:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
+        }
+      }
     }
   }
 }
