@@ -46,7 +46,10 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": []
+              // TODO: add the production domain here before deploying.
+              "allowedHosts": [
+                "localhost"
+              ]
             },
             "ssr": {
               "entry": "src/server.ts"
@@ -125,7 +128,13 @@
             "ssr": {
               "entry": "apps/paintball-alfoldon-dashboard/src/server.ts"
             },
-            "outputMode": "server"
+            "outputMode": "server",
+            "security": {
+              // TODO: add the production domain here before deploying.
+              "allowedHosts": [
+                "localhost"
+              ]
+            }
           },
           "configurations": {
             "production": {
