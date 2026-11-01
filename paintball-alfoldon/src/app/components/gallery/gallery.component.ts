@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  effect,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, ElementRef, HostListener, effect, signal, viewChild } from '@angular/core';
 
 export interface GalleryItem {
   /** Reserved for real photos once an image source (e.g. Facebook albums) is wired in. */
