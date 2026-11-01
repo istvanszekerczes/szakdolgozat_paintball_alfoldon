@@ -10,6 +10,7 @@ import {
   input,
   signal,
   viewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import type { Map as MapLibreMap, Marker } from 'maplibre-gl';
 import {
@@ -44,11 +45,14 @@ const VENUE_ZOOM = 15;
           <div class="map-shell__status" aria-live="polite">Térkép betöltése…</div>
         }
         @case ('error') {
-          <div class="map-shell__status" role="status">A térkép nem jeleníthető meg ebben a böngészőben.</div>
+          <div class="map-shell__status" role="status">
+            A térkép nem jeleníthető meg ebben a böngészőben.
+          </div>
         }
       }
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host {
@@ -109,7 +113,9 @@ export class VenueMapComponent implements AfterViewInit {
       });
       this.map = map;
       // Re-centre the pin if the layout settles late, until the user takes over.
-      reframeUntilInteraction(map, () => map.jumpTo({ center: toLngLat(this.location()), zoom: VENUE_ZOOM }));
+      reframeUntilInteraction(map, () =>
+        map.jumpTo({ center: toLngLat(this.location()), zoom: VENUE_ZOOM }),
+      );
 
       // Reveal the canvas once the style is on screen; `load` also waits for every tile.
       map.once('style.load', () => this.status.set('ready'));
@@ -123,7 +129,11 @@ export class VenueMapComponent implements AfterViewInit {
 
       this.marker = createMarker(
         ml,
-        createMarkerElement({ label: this.caption(loc), caption: this.caption(loc), interactive: false }),
+        createMarkerElement({
+          label: this.caption(loc),
+          caption: this.caption(loc),
+          interactive: false,
+        }),
         position,
       ).addTo(map);
     } catch (err) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { AccordionComponent } from '../../components/accordion/accordion.component';
@@ -18,7 +18,8 @@ interface Faq {
         <span class="eyebrow">GYIK</span>
         <h1 class="page-header__title">Gyakori kérdések</h1>
         <p class="page-header__lead lead">
-          Mindent összeszedtünk, amit a játék előtt tudnod kell. Ha további kérdésed van, keress minket bizalommal.
+          Mindent összeszedtünk, amit a játék előtt tudnod kell. Ha további kérdésed van, keress
+          minket bizalommal.
         </p>
       </div>
     </section>
@@ -35,8 +36,8 @@ interface Faq {
           <span class="eyebrow">Segítség</span>
           <h2 class="faq__help-title">További kérdésed van?</h2>
           <p>
-            Ha nem találtál választ a kérdésedre, vagy egyedi igényekkel érkeznél, szívesen segítünk telefonon vagy
-            e-mailben is.
+            Ha nem találtál választ a kérdésedre, vagy egyedi igényekkel érkeznél, szívesen segítünk
+            telefonon vagy e-mailben is.
           </p>
           <div class="faq__help-actions">
             <a routerLink="/kapcsolat" class="btn btn--primary">Kapcsolatfelvétel</a>
@@ -46,6 +47,7 @@ interface Faq {
       </div>
     </section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .faq {

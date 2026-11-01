@@ -1,4 +1,4 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, input, signal, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Disclosure row (FAQ). Implements the WAI-ARIA accordion pattern:
@@ -19,19 +19,34 @@ import { Component, computed, input, signal } from '@angular/core';
           (click)="toggle()"
         >
           <span class="accordion__question">{{ question() }}</span>
-          <svg class="accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <svg
+            class="accordion__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
             <path d="M12 5v14M5 12h14" />
           </svg>
         </button>
       </h3>
 
-      <div class="accordion__panel" [id]="panelId()" role="region" [attr.aria-labelledby]="triggerId()" [attr.aria-hidden]="!isOpen()">
+      <div
+        class="accordion__panel"
+        [id]="panelId()"
+        role="region"
+        [attr.aria-labelledby]="triggerId()"
+        [attr.aria-hidden]="!isOpen()"
+      >
         <div class="accordion__content">
           <p>{{ answer() }}</p>
         </div>
       </div>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host {

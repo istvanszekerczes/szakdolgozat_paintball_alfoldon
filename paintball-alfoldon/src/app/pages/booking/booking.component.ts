@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
@@ -10,8 +10,8 @@ import { Meta, Title } from '@angular/platform-browser';
         <span class="eyebrow">Foglalás</span>
         <h1 class="page-header__title">Időpont foglalása</h1>
         <p class="page-header__lead lead">
-          Az online naptárunk fejlesztés alatt áll. Addig is telefonon vagy e-mailben pár perc alatt lefoglalhatod a
-          játékot.
+          Az online naptárunk fejlesztés alatt áll. Addig is telefonon vagy e-mailben pár perc alatt
+          lefoglalhatod a játékot.
         </p>
       </div>
     </section>
@@ -20,13 +20,23 @@ import { Meta, Title } from '@angular/platform-browser';
       <!-- Swap target: this container will host the online booking wizard later -->
       <div id="booking-system-root" class="container booking">
         <div class="notice" role="note">
-          <svg class="notice__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg
+            class="notice__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
             <circle cx="12" cy="12" r="10" />
             <path d="M12 8v4M12 16h.01" />
           </svg>
           <p>
             <strong>Fontos:</strong> előzetes időpontfoglalás szükséges, lehetőleg legalább
-            <strong>egy héttel a tervezett játék előtt</strong>, hogy a pályát és a felszerelést garantálni tudjuk.
+            <strong>egy héttel a tervezett játék előtt</strong>, hogy a pályát és a felszerelést
+            garantálni tudjuk.
           </p>
         </div>
 
@@ -42,16 +52,20 @@ import { Meta, Title } from '@angular/platform-browser';
             <span class="eyebrow">E-mail</span>
             <h2 class="channel__value">paintball&#64;alfoldon.hu</h2>
             <p>Ajánlatkérésre és levelekre 24 órán belül válaszolunk.</p>
-            <a href="mailto:paintball@alfoldon.hu" class="btn btn--secondary btn--lg btn--block">E-mail küldése</a>
+            <a href="mailto:paintball@alfoldon.hu" class="btn btn--secondary btn--lg btn--block"
+              >E-mail küldése</a
+            >
           </article>
         </div>
 
         <p class="booking__hint">
-          Írd meg a tervezett dátumot, a létszámot és a választott pályát – így azonnal pontos ajánlatot tudunk adni.
+          Írd meg a tervezett dátumot, a létszámot és a választott pályát – így azonnal pontos
+          ajánlatot tudunk adni.
         </p>
       </div>
     </section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .booking {

@@ -9,6 +9,7 @@ import {
   inject,
   signal,
   viewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import type { Map as MapLibreMap, Marker, PaddingOptions, Popup } from 'maplibre-gl';
@@ -67,6 +68,7 @@ type MapStatus = 'loading' | 'ready' | 'error';
   selector: 'app-hungary-map',
   standalone: true,
   templateUrl: './hungary-map.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './hungary-map.component.scss',
 })
 export class HungaryMapComponent implements AfterViewInit {
@@ -137,7 +139,8 @@ export class HungaryMapComponent implements AfterViewInit {
 
   onLegendClick(event: MouseEvent, venue: PaintballLocation): void {
     // Leave new-tab/new-window clicks to the browser.
-    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+      return;
 
     event.preventDefault();
     if (this.map && this.status() === 'ready') this.focus(venue);
@@ -167,7 +170,9 @@ export class HungaryMapComponent implements AfterViewInit {
       this.popup = createPopup(ml);
       // Keep every venue in frame if the layout settles late or the window is
       // resized across the label breakpoint, until the user takes over.
-      this.framing = reframeUntilInteraction(map, () => map.fitBounds(bounds, { ...fit(), duration: 0 }));
+      this.framing = reframeUntilInteraction(map, () =>
+        map.fitBounds(bounds, { ...fit(), duration: 0 }),
+      );
 
       // Reveal the canvas as soon as the (black) style is on screen; `load` additionally
       // waits for every initial tile, which a single slow request could delay indefinitely.
@@ -372,7 +377,10 @@ export class HungaryMapComponent implements AfterViewInit {
     for (const cluster of this.clusters) cluster.marker.getElement().classList.remove('is-active');
   }
 
-  private showPopup(position: [number, number], content: Parameters<typeof createPopupContent>[0]): void {
+  private showPopup(
+    position: [number, number],
+    content: Parameters<typeof createPopupContent>[0],
+  ): void {
     if (!this.map || !this.popup) return;
     this.popup.setLngLat(position).setDOMContent(createPopupContent(content)).addTo(this.map);
   }

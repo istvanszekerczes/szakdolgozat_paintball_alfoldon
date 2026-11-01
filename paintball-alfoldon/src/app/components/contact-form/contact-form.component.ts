@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 type Field = 'name' | 'email' | 'phone' | 'message';
@@ -12,13 +12,25 @@ type Field = 'name' | 'email' | 'phone' | 'message';
       @if (submitted()) {
         <div class="form-success" role="status">
           <span class="form-success__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M20 6 9 17l-5-5" />
             </svg>
           </span>
           <h3>Üzenetedet megkaptuk</h3>
-          <p>Köszönjük az érdeklődést. Kollégánk 24 órán belül felveszi veled a kapcsolatot a megadott elérhetőségek egyikén.</p>
-          <button type="button" class="btn btn--secondary" (click)="reset()">Új üzenet írása</button>
+          <p>
+            Köszönjük az érdeklődést. Kollégánk 24 órán belül felveszi veled a kapcsolatot a
+            megadott elérhetőségek egyikén.
+          </p>
+          <button type="button" class="btn btn--secondary" (click)="reset()">
+            Új üzenet írása
+          </button>
         </div>
       } @else {
         <form [formGroup]="form" (ngSubmit)="submit()" class="form" novalidate>
@@ -54,7 +66,9 @@ type Field = 'name' | 'email' | 'phone' | 'message';
                 [attr.aria-describedby]="invalid('email') ? 'cf-email-error' : null"
               />
               @if (invalid('email')) {
-                <p id="cf-email-error" class="field__error">Kérjük, érvényes e-mail címet adj meg.</p>
+                <p id="cf-email-error" class="field__error">
+                  Kérjük, érvényes e-mail címet adj meg.
+                </p>
               }
             </div>
 
@@ -89,9 +103,13 @@ type Field = 'name' | 'email' | 'phone' | 'message';
               [attr.aria-describedby]="invalid('message') ? 'cf-message-error' : 'cf-message-hint'"
             ></textarea>
             @if (invalid('message')) {
-              <p id="cf-message-error" class="field__error">Az üzenet legyen legalább 10 karakter hosszú.</p>
+              <p id="cf-message-error" class="field__error">
+                Az üzenet legyen legalább 10 karakter hosszú.
+              </p>
             } @else {
-              <p id="cf-message-hint" class="form__hint">Minél több részletet írsz, annál pontosabb ajánlatot tudunk adni.</p>
+              <p id="cf-message-hint" class="form__hint">
+                Minél több részletet írsz, annál pontosabb ajánlatot tudunk adni.
+              </p>
             }
           </div>
 
@@ -103,6 +121,7 @@ type Field = 'name' | 'email' | 'phone' | 'message';
       }
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host {

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { HungaryMapComponent } from '../../components/hungary-map/hungary-map.component';
@@ -35,10 +35,19 @@ interface Testimonial {
           <a routerLink="/kapcsolat" class="btn btn--secondary btn--lg">Árajánlatot kérek</a>
         </div>
         <ul class="hero__facts" aria-label="Röviden">
-          <li class="fact"><span class="fact__num">7</span><span class="fact__label">pálya, 6 város</span></li>
-          <li class="fact"><span class="fact__num">20+</span><span class="fact__label">év tapasztalat</span></li>
-          <li class="fact"><span class="fact__num">2–150+</span><span class="fact__label">fős csoportok</span></li>
-          <li class="fact"><span class="fact__num">3</span><span class="fact__label">fedett, télen is játszható</span></li>
+          <li class="fact">
+            <span class="fact__num">7</span><span class="fact__label">pálya, 6 város</span>
+          </li>
+          <li class="fact">
+            <span class="fact__num">20+</span><span class="fact__label">év tapasztalat</span>
+          </li>
+          <li class="fact">
+            <span class="fact__num">2–150+</span><span class="fact__label">fős csoportok</span>
+          </li>
+          <li class="fact">
+            <span class="fact__num">3</span
+            ><span class="fact__label">fedett, télen is játszható</span>
+          </li>
         </ul>
       </div>
     </section>
@@ -49,7 +58,10 @@ interface Testimonial {
         <div class="section-head">
           <span class="eyebrow">Helyszíneink</span>
           <h2 id="map-title">Válassz pályát a térképen</h2>
-          <p>Válassz a listából, hogy a térkép ráközelítsen, majd kattints a jelölőre a részletekért. A fedett pályák télen és rossz időben is játszhatók.</p>
+          <p>
+            Válassz a listából, hogy a térkép ráközelítsen, majd kattints a jelölőre a részletekért.
+            A fedett pályák télen és rossz időben is játszhatók.
+          </p>
         </div>
         <app-hungary-map />
       </div>
@@ -74,7 +86,15 @@ interface Testimonial {
               <p class="venue-card__desc">{{ loc.terrainType }}</p>
               <span class="link-arrow venue-card__more">
                 Részletek
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
                   <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
               </span>
@@ -91,20 +111,37 @@ interface Testimonial {
           <span class="eyebrow">Miért mi?</span>
           <h2 id="why-title">Két évtized tapasztalat, gördülékeny szervezés</h2>
           <p class="lead">
-            Tudjuk, hogyan kell megszervezni a tökéletes paintball összecsapást. Akár baráti játékról,
-            akár több száz fős céges rendezvényről van szó, ránk számíthatsz.
+            Tudjuk, hogyan kell megszervezni a tökéletes paintball összecsapást. Akár baráti
+            játékról, akár több száz fős céges rendezvényről van szó, ránk számíthatsz.
           </p>
           <ul class="why__points">
-            <li><strong>Teljes felszerelés</strong> – marker, páramentes maszk, korlátlan hajtógáz, igény szerint overál.</li>
-            <li><strong>Képzett játékvezetők</strong> – biztonságos, jól vezetett játékmenet minden korosztálynak.</li>
+            <li>
+              <strong>Teljes felszerelés</strong> – marker, páramentes maszk, korlátlan hajtógáz,
+              igény szerint overál.
+            </li>
+            <li>
+              <strong>Képzett játékvezetők</strong> – biztonságos, jól vezetett játékmenet minden
+              korosztálynak.
+            </li>
             <li><strong>Rugalmas létszám</strong> – kis baráti köröktől óriásrendezvényekig.</li>
           </ul>
         </div>
         <div class="why__stats">
-          <div class="card stat"><span class="stat__num">20<em>+</em></span><span class="stat__label">év tapasztalat</span></div>
-          <div class="card stat"><span class="stat__num">100k<em>+</em></span><span class="stat__label">elégedett játékos</span></div>
-          <div class="card stat"><span class="stat__num">7</span><span class="stat__label">pálya, 6 város</span></div>
-          <div class="card stat"><span class="stat__num">2–150<em>+</em></span><span class="stat__label">fős csoportok</span></div>
+          <div class="card stat">
+            <span class="stat__num">20<em>+</em></span
+            ><span class="stat__label">év tapasztalat</span>
+          </div>
+          <div class="card stat">
+            <span class="stat__num">100k<em>+</em></span
+            ><span class="stat__label">elégedett játékos</span>
+          </div>
+          <div class="card stat">
+            <span class="stat__num">7</span><span class="stat__label">pálya, 6 város</span>
+          </div>
+          <div class="card stat">
+            <span class="stat__num">2–150<em>+</em></span
+            ><span class="stat__label">fős csoportok</span>
+          </div>
         </div>
       </div>
     </section>
@@ -115,7 +152,10 @@ interface Testimonial {
         <div class="section-head">
           <span class="eyebrow">Szolgáltatások</span>
           <h2 id="activities-title">Kiegészítő tevékenységek</h2>
-          <p>A klasszikus paintball mellett az alábbi csapatjátékokat kínáljuk a különböző pályáinkon.</p>
+          <p>
+            A klasszikus paintball mellett az alábbi csapatjátékokat kínáljuk a különböző
+            pályáinkon.
+          </p>
         </div>
         <div class="activity-grid">
           @for (activity of activities; track activity.title; let i = $index) {
@@ -155,7 +195,9 @@ interface Testimonial {
       <div class="container cta__inner">
         <span class="eyebrow">Foglalás</span>
         <h2 id="cta-title">Készen állsz a bevetésre?</h2>
-        <p class="lead">Foglald le az időpontodat még ma, vagy kérj egyedi árajánlatot a rendezvényedre.</p>
+        <p class="lead">
+          Foglald le az időpontodat még ma, vagy kérj egyedi árajánlatot a rendezvényedre.
+        </p>
         <div class="cta__actions">
           <a routerLink="/foglalas" class="btn btn--primary btn--lg">Időpont foglalása</a>
           <a routerLink="/kapcsolat" class="btn btn--secondary btn--lg">Kapcsolatfelvétel</a>
@@ -163,6 +205,7 @@ interface Testimonial {
       </div>
     </section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .hero {
@@ -400,12 +443,30 @@ export class HomeComponent implements OnInit {
   readonly fieldType = LocationService.fieldType;
 
   readonly activities: Activity[] = [
-    { title: 'Airsoft', text: 'Még valósághűbb katonai szimulációs játék finomabb lövedékekkel és komolyabb harci taktikával.' },
-    { title: 'Lézertag', text: 'Fájdalommentes harci játék infravörös fegyverekkel. Ideális családoknak, gyerekzsúrokra és vegyes csapatoknak.' },
-    { title: 'Íjász harc (archery tag)', text: 'Biztonságos íjászat szivacsos végű nyilakkal. A dodgeball és az íjászat tökéletes kombinációja.' },
-    { title: 'Buborék foci', text: 'Légbuborékba burkolózva focizni – hatalmas ütközések, folyamatos nevetés és garantált jókedv.' },
-    { title: 'Vízifoci', text: 'Nyári szezonális kedvenc: felfújható vizes pályán való csúszkálós labdarúgás.' },
-    { title: 'Ugráló vár', text: 'A legkisebbeknek fenntartott biztonságos játékterület a családi eseményeken.' },
+    {
+      title: 'Airsoft',
+      text: 'Még valósághűbb katonai szimulációs játék finomabb lövedékekkel és komolyabb harci taktikával.',
+    },
+    {
+      title: 'Lézertag',
+      text: 'Fájdalommentes harci játék infravörös fegyverekkel. Ideális családoknak, gyerekzsúrokra és vegyes csapatoknak.',
+    },
+    {
+      title: 'Íjász harc (archery tag)',
+      text: 'Biztonságos íjászat szivacsos végű nyilakkal. A dodgeball és az íjászat tökéletes kombinációja.',
+    },
+    {
+      title: 'Buborék foci',
+      text: 'Légbuborékba burkolózva focizni – hatalmas ütközések, folyamatos nevetés és garantált jókedv.',
+    },
+    {
+      title: 'Vízifoci',
+      text: 'Nyári szezonális kedvenc: felfújható vizes pályán való csúszkálós labdarúgás.',
+    },
+    {
+      title: 'Ugráló vár',
+      text: 'A legkisebbeknek fenntartott biztonságos játékterület a családi eseményeken.',
+    },
   ];
 
   readonly testimonials: Testimonial[] = [

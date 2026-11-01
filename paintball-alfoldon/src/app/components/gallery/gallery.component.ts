@@ -1,4 +1,12 @@
-import { Component, ElementRef, HostListener, effect, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  effect,
+  signal,
+  viewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 export interface GalleryItem {
   /** Reserved for real photos once an image source (e.g. Facebook albums) is wired in. */
@@ -17,7 +25,12 @@ export interface GalleryItem {
     <ul class="gallery" aria-label="Galéria">
       @for (item of items; track item.caption; let i = $index) {
         <li>
-          <button type="button" class="tile" (click)="open(i)" [attr.aria-label]="'Megnyitás: ' + item.caption">
+          <button
+            type="button"
+            class="tile"
+            (click)="open(i)"
+            [attr.aria-label]="'Megnyitás: ' + item.caption"
+          >
             <span class="tile__media" aria-hidden="true">
               <span class="tile__index mono">{{ pad(i + 1) }}</span>
             </span>
@@ -29,28 +42,64 @@ export interface GalleryItem {
 
     @if (active(); as idx) {
       <div class="lightbox" (click)="onBackdrop($event)" (keydown)="onKeydown($event)">
-        <div class="lightbox__dialog" role="dialog" aria-modal="true" [attr.aria-label]="items[idx.value].caption">
-          <button #closeBtn type="button" class="lightbox__btn lightbox__close" (click)="close()" aria-label="Bezárás">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <div
+          class="lightbox__dialog"
+          role="dialog"
+          aria-modal="true"
+          [attr.aria-label]="items[idx.value].caption"
+        >
+          <button
+            #closeBtn
+            type="button"
+            class="lightbox__btn lightbox__close"
+            (click)="close()"
+            aria-label="Bezárás"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           </button>
 
           <figure class="lightbox__figure">
             <div class="lightbox__media" aria-hidden="true">
-              <span class="lightbox__index mono">{{ pad(idx.value + 1) }} / {{ pad(items.length) }}</span>
+              <span class="lightbox__index mono"
+                >{{ pad(idx.value + 1) }} / {{ pad(items.length) }}</span
+              >
             </div>
             <figcaption class="lightbox__caption">{{ items[idx.value].caption }}</figcaption>
           </figure>
 
           <div class="lightbox__nav">
             <button type="button" class="lightbox__btn" (click)="prev()" aria-label="Előző kép">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
                 <path d="m15 18-6-6 6-6" />
               </svg>
             </button>
             <button type="button" class="lightbox__btn" (click)="next()" aria-label="Következő kép">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
                 <path d="m9 18 6-6-6-6" />
               </svg>
             </button>
@@ -59,6 +108,7 @@ export interface GalleryItem {
       </div>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host {

@@ -1,4 +1,11 @@
-import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -35,7 +42,9 @@ import { LocationService, PaintballLocation } from '../../services/location.serv
 
             <div class="prose">
               <h3>Kiegészítő programok</h3>
-              <p>A klasszikus paintball mellett ezen a pályán előzetes egyeztetés szerint elérhető:</p>
+              <p>
+                A klasszikus paintball mellett ezen a pályán előzetes egyeztetés szerint elérhető:
+              </p>
               <ul class="tags" aria-label="Kiegészítő programok">
                 @for (activity of loc.extraActivities; track activity) {
                   <li class="pill">{{ activity }}</li>
@@ -48,7 +57,15 @@ import { LocationService, PaintballLocation } from '../../services/location.serv
                 <h3>Térkép</h3>
                 <a [href]="directions(loc)" target="_blank" rel="noopener" class="link-arrow">
                   Útvonalterv
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
                     <path d="M7 17 17 7M8 7h9v9" />
                   </svg>
                 </a>
@@ -90,7 +107,9 @@ import { LocationService, PaintballLocation } from '../../services/location.serv
               <div class="specs-card__cta">
                 <p>Szeretnéd lefoglalni ezt a pályát a csapatodnak?</p>
                 <a routerLink="/foglalas" class="btn btn--primary btn--block">Időpont foglalása</a>
-                <a routerLink="/kapcsolat" class="btn btn--secondary btn--block">Árajánlatot kérek</a>
+                <a routerLink="/kapcsolat" class="btn btn--secondary btn--block"
+                  >Árajánlatot kérek</a
+                >
               </div>
             </div>
           </aside>
@@ -98,6 +117,7 @@ import { LocationService, PaintballLocation } from '../../services/location.serv
       </section>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .loc-meta {

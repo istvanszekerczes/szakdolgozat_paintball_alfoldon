@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ContactFormComponent } from '../../components/contact-form/contact-form.component';
 
@@ -12,8 +12,8 @@ import { ContactFormComponent } from '../../components/contact-form/contact-form
         <span class="eyebrow">Kapcsolat</span>
         <h1 class="page-header__title">Beszéljünk a játékról</h1>
         <p class="page-header__lead lead">
-          Céges csapatépítőt, születésnapot vagy legénybúcsút szervezel? Kérdésed van a felszerelésről? Írj vagy hívj
-          minket – 24 órán belül válaszolunk.
+          Céges csapatépítőt, születésnapot vagy legénybúcsút szervezel? Kérdésed van a
+          felszerelésről? Írj vagy hívj minket – 24 órán belül válaszolunk.
         </p>
       </div>
     </section>
@@ -29,13 +29,21 @@ import { ContactFormComponent } from '../../components/contact-form/contact-form
 
           <div class="card channel">
             <span class="eyebrow">E-mail</span>
-            <a href="mailto:paintball@alfoldon.hu" class="channel__value">paintball&#64;alfoldon.hu</a>
+            <a href="mailto:paintball@alfoldon.hu" class="channel__value"
+              >paintball&#64;alfoldon.hu</a
+            >
             <p>Ajánlatkérésre és levelekre 24 órán belül írásban válaszolunk.</p>
           </div>
 
           <div class="card channel">
             <span class="eyebrow">Facebook</span>
-            <a href="https://facebook.com/PaintballAlfoldon" target="_blank" rel="noopener" class="channel__value">Paintball Alföldön</a>
+            <a
+              href="https://facebook.com/PaintballAlfoldon"
+              target="_blank"
+              rel="noopener"
+              class="channel__value"
+              >Paintball Alföldön</a
+            >
             <p>Képek, friss hírek és rendezvényinformációk a Facebook-oldalunkon.</p>
           </div>
         </div>
@@ -47,6 +55,7 @@ import { ContactFormComponent } from '../../components/contact-form/contact-form
       </div>
     </section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .contact {
@@ -108,7 +117,8 @@ export class ContactComponent implements OnInit {
     this.title.setTitle('Kapcsolat és ajánlatkérés | Paintball Alföldön');
     this.meta.updateTag({
       name: 'description',
-      content: 'Lépj kapcsolatba velünk: telefonszám, e-mail, nyitvatartás és közvetlen online üzenetküldés a Paintball Alföldön csapatának.',
+      content:
+        'Lépj kapcsolatba velünk: telefonszám, e-mail, nyitvatartás és közvetlen online üzenetküldés a Paintball Alföldön csapatának.',
     });
   }
 }

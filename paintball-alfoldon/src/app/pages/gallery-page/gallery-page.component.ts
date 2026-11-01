@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { GalleryComponent } from '../../components/gallery/gallery.component';
 
@@ -12,8 +12,8 @@ import { GalleryComponent } from '../../components/gallery/gallery.component';
         <span class="eyebrow">Galéria</span>
         <h1 class="page-header__title">Képek a pályákról</h1>
         <p class="page-header__lead lead">
-          Ízelítő a hangulatból és a felszerelésekből. A teljes albumokat minden játék után a Facebook-oldalunkon
-          tesszük közzé.
+          Ízelítő a hangulatból és a felszerelésekből. A teljes albumokat minden játék után a
+          Facebook-oldalunkon tesszük közzé.
         </p>
       </div>
     </section>
@@ -28,7 +28,14 @@ import { GalleryComponent } from '../../components/gallery/gallery.component';
 
         <aside class="card fb-note">
           <span class="fb-note__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
             </svg>
           </span>
@@ -36,7 +43,13 @@ import { GalleryComponent } from '../../components/gallery/gallery.component';
             <h2 class="fb-note__title">Friss képek minden játék után</h2>
             <p>
               A játékmesterek által készített teljes albumokat a hivatalos
-              <a href="https://facebook.com/PaintballAlfoldon" target="_blank" rel="noopener" class="fb-note__link">Facebook-oldalunkon</a>
+              <a
+                href="https://facebook.com/PaintballAlfoldon"
+                target="_blank"
+                rel="noopener"
+                class="fb-note__link"
+                >Facebook-oldalunkon</a
+              >
               tesszük közzé. Keresd meg magad és a csapatodat az akcióképek között!
             </p>
           </div>
@@ -44,6 +57,7 @@ import { GalleryComponent } from '../../components/gallery/gallery.component';
       </div>
     </section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .gallery-page {
@@ -111,7 +125,8 @@ export class GalleryPageComponent implements OnInit {
     this.title.setTitle('Galéria – Képek a pályákról | Paintball Alföldön');
     this.meta.updateTag({
       name: 'description',
-      content: 'Nézd meg a paintball, lézertag és szabadtéri programjainkon készült képeket. Kedvcsináló és galéria a pályákról.',
+      content:
+        'Nézd meg a paintball, lézertag és szabadtéri programjainkon készült képeket. Kedvcsináló és galéria a pályákról.',
     });
   }
 }

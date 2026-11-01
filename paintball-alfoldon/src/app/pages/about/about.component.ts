@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 
@@ -12,7 +12,8 @@ import { RouterLink } from '@angular/router';
         <span class="eyebrow">Rólunk</span>
         <h1 class="page-header__title">Az Undergroundtól az Alföldig</h1>
         <p class="page-header__lead lead">
-          Több mint két évtized a paintballban: versenyzőkből lett szervezők, hét pálya, több százezer játékos.
+          Több mint két évtized a paintballban: versenyzőkből lett szervezők, hét pálya, több
+          százezer játékos.
         </p>
       </div>
     </section>
@@ -22,16 +23,19 @@ import { RouterLink } from '@angular/router';
         <div class="prose about__story">
           <h2>Történetünk</h2>
           <p>
-            Történetünk több mint két évtizeddel ezelőtt kezdődött. Alapítóink a versenyszerű paintball világából
-            érkeztek, ahol a taktika, a csapatmunka és a tiszta adrenalin határozta meg a mindennapokat. Ezt a
-            szenvedélyt szerettük volna átadni a nagyközönségnek is, ezért hoztuk létre az
+            Történetünk több mint két évtizeddel ezelőtt kezdődött. Alapítóink a versenyszerű
+            paintball világából érkeztek, ahol a taktika, a csapatmunka és a tiszta adrenalin
+            határozta meg a mindennapokat. Ezt a szenvedélyt szerettük volna átadni a
+            nagyközönségnek is, ezért hoztuk létre az
             <strong>Underground Paintballt</strong>.
           </p>
           <p>
-            Ahogy az évek során folyamatosan fejlődtünk, újabb és újabb pályákat nyitottunk a régió különböző
-            pontjain. Hogy lefedettségünket és elhivatottságunkat jobban kifejezzük, nevünket
-            <strong>Paintball Alföldönre</strong> változtattuk. Ma már hét pályán, hat városban várunk titeket,
-            és büszkék vagyunk rá, hogy több százezer játékosnak nyújthattunk felejthetetlen pillanatokat.
+            Ahogy az évek során folyamatosan fejlődtünk, újabb és újabb pályákat nyitottunk a régió
+            különböző pontjain. Hogy lefedettségünket és elhivatottságunkat jobban kifejezzük,
+            nevünket
+            <strong>Paintball Alföldönre</strong> változtattuk. Ma már hét pályán, hat városban
+            várunk titeket, és büszkék vagyunk rá, hogy több százezer játékosnak nyújthattunk
+            felejthetetlen pillanatokat.
           </p>
           <p class="about__timeline mono">Alapítva 2005 · Új név 2018</p>
         </div>
@@ -41,17 +45,18 @@ import { RouterLink } from '@angular/router';
           <h2 class="about__mission-title">Ki a szabadba, el a képernyők elől</h2>
           <div class="prose">
             <p>
-              Legfőbb célunk egyszerű: <strong>kimozdítani az embereket – különösen a fiatalokat – a képernyők
-              elől</strong>, és aktív, fizikai kihívásokkal teli szabadtéri tevékenységet biztosítani számukra.
+              Legfőbb célunk egyszerű:
+              <strong>kimozdítani az embereket – különösen a fiatalokat – a képernyők elől</strong>,
+              és aktív, fizikai kihívásokkal teli szabadtéri tevékenységet biztosítani számukra.
             </p>
             <p>
-              Úgy gondoljuk, hogy a paintball, a lézertag és az íjászat nem csupán játékok, hanem a kommunikáció, a
-              csapatszellem és az önbizalom fejlesztésének kiváló eszközei.
+              Úgy gondoljuk, hogy a paintball, a lézertag és az íjászat nem csupán játékok, hanem a
+              kommunikáció, a csapatszellem és az önbizalom fejlesztésének kiváló eszközei.
             </p>
             <p>
-              Szolgáltatásainkkal minden réteget kiszolgálunk: a legkisebb baráti társaságok szülinapi bulijától a
-              multinacionális vállalatok több száz fős csapatépítő tréningjeiig biztosítunk professzionális
-              lebonyolítást és maximális biztonságot.
+              Szolgáltatásainkkal minden réteget kiszolgálunk: a legkisebb baráti társaságok
+              szülinapi bulijától a multinacionális vállalatok több száz fős csapatépítő
+              tréningjeiig biztosítunk professzionális lebonyolítást és maximális biztonságot.
             </p>
           </div>
         </aside>
@@ -60,21 +65,35 @@ import { RouterLink } from '@angular/router';
 
     <section class="section section--alt section--line" aria-label="Számokban">
       <div class="container stats">
-        <div class="stat"><span class="stat__num">20<em>+</em></span><span class="stat__label">év a sportban</span></div>
-        <div class="stat"><span class="stat__num">7</span><span class="stat__label">pálya, 6 város</span></div>
-        <div class="stat"><span class="stat__num">100k<em>+</em></span><span class="stat__label">játékos</span></div>
-        <div class="stat"><span class="stat__num">100<em>%</em></span><span class="stat__label">adrenalin</span></div>
+        <div class="stat">
+          <span class="stat__num">20<em>+</em></span
+          ><span class="stat__label">év a sportban</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num">7</span><span class="stat__label">pálya, 6 város</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num">100k<em>+</em></span
+          ><span class="stat__label">játékos</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num">100<em>%</em></span
+          ><span class="stat__label">adrenalin</span>
+        </div>
       </div>
     </section>
 
     <section class="section section--line cta">
       <div class="container cta__inner">
         <h2>Csatlakozz a következő bevetéshez</h2>
-        <p class="lead">Tapasztald meg a Paintball Alföldön élményt a barátaiddal vagy a kollégáiddal.</p>
+        <p class="lead">
+          Tapasztald meg a Paintball Alföldön élményt a barátaiddal vagy a kollégáiddal.
+        </p>
         <a routerLink="/foglalas" class="btn btn--primary btn--lg">Időpontot foglalok</a>
       </div>
     </section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .about {
