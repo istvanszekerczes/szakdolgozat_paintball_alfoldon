@@ -1,18 +1,43 @@
 # Paintball Alföldön
 
 Marketing site for a paintball operator with seven fields across the Great Hungarian Plain.
-Angular 21 (standalone, signals, zoneless) with server-side rendering / prerendering, a dark-only
+Angular 22 (standalone, signals, zoneless) with server-side rendering / prerendering, a dark-only
 minimal design system and a MapLibre GL venue map recolored to pure black.
+
+The workspace has two Angular CLI projects: the public site (`paintball_alfoldon`, used by default
+from the workspace root) and the admin dashboard (`paintball-alfoldon-dashboard`, in
+`apps/paintball-alfoldon-dashboard`). Node.js `^22.22.3`, `^24.15.0` or `>=26` is required.
 
 ## Quick start
 
 ```bash
 npm install          # also generates src/environments/environment.ts (see "Configuration")
+npm test             # unit tests of both apps (Vitest)
+```
+
+Public site:
+
+```bash
 npm start            # dev server on http://localhost:4200
 npm run build        # production build + prerender → dist/paintball_alfoldon
-npm test             # unit tests (Vitest)
 npm run serve:ssr:paintball_alfoldon   # serve the built SSR app on :4000
 ```
+
+Admin dashboard (expects the backend on http://localhost:8080):
+
+```bash
+npm run start:dashboard      # dev server on http://localhost:4300
+npm run build:dashboard      # production build → dist/apps/paintball-alfoldon-dashboard
+npm run test:dashboard       # dashboard unit tests only
+npm run serve:ssr:dashboard  # serve the built SSR app (uses PORT, default 4000)
+```
+
+## Allowed hosts
+
+The SSR servers answer requests for hosts that are not on the allowlist with `400 Bad Request`.
+`angular.json` only allows `localhost` for now (`security.allowedHosts` of each project), so add
+the production domain before deploying, or set `NG_ALLOWED_HOSTS` on the server. See
+<https://angular.dev/best-practices/security#preventing-server-side-request-forgery-ssrf>.
 
 ## Configuration (environment variables)
 

@@ -13,7 +13,11 @@
     "watch": "ng build --watch --configuration development",
     "pretest": "npm run env",
     "test": "ng test",
-    "serve:ssr:paintball_alfoldon": "node dist/paintball_alfoldon/server/server.mjs"
+    "serve:ssr:paintball_alfoldon": "node dist/paintball_alfoldon/server/server.mjs",
+    "start:dashboard": "ng serve paintball-alfoldon-dashboard",
+    "build:dashboard": "ng build paintball-alfoldon-dashboard",
+    "test:dashboard": "ng test paintball-alfoldon-dashboard",
+    "serve:ssr:dashboard": "node dist/apps/paintball-alfoldon-dashboard/server/server.mjs"
   },
   "private": true,
   "packageManager": "npm@10.9.2",
