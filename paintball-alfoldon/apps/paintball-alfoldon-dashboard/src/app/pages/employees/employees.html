@@ -30,7 +30,7 @@
       <td class="name">{{ e.name }}</td>
       <td>
         @if (e.phone) {
-          <a [href]="'tel:' + e.phone">{{ e.phone }}</a>
+          <a [href]="'tel:' + e.phone" style="white-space: nowrap">{{ e.phone }}</a>
         } @else {
           <span class="muted">–</span>
         }

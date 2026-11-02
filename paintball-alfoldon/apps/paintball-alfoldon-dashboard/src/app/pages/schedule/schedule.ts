@@ -120,8 +120,10 @@ export class SchedulePage {
   }
 
   protected pick(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    if (value) this.setDate(value);
+    const input = event.target as HTMLInputElement;
+    if (input.value) this.setDate(input.value);
+    // Clearing the field picks no day, so it goes back to showing the current one.
+    else input.value = this.date();
   }
 
   protected setDate(date: string): void {

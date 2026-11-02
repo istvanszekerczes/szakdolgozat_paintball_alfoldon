@@ -129,7 +129,8 @@
   font-size: 11px;
   color: var(--accent);
 }
-.ev span {
+.ev span,
+.ev strong {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

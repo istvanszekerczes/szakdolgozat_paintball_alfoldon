@@ -61,6 +61,7 @@
                 [style.left.%]="p.left"
                 [style.width]="'calc(' + p.width + '% - 4px)'"
                 [attr.aria-label]="hm(p.booking.startTime) + ' ' + p.booking.venueName + ', ' + p.booking.customer.name"
+                [attr.title]="hm(p.booking.startTime) + ' ' + p.booking.venueName + ', ' + p.booking.headcount + ' fő, ' + p.booking.customer.name"
                 (click)="selectedId.set(p.booking.id)"
               >
                 <span class="mono">{{ hm(p.booking.startTime) }}–{{ hm(p.booking.endTime) }}</span>
