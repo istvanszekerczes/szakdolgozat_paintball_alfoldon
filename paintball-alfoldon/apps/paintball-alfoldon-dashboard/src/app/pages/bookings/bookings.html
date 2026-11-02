@@ -6,19 +6,19 @@
 <form class="card filters" aria-label="Szűrők" (submit)="$event.preventDefault()">
   <label class="field">
     Állapot
-    <select class="input" [value]="filter().status ?? ''" (change)="setFilter('status', $event)">
-      <option value="">Mind</option>
+    <select class="input" (change)="setFilter('status', $event)">
+      <option value="" [selected]="!filter().status">Mind</option>
       @for (s of statuses; track s) {
-        <option [value]="s">{{ labels[s] }}</option>
+        <option [value]="s" [selected]="s === filter().status">{{ labels[s] }}</option>
       }
     </select>
   </label>
   <label class="field">
     Pálya
-    <select class="input" [value]="filter().venue ?? ''" (change)="setFilter('venue', $event)">
-      <option value="">Mind</option>
+    <select class="input" (change)="setFilter('venue', $event)">
+      <option value="" [selected]="!filter().venue">Mind</option>
       @for (v of venues(); track v.slug) {
-        <option [value]="v.slug">{{ v.name }}</option>
+        <option [value]="v.slug" [selected]="v.slug === filter().venue">{{ v.name }}</option>
       }
     </select>
   </label>
