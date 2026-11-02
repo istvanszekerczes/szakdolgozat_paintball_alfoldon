@@ -152,6 +152,14 @@ export class LocationService {
     return this.locations;
   }
 
+  /** Smallest and largest group any field takes, for headline figures. */
+  getGroupRange(): { min: number; max: number } {
+    return {
+      min: Math.min(...this.locations.map((l) => l.minHeadcount)),
+      max: Math.max(...this.locations.map((l) => l.maxHeadcount)),
+    };
+  }
+
   getLocationById(id: string): PaintballLocation | undefined {
     return this.locations.find(loc => loc.id === id);
   }

@@ -42,7 +42,7 @@ interface Testimonial {
             <span class="fact__num">20+</span><span class="fact__label">év tapasztalat</span>
           </li>
           <li class="fact">
-            <span class="fact__num">2–150+</span><span class="fact__label">fős csoportok</span>
+            <span class="fact__num">{{ groups.min }}–{{ groups.max }}</span><span class="fact__label">fős csoportok</span>
           </li>
           <li class="fact">
             <span class="fact__num">3</span
@@ -139,7 +139,7 @@ interface Testimonial {
             <span class="stat__num">7</span><span class="stat__label">pálya, 6 város</span>
           </div>
           <div class="card stat">
-            <span class="stat__num">2–150<em>+</em></span
+            <span class="stat__num">{{ groups.min }}–{{ groups.max }}</span
             ><span class="stat__label">fős csoportok</span>
           </div>
         </div>
@@ -438,7 +438,9 @@ export class HomeComponent implements OnInit {
   private readonly title = inject(Title);
   private readonly meta = inject(Meta);
 
-  readonly locations = inject(LocationService).getLocations();
+  private readonly locationService = inject(LocationService);
+  readonly locations = this.locationService.getLocations();
+  readonly groups = this.locationService.getGroupRange();
   readonly fieldType = LocationService.fieldType;
 
   readonly activities: Activity[] = [
