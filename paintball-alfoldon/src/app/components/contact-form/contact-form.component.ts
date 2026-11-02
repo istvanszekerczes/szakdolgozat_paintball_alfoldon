@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PHONE_PATTERN } from '../../features/booking/data/booking-rules';
 
 type Field = 'name' | 'email' | 'phone' | 'message';
 
@@ -86,7 +87,11 @@ type Field = 'name' | 'email' | 'phone' | 'message';
                 [attr.aria-describedby]="invalid('phone') ? 'cf-phone-error' : null"
               />
               @if (invalid('phone')) {
-                <p id="cf-phone-error" class="field__error">A telefonszám megadása kötelező.</p>
+                <p id="cf-phone-error" class="field__error">{{
+                    form.controls.phone.hasError('required')
+                      ? 'A telefonszám megadása kötelező.'
+                      : 'Érvénytelen telefonszám.'
+                  }}</p>
               }
             </div>
           </div>
@@ -201,9 +206,9 @@ export class ContactFormComponent {
   private readonly fb = inject(FormBuilder);
 
   readonly form = this.fb.nonNullable.group({
-    name: ['', [Validators.required]],
+    name: ['', [Validators.required, Validators.pattern(/\S/)]],
     email: ['', [Validators.required, Validators.email]],
-    phone: ['', [Validators.required]],
+    phone: ['', [Validators.required, Validators.pattern(PHONE_PATTERN)]],
     message: ['', [Validators.required, Validators.minLength(10)]],
   });
 
