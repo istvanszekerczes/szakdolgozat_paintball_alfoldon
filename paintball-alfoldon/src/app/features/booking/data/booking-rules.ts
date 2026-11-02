@@ -6,8 +6,8 @@
 export const MIN_DAYS_IN_ADVANCE = 7;
 export const MAX_DAYS_IN_ADVANCE = 365;
 export const NOTE_MAX_LENGTH = 1000;
-/** Same pattern as `CreateBookingRequest.phone` on the backend. */
-export const PHONE_PATTERN = /^[+0-9 ()/-]{6,30}$/;
+/** Same pattern as `CreateBookingRequest.phone` on the backend: phone characters, at least 6 digits. */
+export const PHONE_PATTERN = /^(?=(?:\D*\d){6})[+0-9 ()/-]{6,30}$/;
 
 export const PHONE_DISPLAY = '+36 30/977 14 86';
 export const PHONE_HREF = 'tel:+36309771486';

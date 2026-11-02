@@ -165,6 +165,21 @@ class BookingApiIntegrationTest {
     }
 
     @Test
+    void phoneWithoutDigitsIsRefused() throws Exception {
+        String json = bookingJson("10:00").replaceAll("\"phone\"\\s*:\\s*\"[^\"]*\"", "\"phone\":\"((((((()))\"");
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.phone").exists());
+    }
+
+    @Test
+    void fractionalHeadcountIsRefusedInsteadOfRounded() throws Exception {
+        String json = bookingJson("10:00").replaceAll("\"headcount\"\\s*:\\s*\\d+", "\"headcount\":24.5");
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void bookingInsideOneWeekIsRefused() throws Exception {
         String json = bookingJson("10:00").replace(playDate.toString(), playDate.minusDays(10).toString());
         mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(json))

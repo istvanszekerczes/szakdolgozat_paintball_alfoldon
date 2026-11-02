@@ -18,6 +18,6 @@ public record CreateBookingRequest(
         @NotNull(message = "Add meg a létszámot.") @Positive(message = "A létszám legalább 1 fő.") Integer headcount,
         @NotBlank(message = "Add meg a neved.") @Size(max = 200) String name,
         @NotBlank(message = "Add meg az e-mail címed.") @Email(message = "Érvénytelen e-mail cím.") @Size(max = 200) String email,
-        @NotBlank(message = "Add meg a telefonszámod.") @Pattern(regexp = "^[+0-9 ()/-]{6,30}$", message = "Érvénytelen telefonszám.") String phone,
+        @NotBlank(message = "Add meg a telefonszámod.") @Pattern(regexp = "^(?=(?:\\D*\\d){6})[+0-9 ()/-]{6,30}$", message = "Érvénytelen telefonszám.") String phone,
         @Size(max = 1000, message = "A megjegyzés legfeljebb 1000 karakter.") String note) {
 }

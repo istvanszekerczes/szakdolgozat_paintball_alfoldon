@@ -11,6 +11,8 @@ describe('booking rules', () => {
     expect(PHONE_PATTERN.test('06-30/123-4567')).toBe(true);
     expect(PHONE_PATTERN.test('12345')).toBe(false);
     expect(PHONE_PATTERN.test('hívj fel')).toBe(false);
+    expect(PHONE_PATTERN.test('((((((()))')).toBe(false);
+    expect(PHONE_PATTERN.test('        ')).toBe(false);
   });
 
   it('formats dates in Hungarian', () => {
