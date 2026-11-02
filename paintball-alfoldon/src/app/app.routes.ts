@@ -19,7 +19,7 @@ export const routes: Routes = [
   },
   {
     path: 'foglalas',
-    loadComponent: () => import('./pages/booking/booking.component').then(m => m.BookingComponent)
+    loadChildren: () => import('./features/booking/booking.routes').then(m => m.BOOKING_ROUTES)
   },
   {
     path: 'kapcsolat',

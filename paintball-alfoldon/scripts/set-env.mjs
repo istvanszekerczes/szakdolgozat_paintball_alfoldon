@@ -39,6 +39,7 @@ const read = (key) => (process.env[key] ?? fileVars[key] ?? '').trim();
 const env = {
   maptilerApiKey: read('MAPTILER_API_KEY'),
   mapStyleUrl: read('MAP_STYLE_URL'),
+  apiUrl: read('API_URL'),
 };
 
 const banner = [
@@ -53,6 +54,8 @@ const body =
   '  maptilerApiKey: string;\n' +
   '  /** Explicit MapLibre style.json URL. Empty → provider default. */\n' +
   '  mapStyleUrl: string;\n' +
+  '  /** Backend base URL, e.g. https://api.example.hu. Empty → same origin (`/api`, proxied by `ng serve`). */\n' +
+  '  apiUrl: string;\n' +
   '}\n\n' +
   `export const environment: AppEnvironment = ${JSON.stringify(env, null, 2)};\n`;
 

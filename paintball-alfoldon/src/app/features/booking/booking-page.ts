@@ -1,24 +1,24 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { BookingWizard } from './wizard/booking-wizard';
 
 @Component({
-  selector: 'app-booking',
-  standalone: true,
+  selector: 'app-booking-page',
+  imports: [BookingWizard],
   template: `
     <section class="page-header page-header--center">
       <div class="container">
         <span class="eyebrow">Foglalás</span>
         <h1 class="page-header__title">Időpont foglalása</h1>
         <p class="page-header__lead lead">
-          Az online naptárunk fejlesztés alatt áll. Addig is telefonon vagy e-mailben pár perc alatt
-          lefoglalhatod a játékot.
+          Válassz pályát, időpontot és létszámot, és pár perc alatt elküldheted a foglalásod. Inkább
+          beszélnél velünk? Telefonon és e-mailben is foglalhatsz.
         </p>
       </div>
     </section>
 
     <section class="section">
-      <!-- Swap target: this container will host the online booking wizard later -->
-      <div id="booking-system-root" class="container booking">
+      <div class="container booking">
         <div class="notice" role="note">
           <svg
             class="notice__icon"
@@ -40,6 +40,15 @@ import { Meta, Title } from '@angular/platform-browser';
           </p>
         </div>
 
+        <!-- The wizard talks to the API, so it only runs in the browser; the prerendered page shows the placeholder. -->
+        @defer (on idle) {
+          <app-booking-wizard />
+        } @placeholder {
+          <div class="card booking__placeholder" aria-busy="true">Foglalási űrlap betöltése…</div>
+        }
+
+        <h2 class="booking__alt">Inkább telefonon vagy e-mailben?</h2>
+
         <div class="channels">
           <article class="card channel">
             <span class="eyebrow">Telefon</span>
@@ -59,8 +68,8 @@ import { Meta, Title } from '@angular/platform-browser';
         </div>
 
         <p class="booking__hint">
-          Írd meg a tervezett dátumot, a létszámot és a választott pályát – így azonnal pontos
-          ajánlatot tudunk adni.
+          Telefonon vagy e-mailben írd meg a tervezett dátumot, a létszámot és a választott pályát,
+          így azonnal pontos ajánlatot tudunk adni.
         </p>
       </div>
     </section>
@@ -133,6 +142,16 @@ import { Meta, Title } from '@angular/platform-browser';
         margin-top: 0.5rem;
       }
 
+      .booking__placeholder {
+        min-height: 320px;
+        color: var(--fg-3);
+      }
+
+      .booking__alt {
+        margin-top: 1.5rem;
+        font-size: 1.25rem;
+      }
+
       .booking__hint {
         font-size: 0.9375rem;
         text-align: center;
@@ -141,7 +160,7 @@ import { Meta, Title } from '@angular/platform-browser';
     `,
   ],
 })
-export class BookingComponent implements OnInit {
+export class BookingPage implements OnInit {
   private readonly title = inject(Title);
   private readonly meta = inject(Meta);
 
@@ -150,7 +169,7 @@ export class BookingComponent implements OnInit {
     this.meta.updateTag({
       name: 'description',
       content:
-        'Foglald le paintball vagy lézertag időpontodat. Online foglalási rendszerünk hamarosan indul, addig is foglalj közvetlenül telefonon vagy e-mailben.',
+        'Foglald le paintball vagy lézertag időpontodat. Válassz pályát és időpontot, és foglalj online pár perc alatt, vagy keress minket telefonon vagy e-mailben.',
     });
   }
 }

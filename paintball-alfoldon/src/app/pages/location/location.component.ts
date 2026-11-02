@@ -99,7 +99,12 @@ import { LocationService, PaintballLocation } from '../../services/location.serv
 
               <div class="specs-card__cta">
                 <p>Szeretnéd lefoglalni ezt a pályát a csapatodnak?</p>
-                <a routerLink="/foglalas" class="btn btn--primary btn--block">Időpont foglalása</a>
+                <a
+                  routerLink="/foglalas"
+                  [queryParams]="{ palya: loc.id }"
+                  class="btn btn--primary btn--block"
+                  >Foglalás erre a pályára</a
+                >
                 <a routerLink="/kapcsolat" class="btn btn--secondary btn--block"
                   >Árajánlatot kérek</a
                 >
