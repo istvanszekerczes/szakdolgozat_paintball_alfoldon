@@ -10,7 +10,7 @@ from the workspace root) and the admin dashboard (`paintball-alfoldon-dashboard`
 
 ## Features
 
-- Public site: home page with a venue map, a page for each of the seven fields, FAQ, gallery and contact form.
+- Public site: home page with a venue map, a page for each of the seven fields, FAQ, gallery and contact details, and a 404 page.
 - Online booking at `/foglalas`: pick a field, date, free slot and group size, enter contact details, review and send.
 - Admin dashboard: incoming bookings, accept or reject, calendar, day schedule with cars and staff, fields and blocked
   dates, employees, cars.
@@ -73,6 +73,15 @@ so CI can inject keys without a file (e.g. `MAPTILER_API_KEY=… npm run build`)
 To get a MapTiler key: create a free account at <https://cloud.maptiler.com/>, open
 **Account → API keys**, create a key and restrict it to your domain(s).
 
+## Rendering
+
+`src/app/app.routes.server.ts` prerenders every real page. Any other URL renders the 404 page on the server and
+answers with status 404, so production needs the Node server (`dist/paintball_alfoldon/server/server.mjs`) for that.
+A new page must be added to both `app.routes.ts` and `app.routes.server.ts`; a test checks that they match.
+
+Group limits per field live in the database (`V2__seed_venues.sql`), and the wizard enforces them through the API.
+`location.service.ts` holds a copy for the static pages; a test checks that it matches.
+
 ## Booking wizard
 
 `/foglalas` is a five-step wizard: field → date and slot → group → contact → summary. Venue pages link to it
@@ -131,9 +140,9 @@ src/app/
   app.ts / app.html / app.scss   shell: header, venues dropdown, mobile menu, footer
   app.routes.ts                  lazy routes; field pages share LocationComponent via route data
   services/location.service.ts   single source of truth for the seven fields
-  pages/                         home, about, faq, gallery, contact, location
+  pages/                         home, about, faq, gallery, contact, location, not-found
   features/booking/              booking page and wizard: data, steps, done screen
-  components/                    accordion, contact-form, gallery, hungary-map, venue-map
+  components/                    accordion, gallery, hungary-map, venue-map
 src/styles.scss                  design tokens, reset, typography, shared components, map theme
 ```
 
