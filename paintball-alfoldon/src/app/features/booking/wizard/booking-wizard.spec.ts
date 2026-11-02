@@ -168,6 +168,34 @@ describe('BookingWizard', () => {
     expect(el.textContent).toContain('#42');
   });
 
+  it('refuses a fractional headcount and a blank name', async () => {
+    await setup({ palya: 'szeged' });
+    await type('#bw-date', DAY);
+    http.expectOne((r) => r.url.endsWith('/availability')).flush({
+      venueSlug: 'szeged',
+      date: DAY,
+      bookable: true,
+      slots: [{ start: '10:00:00', end: '12:00:00', available: true }],
+    });
+    await fixture.whenStable();
+    await click('10:00');
+    await click('Tovább');
+
+    await type('#bw-headcount', '10.5');
+    await click('Tovább');
+    expect(heading()).toContain('Hányan');
+    expect(el.textContent).toContain('egész szám');
+
+    await type('#bw-headcount', '20');
+    await click('Tovább');
+    await type('#bw-name', '    ');
+    await type('#bw-email', 'teszt@pelda.hu');
+    await type('#bw-phone', '+36 30 123 4567');
+    await click('Tovább');
+    expect(heading()).toContain('Kapcsolattartó');
+    expect(el.textContent).toContain('Add meg a neved.');
+  });
+
   it('sends the visitor back to the slots when the slot was taken meanwhile', async () => {
     await setup({ palya: 'szeged' });
     await type('#bw-date', DAY);
@@ -188,10 +216,16 @@ describe('BookingWizard', () => {
       .expectOne('/api/bookings')
       .flush({ detail: 'Ez az időpont már foglalt.' }, { status: 409, statusText: 'Conflict' });
     await settle();
-    http.expectOne((r) => r.url.endsWith('/availability')).flush({ ...slots, slots: [{ ...slots.slots[0], available: false }] });
+    http.expectOne((r) => r.url.endsWith('/availability')).flush({
+      ...slots,
+      slots: [{ ...slots.slots[0], available: false }, { start: '12:00:00', end: '14:00:00', available: true }],
+    });
     await fixture.whenStable();
 
     expect(heading()).toContain('Mikor jönnétek');
     expect(el.textContent).toContain('Ez az időpont már foglalt.');
+
+    await click('12:00–');
+    expect(el.textContent).not.toContain('Ez az időpont már foglalt.');
   });
 });

@@ -110,6 +110,7 @@ export class BookingWizard {
    */
   private readonly venueSlug = computed(() => this.model().venueSlug);
   private readonly date = computed(() => this.model().date);
+  private readonly startTime = computed(() => this.model().startTime);
   protected readonly venue = computed(() => this.venues.value().find((v) => v.slug === this.venueSlug()));
 
   /** The picked date, once it is inside the bookable window; empty otherwise. */
@@ -142,6 +143,12 @@ export class BookingWizard {
     required(p.startTime, { message: 'Válassz időpontot.' });
 
     required(p.headcount, { message: 'Add meg a létszámot.' });
+    validate(p.headcount, ({ value }) => {
+      const count = value();
+      return count !== null && !Number.isInteger(count)
+        ? { kind: 'wholeNumber', message: 'A létszám egész szám legyen.' }
+        : null;
+    });
     min(p.headcount, () => this.venue()?.minHeadcount ?? 1, {
       message: () => `Ezen a pályán legalább ${this.venue()?.minHeadcount ?? 1} fő játszhat.`,
     });
@@ -151,6 +158,9 @@ export class BookingWizard {
     maxLength(p.note, NOTE_MAX_LENGTH, { message: `A megjegyzés legfeljebb ${NOTE_MAX_LENGTH} karakter.` });
 
     required(p.name, { message: 'Add meg a neved.' });
+    validate(p.name, ({ value }) =>
+      value() && !value().trim() ? { kind: 'blank', message: 'Add meg a neved.' } : null,
+    );
     maxLength(p.name, 200, { message: 'Legfeljebb 200 karakter.' });
     required(p.email, { message: 'Add meg az e-mail címed.' });
     email(p.email, { message: 'Érvénytelen e-mail cím.' });
@@ -176,6 +186,11 @@ export class BookingWizard {
         this.ruleError.set(null);
         if (this.model().startTime) this.form.startTime().reset('');
       });
+    });
+
+    // Picking a slot answers an earlier refusal, so its message must not stay on screen.
+    effect(() => {
+      if (this.startTime()) untracked(() => this.ruleError.set(null));
     });
 
     // `/foglalas?palya=szeged`: preselect the venue once the list has arrived.
