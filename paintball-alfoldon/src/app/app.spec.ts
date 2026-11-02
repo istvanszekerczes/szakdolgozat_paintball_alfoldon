@@ -33,6 +33,26 @@ describe('App', () => {
     expect(el.querySelectorAll('.site-footer [data-venue]').length).toBe(7);
   });
 
+  it('keeps the venue menu open when the trigger is clicked after hovering', () => {
+    const app = TestBed.createComponent(App).componentInstance;
+
+    app.openVenues();
+    app.toggleVenues();
+    expect(app.venuesOpen()).toBe(true);
+
+    app.toggleVenues();
+    expect(app.venuesOpen()).toBe(false);
+  });
+
+  it('toggles the venue menu by keyboard, without a hover', () => {
+    const app = TestBed.createComponent(App).componentInstance;
+
+    app.toggleVenues();
+    expect(app.venuesOpen()).toBe(true);
+    app.toggleVenues();
+    expect(app.venuesOpen()).toBe(false);
+  });
+
   it('toggles the mobile menu and closes it with Escape', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();

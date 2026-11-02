@@ -32,6 +32,7 @@ export class App {
   readonly menuOpen = signal(false);
   /** "Pályák" dropdown in the desktop navigation. */
   readonly venuesOpen = signal(false);
+  private venuesOpenedByHover = false;
 
   constructor() {
     this.router.events
@@ -54,20 +55,27 @@ export class App {
   }
 
   toggleVenues(): void {
+    // A mouse hovers before it clicks; that click must not close what the hover just opened.
+    if (this.venuesOpenedByHover) {
+      this.venuesOpenedByHover = false;
+      return;
+    }
     this.venuesOpen.update((open) => !open);
   }
 
   openVenues(): void {
+    if (!this.venuesOpen()) this.venuesOpenedByHover = true;
     this.venuesOpen.set(true);
   }
 
   closeVenues(): void {
+    this.venuesOpenedByHover = false;
     this.venuesOpen.set(false);
   }
 
   closeAll(): void {
     this.menuOpen.set(false);
-    this.venuesOpen.set(false);
+    this.closeVenues();
   }
 
   /** Close the dropdown when keyboard focus leaves it entirely. */
