@@ -8,6 +8,16 @@ The workspace has two Angular CLI projects: the public site (`paintball_alfoldon
 from the workspace root) and the admin dashboard (`paintball-alfoldon-dashboard`, in
 `apps/paintball-alfoldon-dashboard`). Node.js `^22.22.3`, `^24.15.0` or `>=26` is required.
 
+## Features
+
+- Public site: home page with a venue map, a page for each of the seven fields, FAQ, gallery and contact form.
+- Online booking at `/foglalas`: pick a field, date, free slot and group size, enter contact details, review and send.
+- Admin dashboard: incoming bookings, accept or reject, calendar, day schedule with cars and staff, fields and blocked
+  dates, employees, cars.
+- Backend: Spring Boot REST API with PostgreSQL. It checks every booking rule again, so the frontends can't bypass them.
+
+Screenshots are in `docs/screenshots/`.
+
 ## Quick start
 
 ```bash
@@ -22,6 +32,8 @@ npm start            # dev server on http://localhost:4200
 npm run build        # production build + prerender → dist/paintball_alfoldon
 npm run serve:ssr:paintball_alfoldon   # serve the built SSR app on :4000
 ```
+
+The booking wizard needs the backend on http://localhost:8080 (see "Booking wizard").
 
 Admin dashboard (expects the backend on http://localhost:8080):
 
@@ -53,12 +65,30 @@ regenerate it by hand (for example before a bare `ng serve`).
 | ------------------ | ------------------------------------------------------------------------------------------- |
 | `MAPTILER_API_KEY` | Optional. Switches the basemap to MapTiler's `dataviz-dark` style (still recolored black).  |
 | `MAP_STYLE_URL`    | Optional. Any MapLibre-compatible `style.json` URL; overrides both defaults.                |
+| `API_URL`          | Optional. Backend base URL for the booking wizard, without a trailing slash. See below.     |
 
 Copy `.env.example` to `.env` to get started. Real environment variables win over `.env` values,
 so CI can inject keys without a file (e.g. `MAPTILER_API_KEY=… npm run build`).
 
 To get a MapTiler key: create a free account at <https://cloud.maptiler.com/>, open
 **Account → API keys**, create a key and restrict it to your domain(s).
+
+## Booking wizard
+
+`/foglalas` is a five-step wizard: field → date and slot → group → contact → summary. Venue pages link to it
+with `?palya=<slug>`, which preselects the field and starts on the date step. The code is in
+`src/app/features/booking/`. One Signal Form holds the whole booking, and each step validates its own fields
+before moving on. The page shell is prerendered, and the wizard itself loads in the browser through `@defer`.
+
+It uses three public endpoints: `GET /api/venues`, `GET /api/venues/{slug}/availability?date=` and
+`POST /api/bookings`. Refusals come back as ProblemDetail: 400 (with an `errors` map per field), 409 (slot taken)
+and 422 (a booking rule, e.g. less than a week ahead). The wizard sends the visitor to the step that can fix them.
+
+**Reaching the backend:**
+
+- In development, `proxy.conf.json` makes `ng serve` forward `/api` to http://localhost:8080, so `API_URL` stays empty.
+- In production, the proxy doesn't exist. Either set `API_URL` at build time, with the site's origin allowed in the
+  backend's `CORS_PUBLIC_ORIGINS`, or route `/api` to the backend on the same domain with a reverse proxy.
 
 ## Map architecture
 
@@ -101,7 +131,8 @@ src/app/
   app.ts / app.html / app.scss   shell: header, venues dropdown, mobile menu, footer
   app.routes.ts                  lazy routes; field pages share LocationComponent via route data
   services/location.service.ts   single source of truth for the seven fields
-  pages/                         home, about, faq, gallery, booking, contact, location
+  pages/                         home, about, faq, gallery, contact, location
+  features/booking/              booking page and wizard: data, steps, done screen
   components/                    accordion, contact-form, gallery, hungary-map, venue-map
 src/styles.scss                  design tokens, reset, typography, shared components, map theme
 ```
