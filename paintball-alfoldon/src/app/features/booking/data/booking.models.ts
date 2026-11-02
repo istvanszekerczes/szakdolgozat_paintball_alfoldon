@@ -51,7 +51,7 @@ export interface CreateBookingRequest {
   note: string | null;
 }
 
-export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'REJECTED' | 'CANCELLED';
+export type BookingStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
 
 export interface BookingCreated {
   id: number;
