@@ -41,6 +41,8 @@ public final class ScheduleTestData {
         booking.setId(id);
         booking.setVenue(venue);
         booking.setCustomer(customer);
+        booking.setContactName(customer.getName());
+        booking.setContactPhone(customer.getPhone());
         booking.setPlayDate(date);
         booking.setStartTime(LocalTime.parse(start));
         booking.setEndTime(LocalTime.parse(end));

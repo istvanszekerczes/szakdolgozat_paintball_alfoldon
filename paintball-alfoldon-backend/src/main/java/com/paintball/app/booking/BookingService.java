@@ -61,6 +61,8 @@ public class BookingService {
         Booking booking = new Booking();
         booking.setVenue(venue);
         booking.setCustomer(findOrCreateCustomer(request, now));
+        booking.setContactName(request.name().trim());
+        booking.setContactPhone(request.phone().trim());
         booking.setPlayDate(request.date());
         booking.setStartTime(request.startTime());
         booking.setEndTime(rules.slotEnd(request.startTime()));

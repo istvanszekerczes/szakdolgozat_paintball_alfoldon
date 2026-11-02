@@ -48,6 +48,13 @@ public class Booking {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    /** As given on this booking; the customer row only holds the latest details. */
+    @Column(name = "contact_name", nullable = false, length = 200)
+    private String contactName;
+
+    @Column(name = "contact_phone", nullable = false, length = 30)
+    private String contactPhone;
+
     @Column(name = "play_date", nullable = false)
     private LocalDate playDate;
 

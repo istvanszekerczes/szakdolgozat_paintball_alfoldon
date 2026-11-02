@@ -26,7 +26,7 @@ public record AdminBookingResponse(Long id, String venueSlug, String venueName, 
         return new AdminBookingResponse(booking.getId(), booking.getVenue().getSlug(), booking.getVenue().getName(),
                 booking.getPlayDate(), booking.getStartTime(), booking.getEndTime(), booking.getHeadcount(),
                 booking.getNote(), booking.getStatus(),
-                new Customer(customer.getName(), customer.getEmail(), customer.getPhone()),
+                new Customer(booking.getContactName(), customer.getEmail(), booking.getContactPhone()),
                 booking.getCreatedAt(), booking.getUpdatedAt(),
                 car == null ? null : new CarRef(car.getId(), car.getPlate(), car.getSeats()),
                 booking.getEmployees().stream()

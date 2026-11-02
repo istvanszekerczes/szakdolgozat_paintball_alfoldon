@@ -143,6 +143,8 @@ class BookingServiceTest {
         assertThat(booking.getCustomer()).isSameAs(existing);
         assertThat(existing.getName()).isEqualTo("Kiss Béla");
         assertThat(existing.getPhone()).isEqualTo("+36 30 123 4567");
+        assertThat(booking.getContactName()).isEqualTo("Kiss Béla");
+        assertThat(booking.getContactPhone()).isEqualTo("+36 30 123 4567");
     }
 
     @Test

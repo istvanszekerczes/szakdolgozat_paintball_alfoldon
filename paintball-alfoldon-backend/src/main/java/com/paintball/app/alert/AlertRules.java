@@ -56,12 +56,12 @@ public final class AlertRules {
             if (b.getStatus() == BookingStatus.PENDING) {
                 if (b.getPlayDate().isBefore(assignLimit)) {
                     out.add(new Alert(Type.PENDING_SOON, Severity.DANGER, "Közeli, még függő foglalás",
-                            b.getCustomer().getName() + ", " + when + ". A játékig kevesebb mint egy hét van.",
+                            b.getContactName() + ", " + when + ". A játékig kevesebb mint egy hét van.",
                             b.getId(), b.getPlayDate()));
                 } else if (b.getCreatedAt().plus(LONG_PENDING).isBefore(now)) {
                     long hours = Duration.between(b.getCreatedAt(), now).toHours();
                     out.add(new Alert(Type.LONG_PENDING, Severity.WARN, "Régóta függő foglalás",
-                            b.getCustomer().getName() + ", " + when + ". " + hours / 24 + " napja vár döntésre.",
+                            b.getContactName() + ", " + when + ". " + hours / 24 + " napja vár döntésre.",
                             b.getId(), b.getPlayDate()));
                 }
             }

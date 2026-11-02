@@ -165,6 +165,22 @@ class BookingApiIntegrationTest {
     }
 
     @Test
+    void aLaterBookingWithTheSameEmailKeepsEarlierNamesAndPhones() throws Exception {
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(bookingJson("10:00")))
+                .andExpect(status().isCreated());
+        String later = bookingJson("12:00").replace("Kiss Béla", "Nagy Éva").replace("+36 30 123 4567", "+36 20 999 8888");
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(later))
+                .andExpect(status().isCreated());
+
+        mvc.perform(get("/api/admin/bookings").header("Authorization", "Bearer " + login()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.startTime == '10:00:00')].customer.name").value("Kiss Béla"))
+                .andExpect(jsonPath("$[?(@.startTime == '10:00:00')].customer.phone").value("+36 30 123 4567"))
+                .andExpect(jsonPath("$[?(@.startTime == '12:00:00')].customer.name").value("Nagy Éva"))
+                .andExpect(jsonPath("$[?(@.startTime == '12:00:00')].customer.phone").value("+36 20 999 8888"));
+    }
+
+    @Test
     void phoneWithoutDigitsIsRefused() throws Exception {
         String json = bookingJson("10:00").replaceAll("\"phone\"\\s*:\\s*\"[^\"]*\"", "\"phone\":\"((((((()))\"");
         mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(json))
@@ -176,7 +192,15 @@ class BookingApiIntegrationTest {
     void fractionalHeadcountIsRefusedInsteadOfRounded() throws Exception {
         String json = bookingJson("10:00").replaceAll("\"headcount\"\\s*:\\s*\\d+", "\"headcount\":24.5");
         mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(json))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail").value("Hibás adatok."));
+    }
+
+    @Test
+    void malformedJsonGetsTheUsualErrorFormat() throws Exception {
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content("{nem json"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail").value("Hibás adatok."));
     }
 
     @Test

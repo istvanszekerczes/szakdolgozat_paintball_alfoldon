@@ -6,12 +6,19 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /** Turns exceptions into RFC 9457 problem responses the frontends can show directly. */
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+    /** Unreadable JSON, or a value of the wrong type such as 10.5 people. */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ProblemDetail unreadable(HttpMessageNotReadableException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Hibás adatok.");
+    }
 
     @ExceptionHandler(NotFoundException.class)
     public ProblemDetail notFound(NotFoundException ex) {
