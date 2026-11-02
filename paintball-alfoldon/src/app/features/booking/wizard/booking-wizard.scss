@@ -112,4 +112,8 @@ button.progress__btn {
   .is-current .progress__label {
     display: inline;
   }
+
+  .progress__item.is-current {
+    flex-grow: 3;
+  }
 }
