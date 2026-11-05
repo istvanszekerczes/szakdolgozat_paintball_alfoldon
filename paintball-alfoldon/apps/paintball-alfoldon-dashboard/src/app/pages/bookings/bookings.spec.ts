@@ -36,4 +36,23 @@ describe('BookingsPage', () => {
     expect(selects[0].value).toBe('ACCEPTED');
     expect(selects[1].value).toBe('szeged');
   });
+
+  it('keeps the clear button in place, disabled until a filter is set', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+    });
+    const fixture = TestBed.createComponent(BookingsPage);
+    const http = TestBed.inject(HttpTestingController);
+    TestBed.tick();
+    http.match(() => true).forEach((req) => req.flush([]));
+    await fixture.whenStable();
+    const button = () => fixture.nativeElement.querySelector('button.clear') as HTMLButtonElement;
+    expect(button().disabled).toBe(true);
+
+    fixture.componentRef.setInput('status', 'PENDING');
+    TestBed.tick();
+    http.match(() => true).forEach((req) => req.flush([]));
+    await fixture.whenStable();
+    expect(button().disabled).toBe(false);
+  });
 });

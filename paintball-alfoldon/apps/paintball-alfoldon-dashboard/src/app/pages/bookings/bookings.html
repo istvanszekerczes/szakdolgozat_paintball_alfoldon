@@ -30,9 +30,8 @@
     Eddig
     <input class="input" type="date" [value]="filter().to ?? ''" (change)="setFilter('to', $event)" />
   </label>
-  @if (hasFilter()) {
-    <button class="btn btn-ghost clear" type="button" (click)="clearFilters()">Szűrők törlése</button>
-  }
+  <!-- Always rendered (disabled when unused) so the dropdowns keep their width when a filter is set. -->
+  <button class="btn btn-ghost clear" type="button" [disabled]="!hasFilter()" (click)="clearFilters()">Szűrők törlése</button>
 </form>
 
 @if (error()) {

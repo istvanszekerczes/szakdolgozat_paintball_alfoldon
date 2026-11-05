@@ -22,8 +22,11 @@
 }
 .filters .field {
   flex: 1 1 160px;
+  // Without this a select grows to fit its longest option (e.g. a newly seen venue name).
+  min-width: 0;
 }
 .clear {
+  flex: 0 0 auto;
   min-height: 42px;
 }
 
