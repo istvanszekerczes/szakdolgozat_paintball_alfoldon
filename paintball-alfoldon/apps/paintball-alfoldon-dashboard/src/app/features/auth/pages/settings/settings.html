@@ -1,0 +1,36 @@
+<header class="page-head">
+  <div>
+    <h1>Beállítások</h1>
+    <p class="muted">Bejelentkezve: {{ auth.username() }}</p>
+  </div>
+</header>
+
+<form class="card box" aria-labelledby="jelszo-cim" (submit)="submit($event)">
+  <h2 id="jelszo-cim">Jelszócsere</h2>
+  <label class="field">
+    Jelenlegi jelszó
+    <input class="input" type="password" autocomplete="current-password" required [value]="current()" (input)="current.set(value($event))" />
+  </label>
+  <label class="field">
+    Új jelszó (legalább 8 karakter)
+    <input class="input" type="password" autocomplete="new-password" minlength="8" required [value]="next()" (input)="next.set(value($event))" />
+  </label>
+  <label class="field">
+    Új jelszó még egyszer
+    <input class="input" type="password" autocomplete="new-password" required [value]="repeat()" (input)="repeat.set(value($event))" />
+  </label>
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+  @if (done()) {
+    <p class="ok" role="status">A jelszó megváltozott. Legközelebb már az újjal lépj be.</p>
+  }
+  <button class="btn btn-primary" type="submit" [disabled]="busy() || !current() || !next() || !repeat()">
+    {{ busy() ? 'Mentés…' : 'Jelszó módosítása' }}
+  </button>
+</form>
+
+<section class="card box">
+  <h2>Megjelenés</h2>
+  <p class="muted">Világos vagy sötét mód: a jobb felső sarokban lévő gombbal váltható, a böngésző megjegyzi.</p>
+</section>

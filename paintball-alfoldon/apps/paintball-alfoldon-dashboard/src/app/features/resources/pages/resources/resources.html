@@ -1,0 +1,44 @@
+<header class="page-head">
+  <div>
+    <h1>Erőforrások</h1>
+    <p class="muted">Autók · {{ loading() ? 'Betöltés…' : cars().length + ' autó' }}</p>
+  </div>
+  <button class="btn btn-primary" type="button" (click)="openNew()">+ Új autó</button>
+</header>
+
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}
+
+<app-data-table label="Autók listája" [columns]="columns" [rows]="cars().length" [loading]="loading()" [minWidth]="480" emptyText="Még nincs autó felvéve.">
+  @for (c of cars(); track c.id) {
+    <tr [class.inactive]="!c.active">
+      <td class="mono plate">{{ c.plate }}</td>
+      <td class="num" data-label="Férőhely">{{ c.seats }}</td>
+      <td><app-status-badge [label]="c.active ? 'Aktív' : 'Inaktív'" [tone]="c.active ? 'ok' : 'muted'" /></td>
+      <td class="actions-cell"><button class="btn btn-ghost btn-sm" type="button" (click)="openEdit(c)">Szerkesztés</button></td>
+    </tr>
+  }
+</app-data-table>
+
+<section class="card soon">
+  <h2>Felszerelés-készlet</h2>
+  <p class="muted">Hamarosan: puskák, maszkok, palackok készlete és a palack-küszöb figyelmeztetés.</p>
+</section>
+
+<app-form-dialog [open]="formOpen()" [title]="editing() ? 'Autó szerkesztése' : 'Új autó'" [busy]="busy()" [error]="formError()" (save)="save()" (closed)="formOpen.set(false)">
+  <div class="form-row">
+    <label class="field">
+      Rendszám
+      <input class="input mono" required maxlength="20" autocomplete="off" placeholder="ABC-123" [value]="form().plate" (input)="set('plate', value($event))" />
+    </label>
+    <label class="field">
+      Férőhely (sofőrrel)
+      <input class="input" type="number" min="1" max="60" required [value]="form().seats" (input)="set('seats', +value($event))" />
+    </label>
+  </div>
+  <label class="check">
+    <input type="checkbox" [checked]="form().active" (change)="set('active', $any($event.target).checked)" />
+    Aktív (beosztható)
+  </label>
+</app-form-dialog>

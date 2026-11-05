@@ -1,0 +1,61 @@
+<header class="page-head">
+  <div>
+    <h1>Beosztás</h1>
+    <p class="muted">{{ title() }}</p>
+  </div>
+</header>
+
+<div class="card toolbar">
+  <button class="btn btn-ghost" type="button" aria-label="Előző nap" (click)="go(-1)">‹</button>
+  <label class="field">
+    <span class="sr-only">Nap</span>
+    <input class="input" type="date" [value]="date()" (change)="pick($event)" />
+  </label>
+  <button class="btn btn-ghost" type="button" aria-label="Következő nap" (click)="go(1)">›</button>
+  <button class="btn btn-ghost" type="button" (click)="setDate(todayIso)">Ma</button>
+  <span class="muted note">Kiírások (műszakvállalás): hamarosan</span>
+</div>
+
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}
+
+<section class="card" aria-labelledby="idovonal-cim">
+  <div class="card-head"><h2 id="idovonal-cim">Autók</h2></div>
+  @if (schedule(); as s) {
+    <app-car-timeline [schedule]="s" />
+  } @else {
+    <p class="muted">Betöltés…</p>
+  }
+</section>
+
+<div class="cols">
+  <section class="card games" aria-labelledby="jatekok-cim">
+    <div class="card-head">
+      <h2 id="jatekok-cim">Elfogadott játékok</h2>
+      <span class="muted small">{{ games().length }} játék</span>
+    </div>
+    @for (g of games(); track g.id) {
+      <article class="game">
+        <div class="game-head">
+          <span class="mono time">{{ hm(g.startTime) }}–{{ hm(g.endTime) }}</span>
+          <div class="grow">
+            <strong>{{ g.venueName }}</strong>
+            <span class="muted small">{{ g.customer.name }} · {{ g.headcount }} fő</span>
+          </div>
+          <a class="link" [routerLink]="['/foglalasok', g.id]">Részletek →</a>
+        </div>
+        <app-assignment-panel [booking]="g" (updated)="onAssigned($event)" />
+      </article>
+    } @empty {
+      <p class="empty">{{ loading() ? 'Betöltés…' : 'Ezen a napon nincs elfogadott játék.' }}</p>
+    }
+  </section>
+
+  <section class="card" aria-labelledby="dolgozok-cim">
+    <div class="card-head"><h2 id="dolgozok-cim">Ki dolgozik</h2></div>
+    @if (schedule(); as s) {
+      <app-staff-today [schedule]="s" />
+    }
+  </section>
+</div>

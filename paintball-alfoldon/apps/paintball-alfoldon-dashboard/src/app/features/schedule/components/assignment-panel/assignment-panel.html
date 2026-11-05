@@ -1,0 +1,35 @@
+<fieldset class="panel" [disabled]="busy()">
+  <legend>Beosztás</legend>
+  <label class="field">
+    Autó
+    <!-- [selected] per option, not [value] on the select: the options arrive after the booking. -->
+    <select class="input" (change)="carId.set(num($event))">
+      <option value="" [selected]="carId() === null">— nincs autó —</option>
+      @for (c of carOptions(); track c.id) {
+        <option [value]="c.id" [selected]="c.id === carId()">{{ c.plate }} · {{ c.seats }} hely{{ c.active ? '' : ' (inaktív)' }}</option>
+      }
+    </select>
+  </label>
+  <div class="field">
+    Dolgozók
+    <div class="staff">
+      @for (e of employeeOptions(); track e.id) {
+        <label class="check">
+          <input type="checkbox" [checked]="employeeIds().has(e.id)" (change)="toggle(e.id)" />
+          {{ e.name }} <span class="muted small">{{ labels[e.employmentType] }}</span>
+        </label>
+      } @empty {
+        <span class="muted small">{{ loading() ? 'Betöltés…' : 'Még nincs alkalmazott felvéve.' }}</span>
+      }
+    </div>
+  </div>
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+  @if (saved()) {
+    <p class="ok small" role="status">Beosztás mentve.</p>
+  }
+  <button class="btn btn-primary" type="button" [disabled]="!dirty()" (click)="save()">
+    {{ busy() ? 'Mentés…' : 'Beosztás mentése' }}
+  </button>
+</fieldset>

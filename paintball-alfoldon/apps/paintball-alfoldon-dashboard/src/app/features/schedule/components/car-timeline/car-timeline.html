@@ -1,0 +1,40 @@
+<div class="tl" role="list" aria-label="Autók napi útvonala">
+  <div class="row axis" aria-hidden="true">
+    <span></span>
+    <div class="track">
+      @for (h of hours; track h) {
+        <span class="tick mono" [style.left.%]="((h - first) / (last - first)) * 100">{{ h }}</span>
+      }
+    </div>
+  </div>
+  @for (car of rows(); track car.carId) {
+    <div class="row" role="listitem">
+      <span class="plate mono">{{ car.plate }}</span>
+      <div class="track lane">
+        @for (s of car.bars; track $index) {
+          @if (s.type === 'GAME') {
+            <a class="seg seg-GAME" [routerLink]="['/foglalasok', s.bookingId]" [style.left.%]="s.left" [style.width.%]="s.width" [title]="s.title">{{ s.venueName }}</a>
+          } @else {
+            <span class="seg" [class]="'seg seg-' + s.type" [style.left.%]="s.left" [style.width.%]="s.width" [title]="s.title"></span>
+          }
+        }
+        @if (!car.bars.length) {
+          <span class="free muted">szabad</span>
+        }
+        @if (nowLeft() !== null) {
+          <span class="now" [style.left.%]="nowLeft()"></span>
+        }
+      </div>
+    </div>
+  } @empty {
+    <p class="muted none">Nincs még autó felvéve (Erőforrások → Autók).</p>
+  }
+</div>
+<div class="legend muted">
+  @for (t of legend; track t) {
+    <span><i [class]="'seg-' + t"></i>{{ labels[t] }}</span>
+  }
+  @if (nowLeft() !== null) {
+    <span><i class="now-key"></i>most</span>
+  }
+</div>
