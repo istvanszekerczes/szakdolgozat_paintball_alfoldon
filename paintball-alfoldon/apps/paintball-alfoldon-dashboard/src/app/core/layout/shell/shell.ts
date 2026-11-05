@@ -1,4 +1,13 @@
-import { Component, DOCUMENT, OnInit, PLATFORM_ID, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  DOCUMENT,
+  OnInit,
+  PLATFORM_ID,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
@@ -27,7 +36,7 @@ interface NavItem {
 export class Shell implements OnInit {
   protected authService = inject(AuthService);
   private bookingService = inject(BookingService);
-  private readonly document = inject(DOCUMENT);
+  private document = inject(DOCUMENT);
   private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
 
   protected readonly menuOpen = signal(false);

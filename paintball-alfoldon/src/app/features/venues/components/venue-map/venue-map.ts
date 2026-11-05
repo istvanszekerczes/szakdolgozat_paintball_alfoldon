@@ -30,7 +30,6 @@ const VENUE_ZOOM = 15;
 /** Single-venue map with a labelled pin, used on the field detail pages. */
 @Component({
   selector: 'app-venue-map',
-  standalone: true,
   templateUrl: './venue-map.html',
   styleUrl: './venue-map.scss',
 })
@@ -39,7 +38,7 @@ export class VenueMap implements AfterViewInit {
   readonly status = signal<'loading' | 'ready' | 'error'>('loading');
 
   private readonly mapContainer = viewChild.required<ElementRef<HTMLDivElement>>('mapContainer');
-  private readonly platformId = inject(PLATFORM_ID);
+  private platformId = inject(PLATFORM_ID);
 
   private map?: MapLibreMap;
   private marker?: Marker;

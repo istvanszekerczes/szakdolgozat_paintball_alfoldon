@@ -10,7 +10,9 @@
       >
         <span class="venue__head">
           <span class="venue__city">{{ venue.city }}</span>
-          <span class="pill" [class.pill--accent]="venue.indoor">{{ venue.indoor ? 'Fedett' : 'Szabadtéri' }}</span>
+          <span class="pill" [class.pill--accent]="venue.indoor">{{
+            venue.indoor ? 'Fedett' : 'Szabadtéri'
+          }}</span>
         </span>
         <span class="venue__name">{{ venue.name }}</span>
         <span class="venue__meta mono">{{ venue.minHeadcount }}–{{ venue.maxHeadcount }} fő</span>

@@ -9,8 +9,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './not-found.scss',
 })
 export class NotFound implements OnInit, OnDestroy {
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
+  private title = inject(Title);
+  private meta = inject(Meta);
 
   ngOnInit(): void {
     this.title.setTitle('Az oldal nem található | Paintball Alföldön');

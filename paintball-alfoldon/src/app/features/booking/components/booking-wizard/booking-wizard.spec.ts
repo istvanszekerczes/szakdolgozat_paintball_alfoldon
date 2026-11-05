@@ -45,7 +45,10 @@ describe('BookingWizard', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         provideRouter([]),
-        { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap(query) } } },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { queryParamMap: convertToParamMap(query) } },
+        },
       ],
     });
     fixture = TestBed.createComponent(BookingWizard);
@@ -59,7 +62,9 @@ describe('BookingWizard', () => {
 
   const heading = () => el.querySelector('h2')?.textContent ?? '';
   const button = (text: string) =>
-    [...el.querySelectorAll<HTMLButtonElement>('button')].find((b) => b.textContent?.includes(text))!;
+    [...el.querySelectorAll<HTMLButtonElement>('button')].find((b) =>
+      b.textContent?.includes(text),
+    )!;
 
   async function type(selector: string, value: string) {
     const input = el.querySelector<HTMLInputElement | HTMLTextAreaElement>(selector)!;
@@ -111,15 +116,17 @@ describe('BookingWizard', () => {
     await setup({ palya: 'szeged' });
 
     await type('#bw-date', DAY);
-    http.expectOne((r) => r.url === '/api/venues/szeged/availability').flush({
-      venueSlug: 'szeged',
-      date: DAY,
-      bookable: true,
-      slots: [
-        { start: '08:00:00', end: '10:00:00', available: false },
-        { start: '10:00:00', end: '12:00:00', available: true },
-      ],
-    });
+    http
+      .expectOne((r) => r.url === '/api/venues/szeged/availability')
+      .flush({
+        venueSlug: 'szeged',
+        date: DAY,
+        bookable: true,
+        slots: [
+          { start: '08:00:00', end: '10:00:00', available: false },
+          { start: '10:00:00', end: '12:00:00', available: true },
+        ],
+      });
     await fixture.whenStable();
     expect(button('08:00–').disabled).toBe(true);
     await click('10:00–');
@@ -171,12 +178,14 @@ describe('BookingWizard', () => {
   it('refuses a fractional headcount and a blank name', async () => {
     await setup({ palya: 'szeged' });
     await type('#bw-date', DAY);
-    http.expectOne((r) => r.url.endsWith('/availability')).flush({
-      venueSlug: 'szeged',
-      date: DAY,
-      bookable: true,
-      slots: [{ start: '10:00:00', end: '12:00:00', available: true }],
-    });
+    http
+      .expectOne((r) => r.url.endsWith('/availability'))
+      .flush({
+        venueSlug: 'szeged',
+        date: DAY,
+        bookable: true,
+        slots: [{ start: '10:00:00', end: '12:00:00', available: true }],
+      });
     await fixture.whenStable();
     await click('10:00');
     await click('Tovább');
@@ -199,7 +208,12 @@ describe('BookingWizard', () => {
   it('sends the visitor back to the slots when the slot was taken meanwhile', async () => {
     await setup({ palya: 'szeged' });
     await type('#bw-date', DAY);
-    const slots = { venueSlug: 'szeged', date: DAY, bookable: true, slots: [{ start: '10:00:00', end: '12:00:00', available: true }] };
+    const slots = {
+      venueSlug: 'szeged',
+      date: DAY,
+      bookable: true,
+      slots: [{ start: '10:00:00', end: '12:00:00', available: true }],
+    };
     http.expectOne((r) => r.url.endsWith('/availability')).flush(slots);
     await fixture.whenStable();
     await click('10:00');
@@ -216,10 +230,15 @@ describe('BookingWizard', () => {
       .expectOne('/api/bookings')
       .flush({ detail: 'Ez az időpont már foglalt.' }, { status: 409, statusText: 'Conflict' });
     await settle();
-    http.expectOne((r) => r.url.endsWith('/availability')).flush({
-      ...slots,
-      slots: [{ ...slots.slots[0], available: false }, { start: '12:00:00', end: '14:00:00', available: true }],
-    });
+    http
+      .expectOne((r) => r.url.endsWith('/availability'))
+      .flush({
+        ...slots,
+        slots: [
+          { ...slots.slots[0], available: false },
+          { start: '12:00:00', end: '14:00:00', available: true },
+        ],
+      });
     await fixture.whenStable();
 
     expect(heading()).toContain('Mikor jönnétek');

@@ -3,13 +3,12 @@ import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-contact',
-  standalone: true,
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })
 export class Contact implements OnInit {
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
+  private title = inject(Title);
+  private meta = inject(Meta);
 
   ngOnInit(): void {
     this.title.setTitle('Kapcsolat és ajánlatkérés | Paintball Alföldön');

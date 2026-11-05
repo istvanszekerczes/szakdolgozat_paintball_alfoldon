@@ -4,14 +4,13 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-about',
-  standalone: true,
   imports: [RouterLink],
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })
 export class About implements OnInit {
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
+  private title = inject(Title);
+  private meta = inject(Meta);
 
   ngOnInit(): void {
     this.title.setTitle('Rólunk – Az Underground Paintball története | Paintball Alföldön');

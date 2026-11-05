@@ -6,9 +6,13 @@
       <p class="error" role="alert">{{ error() }}</p>
     }
     <div class="dialog-actions">
-      <button class="btn btn-ghost" type="button" (click)="dialog.close()">{{ saveLabel() ? cancelLabel() : 'Bezárás' }}</button>
+      <button class="btn btn-ghost" type="button" (click)="dialog.close()">
+        {{ saveLabel() ? cancelLabel() : 'Bezárás' }}
+      </button>
       @if (saveLabel()) {
-        <button class="btn btn-primary" type="submit" [disabled]="busy()">{{ busy() ? 'Mentés…' : saveLabel() }}</button>
+        <button class="btn btn-primary" type="submit" [disabled]="busy()">
+          {{ busy() ? 'Mentés…' : saveLabel() }}
+        </button>
       }
     </div>
   </form>

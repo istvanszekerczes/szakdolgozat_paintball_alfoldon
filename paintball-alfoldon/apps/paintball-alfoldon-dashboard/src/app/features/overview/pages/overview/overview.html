@@ -29,7 +29,9 @@
     <ul class="alerts">
       @for (a of alerts(); track $index) {
         <li class="alert">
-          <span class="sev" [class]="a.severity === 'DANGER' ? 'sev sev-danger' : 'sev sev-warn'">{{ a.severity === 'DANGER' ? 'Sürgős' : 'Figyelem' }}</span>
+          <span class="sev" [class]="a.severity === 'DANGER' ? 'sev sev-danger' : 'sev sev-warn'">{{
+            a.severity === 'DANGER' ? 'Sürgős' : 'Figyelem'
+          }}</span>
           <div class="alert-text">
             <strong>{{ a.title }}</strong>
             <span class="muted">{{ a.detail }}</span>
@@ -52,7 +54,8 @@
       <p class="unassigned small">
         Hiányos beosztás ma:
         @for (u of s.unassigned; track u.bookingId) {
-          <a [routerLink]="['/foglalasok', u.bookingId]">{{ hm(u.startTime) }} {{ u.venueName }}</a>{{ $last ? '' : ', ' }}
+          <a [routerLink]="['/foglalasok', u.bookingId]">{{ hm(u.startTime) }} {{ u.venueName }}</a
+          >{{ $last ? '' : ', ' }}
         }
       </p>
     }
@@ -66,18 +69,37 @@
     <section id="beerkezo" class="card" aria-labelledby="beerkezo-cim">
       <div class="card-head">
         <h2 id="beerkezo-cim">Beérkező foglalások</h2>
-        <a class="link" routerLink="/foglalasok" [queryParams]="{ status: 'PENDING' }">Összes függő →</a>
+        <a class="link" routerLink="/foglalasok" [queryParams]="{ status: 'PENDING' }"
+          >Összes függő →</a
+        >
       </div>
       @for (b of incoming().slice(0, 6); track b.id) {
         <article class="row">
           <div class="grow">
             <a class="title-link" [routerLink]="['/foglalasok', b.id]">{{ b.customer.name }}</a>
-            <span class="muted">{{ longDay(b.date) }} {{ hm(b.startTime) }} · {{ b.venueName }} · {{ b.headcount }} fő</span>
+            <span class="muted"
+              >{{ longDay(b.date) }} {{ hm(b.startTime) }} · {{ b.venueName }} ·
+              {{ b.headcount }} fő</span
+            >
           </div>
           <span class="muted small">{{ relative(b.createdAt) }}</span>
           <div class="actions">
-            <button class="btn btn-ghost" type="button" [disabled]="busyId() === b.id" (click)="decide(b, 'REJECTED')">Elutasítás</button>
-            <button class="btn btn-primary" type="button" [disabled]="busyId() === b.id" (click)="decide(b, 'ACCEPTED')">Elfogadás</button>
+            <button
+              class="btn btn-ghost"
+              type="button"
+              [disabled]="busyId() === b.id"
+              (click)="decide(b, 'REJECTED')"
+            >
+              Elutasítás
+            </button>
+            <button
+              class="btn btn-primary"
+              type="button"
+              [disabled]="busyId() === b.id"
+              (click)="decide(b, 'ACCEPTED')"
+            >
+              Elfogadás
+            </button>
           </div>
         </article>
       } @empty {
@@ -88,7 +110,9 @@
     <section id="mai-jatekok" class="card" aria-labelledby="jatekok-cim">
       <div class="card-head">
         <h2 id="jatekok-cim">Mai játékok</h2>
-        <a class="link" routerLink="/foglalasok" [queryParams]="{ from: today, to: today }">Foglalásokban →</a>
+        <a class="link" routerLink="/foglalasok" [queryParams]="{ from: today, to: today }"
+          >Foglalásokban →</a
+        >
       </div>
       @for (g of todaysGames(); track g.id) {
         <article class="row">
@@ -98,7 +122,9 @@
           </div>
           <div class="grow">
             <strong>{{ g.venueName }}</strong>
-            <span class="muted">{{ g.customer.name }} · {{ g.headcount }} fő · {{ g.customer.phone }}</span>
+            <span class="muted"
+              >{{ g.customer.name }} · {{ g.headcount }} fő · {{ g.customer.phone }}</span
+            >
           </div>
           <a class="link" [routerLink]="['/foglalasok', g.id]">Részletek →</a>
         </article>
@@ -135,8 +161,13 @@
           </div>
           <div class="grow">
             @for (ev of d.events; track ev.id) {
-              <a class="ev" [class.pending]="ev.status === 'PENDING'" [routerLink]="['/foglalasok', ev.id]">
-                <span class="mono">{{ hm(ev.startTime) }}</span> · {{ ev.venueName }} · {{ ev.headcount }} fő
+              <a
+                class="ev"
+                [class.pending]="ev.status === 'PENDING'"
+                [routerLink]="['/foglalasok', ev.id]"
+              >
+                <span class="mono">{{ hm(ev.startTime) }}</span> · {{ ev.venueName }} ·
+                {{ ev.headcount }} fő
               </a>
             } @empty {
               <span class="muted small">Nincs játék</span>

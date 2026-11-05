@@ -34,13 +34,24 @@ export class Venues implements OnInit {
   protected readonly error = computed(() => this.actionError() ?? this.venueService.venuesError());
 
   protected readonly editing = signal<AdminVenue | null>(null);
-  protected readonly form = signal<VenueSettings>({ active: true, travelMinutes: 0, setupMinutes: 45, teardownMinutes: 30 });
+  protected readonly form = signal<VenueSettings>({
+    active: true,
+    travelMinutes: 0,
+    setupMinutes: 45,
+    teardownMinutes: 30,
+  });
   protected readonly busy = signal(false);
   protected readonly formError = signal<string | null>(null);
 
   protected readonly blocksOf = signal<AdminVenue | null>(null);
   protected readonly blocks = this.venueService.blocks;
-  protected readonly blockForm = signal({ date: '', from: '08:00', toDate: '', to: '20:00', reason: '' });
+  protected readonly blockForm = signal({
+    date: '',
+    from: '08:00',
+    toDate: '',
+    to: '20:00',
+    reason: '',
+  });
   protected readonly blockBusy = signal(false);
   /** A refused or invalid block, or else a failed load of the list. */
   private readonly blockActionError = signal<string | null>(null);
@@ -55,7 +66,12 @@ export class Venues implements OnInit {
 
   protected openEdit(v: AdminVenue): void {
     this.editing.set(v);
-    this.form.set({ active: v.active, travelMinutes: v.travelMinutes, setupMinutes: v.setupMinutes, teardownMinutes: v.teardownMinutes });
+    this.form.set({
+      active: v.active,
+      travelMinutes: v.travelMinutes,
+      setupMinutes: v.setupMinutes,
+      teardownMinutes: v.teardownMinutes,
+    });
     this.formError.set(null);
   }
 
@@ -87,7 +103,11 @@ export class Venues implements OnInit {
   }
 
   protected toggleActive(v: AdminVenue): void {
-    if (v.active && !confirm(`A(z) ${v.name} pálya inaktív lesz, és nem lehet rá foglalni. Folytatod?`)) return;
+    if (
+      v.active &&
+      !confirm(`A(z) ${v.name} pálya inaktív lesz, és nem lehet rá foglalni. Folytatod?`)
+    )
+      return;
     const { active, travelMinutes, setupMinutes, teardownMinutes } = v;
     this.actionError.set(null);
     this.venueService
@@ -104,7 +124,11 @@ export class Venues implements OnInit {
 
   protected setBlock(key: 'date' | 'from' | 'toDate' | 'to' | 'reason', event: Event): void {
     const value = (event.target as HTMLInputElement).value;
-    this.blockForm.update((f) => ({ ...f, [key]: value, ...(key === 'date' && !f.toDate ? { toDate: value } : {}) }));
+    this.blockForm.update((f) => ({
+      ...f,
+      [key]: value,
+      ...(key === 'date' && !f.toDate ? { toDate: value } : {}),
+    }));
   }
 
   protected addBlock(): void {
@@ -117,7 +141,11 @@ export class Venues implements OnInit {
     }
     this.blockBusy.set(true);
     this.blockActionError.set(null);
-    const block = { startsAt: `${f.date}T${f.from}:00`, endsAt: `${f.toDate}T${f.to}:00`, reason: f.reason.trim() || null };
+    const block = {
+      startsAt: `${f.date}T${f.from}:00`,
+      endsAt: `${f.toDate}T${f.to}:00`,
+      reason: f.reason.trim() || null,
+    };
     this.venueService.addBlock(v.id, block).subscribe({
       next: () => {
         this.blockBusy.set(false);
@@ -140,9 +168,11 @@ export class Venues implements OnInit {
 
   /** "2026-11-10T09:00:00" → "nov. 10. 9:00" */
   protected when(dateTime: string): string {
-    return new Intl.DateTimeFormat('hu-HU', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(
-      new Date(dateTime),
-    );
+    return new Intl.DateTimeFormat('hu-HU', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    }).format(new Date(dateTime));
   }
-
 }

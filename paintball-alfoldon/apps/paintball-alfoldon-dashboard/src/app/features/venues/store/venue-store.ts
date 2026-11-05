@@ -83,11 +83,15 @@ export const VenueStore = signalStore(
     },
 
     deleteBlock(venueId: number, blockId: number): Observable<void> {
-      return backendCommunicator.deleteVenueBlock(venueId, blockId).pipe(
-        tap(() =>
-          patchState(store, (state) => ({ blocks: state.blocks.filter((b) => b.id !== blockId) })),
-        ),
-      );
+      return backendCommunicator
+        .deleteVenueBlock(venueId, blockId)
+        .pipe(
+          tap(() =>
+            patchState(store, (state) => ({
+              blocks: state.blocks.filter((b) => b.id !== blockId),
+            })),
+          ),
+        );
     },
   })),
 );

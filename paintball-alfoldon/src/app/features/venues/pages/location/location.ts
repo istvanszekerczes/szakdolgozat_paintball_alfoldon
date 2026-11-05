@@ -9,17 +9,16 @@ import { LocationService } from '../../services/location-service';
 
 @Component({
   selector: 'app-location',
-  standalone: true,
   imports: [RouterLink, VenueMap],
   templateUrl: './location.html',
   styleUrl: './location.scss',
 })
 export class LocationPage implements OnInit {
-  private readonly route = inject(ActivatedRoute);
-  private readonly locationService = inject(LocationService);
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
-  private readonly destroyRef = inject(DestroyRef);
+  private route = inject(ActivatedRoute);
+  private locationService = inject(LocationService);
+  private title = inject(Title);
+  private meta = inject(Meta);
+  private destroyRef = inject(DestroyRef);
 
   readonly location = signal<PaintballLocation | null>(null);
   readonly fieldType = LocationService.fieldType;

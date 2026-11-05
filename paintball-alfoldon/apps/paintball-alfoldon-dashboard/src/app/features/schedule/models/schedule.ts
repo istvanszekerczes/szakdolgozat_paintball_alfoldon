@@ -1,7 +1,8 @@
 import { EmploymentType } from '../../employees/models/employee';
 
 /** The computed day plan and the alerts built on it (see ScheduleController.java, AlertController.java). */
-export type SegmentType = 'TRAVEL_OUT' | 'SETUP' | 'GAME' | 'TEARDOWN' | 'TRAVEL_BETWEEN' | 'TRAVEL_HOME';
+export type SegmentType =
+  'TRAVEL_OUT' | 'SETUP' | 'GAME' | 'TEARDOWN' | 'TRAVEL_BETWEEN' | 'TRAVEL_HOME';
 
 export const SEGMENT_LABELS: Record<SegmentType, string> = {
   TRAVEL_OUT: 'Odaút',
@@ -34,7 +35,14 @@ export interface DaySchedule {
     venues: string[];
     excluded: boolean;
   }[];
-  unassigned: { bookingId: number; venueName: string; startTime: string; endTime: string; hasCar: boolean; hasStaff: boolean }[];
+  unassigned: {
+    bookingId: number;
+    venueName: string;
+    startTime: string;
+    endTime: string;
+    hasCar: boolean;
+    hasStaff: boolean;
+  }[];
 }
 
 export interface Alert {

@@ -29,9 +29,14 @@
       </p>
     } @else if (availability(); as day) {
       @if (!day.bookable) {
-        <p class="hint">Erre a napra online nem lehet foglalni. Hívj minket: <a [href]="phoneHref">{{ phone }}</a>.</p>
+        <p class="hint">
+          Erre a napra online nem lehet foglalni. Hívj minket: <a [href]="phoneHref">{{ phone }}</a
+          >.
+        </p>
       } @else if (!hasFreeSlot(day)) {
-        <p class="hint">Ezen a napon minden időpont foglalt. Válassz másik napot, vagy hívj minket.</p>
+        <p class="hint">
+          Ezen a napon minden időpont foglalt. Válassz másik napot, vagy hívj minket.
+        </p>
       } @else {
         <div class="slots__grid">
           @for (slot of day.slots; track slot.start) {

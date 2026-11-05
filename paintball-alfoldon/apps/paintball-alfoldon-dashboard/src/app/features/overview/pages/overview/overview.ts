@@ -4,7 +4,16 @@ import { BookingService } from '../../../bookings/services/booking-service';
 import { ScheduleService } from '../../../schedule/services/schedule-service';
 import { AdminBooking, BookingStatus, STATUS_LABELS } from '../../../bookings/models/booking';
 import { errorMessage } from '../../../../shared/utils/error-message';
-import { addDays, fullDate, hm, hoursSince, longDay, relative, shortDow, today } from '../../../../shared/utils/format';
+import {
+  addDays,
+  fullDate,
+  hm,
+  hoursSince,
+  longDay,
+  relative,
+  shortDow,
+  today,
+} from '../../../../shared/utils/format';
 import { CarTimeline } from '../../../schedule/components/car-timeline/car-timeline';
 import { StaffToday } from '../../../schedule/components/staff-today/staff-today';
 
@@ -51,9 +60,7 @@ export class Overview implements OnInit {
   private readonly pending = this.bookingService.pendingBookings;
   /** Pending and accepted bookings for today and the next 6 days. */
   private readonly week = computed(() =>
-    this.bookingService
-      .bookings()
-      .filter((b) => b.status === 'PENDING' || b.status === 'ACCEPTED'),
+    this.bookingService.bookings().filter((b) => b.status === 'PENDING' || b.status === 'ACCEPTED'),
   );
   /** Computed by the backend (/api/admin/alerts), most severe first. */
   protected readonly alerts = this.scheduleService.alerts;
@@ -88,13 +95,31 @@ export class Overview implements OnInit {
   protected readonly kpis = computed(() => {
     const games = this.todaysGames();
     const weekAccepted = this.week().filter((b) => b.status === 'ACCEPTED');
-    const longPending = this.incoming().filter((b) => hoursSince(b.createdAt) > LONG_PENDING_HOURS).length;
+    const longPending = this.incoming().filter(
+      (b) => hoursSince(b.createdAt) > LONG_PENDING_HOURS,
+    ).length;
     const urgent = this.alerts().filter((a) => a.severity === 'DANGER').length;
     return [
       { label: 'Mai játékok', value: games.length, sub: `${sum(games)} fő`, href: '#mai-jatekok' },
-      { label: 'Beérkező foglalás', value: this.incoming().length, sub: `${longPending} régóta függő`, href: '#beerkezo' },
-      { label: 'Következő 7 nap', value: weekAccepted.length, sub: `elfogadott játék · ${sum(weekAccepted)} fő`, href: '#het' },
-      { label: 'Figyelmet igényel', value: this.alerts().length, sub: `${urgent} sürgős`, href: '#riasztasok', danger: urgent > 0 },
+      {
+        label: 'Beérkező foglalás',
+        value: this.incoming().length,
+        sub: `${longPending} régóta függő`,
+        href: '#beerkezo',
+      },
+      {
+        label: 'Következő 7 nap',
+        value: weekAccepted.length,
+        sub: `elfogadott játék · ${sum(weekAccepted)} fő`,
+        href: '#het',
+      },
+      {
+        label: 'Figyelmet igényel',
+        value: this.alerts().length,
+        sub: `${urgent} sürgős`,
+        href: '#riasztasok',
+        danger: urgent > 0,
+      },
     ];
   });
 

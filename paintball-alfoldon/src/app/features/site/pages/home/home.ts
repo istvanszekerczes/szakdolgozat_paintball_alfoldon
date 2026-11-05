@@ -17,16 +17,15 @@ interface Testimonial {
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [RouterLink, HungaryMap],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
 export class Home implements OnInit {
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
+  private title = inject(Title);
+  private meta = inject(Meta);
 
-  private readonly locationService = inject(LocationService);
+  private locationService = inject(LocationService);
   readonly locations = this.locationService.getLocations();
   readonly groups = this.locationService.getGroupRange();
   readonly fieldType = LocationService.fieldType;

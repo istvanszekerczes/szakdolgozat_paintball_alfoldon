@@ -4,14 +4,13 @@ import { Gallery } from '../../../../shared/components/gallery/gallery';
 
 @Component({
   selector: 'app-gallery-page',
-  standalone: true,
   imports: [Gallery],
   templateUrl: './gallery-page.html',
   styleUrl: './gallery-page.scss',
 })
 export class GalleryPage implements OnInit {
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
+  private title = inject(Title);
+  private meta = inject(Meta);
 
   ngOnInit(): void {
     this.title.setTitle('Galéria – Képek a pályákról | Paintball Alföldön');

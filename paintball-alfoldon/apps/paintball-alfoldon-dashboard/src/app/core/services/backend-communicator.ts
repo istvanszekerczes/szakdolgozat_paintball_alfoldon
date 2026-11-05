@@ -2,11 +2,7 @@ import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { SKIPS_AUTH } from '../interceptors/skips-auth';
 import { LoginResponse } from '../../features/auth/models/auth';
-import {
-  AdminBooking,
-  BookingFilter,
-  BookingStatus,
-} from '../../features/bookings/models/booking';
+import { AdminBooking, BookingFilter, BookingStatus } from '../../features/bookings/models/booking';
 import { Employee, EmployeeInput, Exclusion } from '../../features/employees/models/employee';
 import { Car, CarInput } from '../../features/resources/models/car';
 import { Alert, DaySchedule } from '../../features/schedule/models/schedule';

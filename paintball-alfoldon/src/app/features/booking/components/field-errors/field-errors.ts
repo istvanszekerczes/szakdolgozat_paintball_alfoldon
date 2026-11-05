@@ -12,7 +12,9 @@ export class FieldErrors {
 
   protected readonly message = computed(() => {
     const state = this.field()();
-    return state.touched() && state.invalid() ? (state.errors()[0]?.message ?? 'Hibás érték.') : null;
+    return state.touched() && state.invalid()
+      ? (state.errors()[0]?.message ?? 'Hibás érték.')
+      : null;
   });
 }
 

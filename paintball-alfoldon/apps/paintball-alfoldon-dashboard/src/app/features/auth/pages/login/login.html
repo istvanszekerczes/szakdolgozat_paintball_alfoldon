@@ -13,18 +13,37 @@
 
     <label class="field">
       Felhasználónév
-      <input class="input" name="username" autocomplete="username" required [value]="username()" (input)="username.set(value($event))" />
+      <input
+        class="input"
+        name="username"
+        autocomplete="username"
+        required
+        [value]="username()"
+        (input)="username.set(value($event))"
+      />
     </label>
     <label class="field">
       Jelszó
-      <input class="input" name="password" type="password" autocomplete="current-password" required [value]="password()" (input)="password.set(value($event))" />
+      <input
+        class="input"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        required
+        [value]="password()"
+        (input)="password.set(value($event))"
+      />
     </label>
 
     @if (error()) {
       <p class="error" role="alert">{{ error() }}</p>
     }
 
-    <button class="btn btn-primary submit" type="submit" [disabled]="busy() || !username() || !password()">
+    <button
+      class="btn btn-primary submit"
+      type="submit"
+      [disabled]="busy() || !username() || !password()"
+    >
       {{ busy() ? 'Bejelentkezés…' : 'Bejelentkezés' }}
     </button>
   </form>

@@ -13,9 +13,22 @@
       <div class="track lane">
         @for (s of car.bars; track $index) {
           @if (s.type === 'GAME') {
-            <a class="seg seg-GAME" [routerLink]="['/foglalasok', s.bookingId]" [style.left.%]="s.left" [style.width.%]="s.width" [title]="s.title">{{ s.venueName }}</a>
+            <a
+              class="seg seg-GAME"
+              [routerLink]="['/foglalasok', s.bookingId]"
+              [style.left.%]="s.left"
+              [style.width.%]="s.width"
+              [title]="s.title"
+              >{{ s.venueName }}</a
+            >
           } @else {
-            <span class="seg" [class]="'seg seg-' + s.type" [style.left.%]="s.left" [style.width.%]="s.width" [title]="s.title"></span>
+            <span
+              class="seg"
+              [class]="'seg seg-' + s.type"
+              [style.left.%]="s.left"
+              [style.width.%]="s.width"
+              [title]="s.title"
+            ></span>
           }
         }
         @if (!car.bars.length) {

@@ -10,14 +10,13 @@ interface FaqItem {
 
 @Component({
   selector: 'app-faq-page',
-  standalone: true,
   imports: [Accordion, RouterLink],
   templateUrl: './faq.html',
   styleUrl: './faq.scss',
 })
 export class Faq implements OnInit {
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
+  private title = inject(Title);
+  private meta = inject(Meta);
 
   readonly faqs: FaqItem[] = [
     {

@@ -22,7 +22,10 @@ export function isoDateFromToday(days: number, today = new Date()): string {
 /** Hungarian long date, e.g. `2026. november 12., csütörtök`. */
 export function formatDate(iso: string): string {
   const [y, m, d] = iso.split('-').map(Number);
-  return new Intl.DateTimeFormat('hu-HU', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }).format(
-    new Date(y, m - 1, d),
-  );
+  return new Intl.DateTimeFormat('hu-HU', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long',
+  }).format(new Date(y, m - 1, d));
 }

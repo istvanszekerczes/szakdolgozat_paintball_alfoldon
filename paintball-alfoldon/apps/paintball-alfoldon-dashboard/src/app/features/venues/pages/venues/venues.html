@@ -1,7 +1,13 @@
 <header class="page-head">
   <div>
     <h1>Pályák</h1>
-    <p class="muted">{{ loading() ? 'Betöltés…' : venues().length + ' pálya · az utazási idő a beosztás és az autó-idővonal alapja' }}</p>
+    <p class="muted">
+      {{
+        loading()
+          ? 'Betöltés…'
+          : venues().length + ' pálya · az utazási idő a beosztás és az autó-idővonal alapja'
+      }}
+    </p>
   </div>
 </header>
 
@@ -9,7 +15,13 @@
   <p class="error" role="alert">{{ error() }}</p>
 }
 
-<app-data-table label="Pályák listája" [columns]="columns" [rows]="venues().length" [loading]="loading()" [minWidth]="860">
+<app-data-table
+  label="Pályák listája"
+  [columns]="columns"
+  [rows]="venues().length"
+  [loading]="loading()"
+  [minWidth]="860"
+>
   @for (v of venues(); track v.id) {
     <tr [class.inactive]="!v.active">
       <td>
@@ -21,12 +33,23 @@
       <td>{{ v.indoor ? 'Fedett' : 'Szabadtéri' }}</td>
       <td class="num">{{ v.minHeadcount }}–{{ v.maxHeadcount }} fő</td>
       <td class="num mono" data-label="Út">{{ v.travelMinutes }} perc</td>
-      <td class="num mono" data-label="Ki/elpakolás">{{ v.setupMinutes }} / {{ v.teardownMinutes }} perc</td>
-      <td><app-status-badge [label]="v.active ? 'Foglalható' : 'Inaktív'" [tone]="v.active ? 'ok' : 'muted'" /></td>
+      <td class="num mono" data-label="Ki/elpakolás">
+        {{ v.setupMinutes }} / {{ v.teardownMinutes }} perc
+      </td>
+      <td>
+        <app-status-badge
+          [label]="v.active ? 'Foglalható' : 'Inaktív'"
+          [tone]="v.active ? 'ok' : 'muted'"
+        />
+      </td>
       <td class="actions-cell">
-        <button class="btn btn-ghost btn-sm" type="button" (click)="openBlocks(v)">Zárolások</button>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="openBlocks(v)">
+          Zárolások
+        </button>
         <button class="btn btn-ghost btn-sm" type="button" (click)="openEdit(v)">Idők</button>
-        <button class="btn btn-ghost btn-sm" type="button" (click)="toggleActive(v)">{{ v.active ? 'Inaktiválás' : 'Aktiválás' }}</button>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="toggleActive(v)">
+          {{ v.active ? 'Inaktiválás' : 'Aktiválás' }}
+        </button>
       </td>
     </tr>
   }
@@ -40,19 +63,46 @@
   (save)="save()"
   (closed)="editing.set(null)"
 >
-  <p class="sub">Az út a szegedi bázisról számít, egy irányba. Az alapértéket a koordinátákból becsültük (kb. 60 km/h), nyugodtan pontosítsd.</p>
+  <p class="sub">
+    Az út a szegedi bázisról számít, egy irányba. Az alapértéket a koordinátákból becsültük (kb. 60
+    km/h), nyugodtan pontosítsd.
+  </p>
   <label class="field">
     Út Szegedről (perc)
-    <input class="input" type="number" min="0" max="600" step="5" [value]="form().travelMinutes" (input)="setNum('travelMinutes', $event)" />
+    <input
+      class="input"
+      type="number"
+      min="0"
+      max="600"
+      step="5"
+      [value]="form().travelMinutes"
+      (input)="setNum('travelMinutes', $event)"
+    />
   </label>
   <div class="form-row">
     <label class="field">
       Kipakolás (perc)
-      <input class="input" type="number" min="0" max="240" step="5" [value]="form().setupMinutes" (input)="setNum('setupMinutes', $event)" />
+      <input
+        class="input"
+        type="number"
+        min="0"
+        max="240"
+        step="5"
+        [value]="form().setupMinutes"
+        (input)="setNum('setupMinutes', $event)"
+      />
     </label>
     <label class="field">
       Elpakolás (perc)
-      <input class="input" type="number" min="0" max="240" step="5" [value]="form().teardownMinutes" (input)="setNum('teardownMinutes', $event)" />
+      <input
+        class="input"
+        type="number"
+        min="0"
+        max="240"
+        step="5"
+        [value]="form().teardownMinutes"
+        (input)="setNum('teardownMinutes', $event)"
+      />
     </label>
   </div>
   <label class="check">
@@ -71,21 +121,41 @@
   (save)="addBlock()"
   (closed)="blocksOf.set(null)"
 >
-  <p class="sub">Zárolt időben a nyilvános oldalon nem lehet erre a pályára foglalni, a meglévő foglalások pedig riasztást kapnak.</p>
+  <p class="sub">
+    Zárolt időben a nyilvános oldalon nem lehet erre a pályára foglalni, a meglévő foglalások pedig
+    riasztást kapnak.
+  </p>
   <div class="form-row">
     <label class="field">
       Kezdő nap
-      <input class="input" type="date" [min]="today" [value]="blockForm().date" (change)="setBlock('date', $event)" />
+      <input
+        class="input"
+        type="date"
+        [min]="today"
+        [value]="blockForm().date"
+        (change)="setBlock('date', $event)"
+      />
     </label>
     <label class="field">
       Kezdés
-      <input class="input" type="time" [value]="blockForm().from" (change)="setBlock('from', $event)" />
+      <input
+        class="input"
+        type="time"
+        [value]="blockForm().from"
+        (change)="setBlock('from', $event)"
+      />
     </label>
   </div>
   <div class="form-row">
     <label class="field">
       Utolsó nap
-      <input class="input" type="date" [min]="blockForm().date || today" [value]="blockForm().toDate" (change)="setBlock('toDate', $event)" />
+      <input
+        class="input"
+        type="date"
+        [min]="blockForm().date || today"
+        [value]="blockForm().toDate"
+        (change)="setBlock('toDate', $event)"
+      />
     </label>
     <label class="field">
       Vége
@@ -94,7 +164,13 @@
   </div>
   <label class="field">
     Ok (nem kötelező)
-    <input class="input" maxlength="300" placeholder="karbantartás, rendezvény…" [value]="blockForm().reason" (input)="setBlock('reason', $event)" />
+    <input
+      class="input"
+      maxlength="300"
+      placeholder="karbantartás, rendezvény…"
+      [value]="blockForm().reason"
+      (input)="setBlock('reason', $event)"
+    />
   </label>
 
   <h3>Aktuális zárolások</h3>
@@ -107,7 +183,9 @@
             <span class="muted">{{ b.reason }}</span>
           }
         </div>
-        <button class="btn btn-ghost btn-sm" type="button" (click)="deleteBlock(b)">Feloldás</button>
+        <button class="btn btn-ghost btn-sm" type="button" (click)="deleteBlock(b)">
+          Feloldás
+        </button>
       </li>
     } @empty {
       <li class="muted">Nincs aktuális zárolás.</li>

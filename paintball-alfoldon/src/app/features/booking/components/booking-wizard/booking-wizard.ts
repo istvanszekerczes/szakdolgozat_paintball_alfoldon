@@ -82,9 +82,9 @@ const STEP_OF_FIELD: Record<string, number> = {
   styleUrl: './booking-wizard.scss',
 })
 export class BookingWizard {
-  private readonly bookingService = inject(BookingService);
-  private readonly route = inject(ActivatedRoute);
-  private readonly injector = inject(Injector);
+  private bookingService = inject(BookingService);
+  private route = inject(ActivatedRoute);
+  private injector = inject(Injector);
   private readonly heading = viewChild<ElementRef<HTMLElement>>('stepHeading');
   private readonly doneHeading = viewChild<ElementRef<HTMLElement>>('doneHost');
 
@@ -139,7 +139,8 @@ export class BookingWizard {
           message: `Online legalább ${MIN_DAYS_IN_ADVANCE} nappal előre lehet foglalni. Rövidebb határidőre hívj minket telefonon.`,
         };
       }
-      if (date > this.maxDate) return { kind: 'tooLate', message: 'Erre a dátumra még nem lehet foglalni.' };
+      if (date > this.maxDate)
+        return { kind: 'tooLate', message: 'Erre a dátumra még nem lehet foglalni.' };
       return null;
     });
     required(p.startTime, { message: 'Válassz időpontot.' });
@@ -157,7 +158,9 @@ export class BookingWizard {
     max(p.headcount, () => this.venue()?.maxHeadcount, {
       message: () => `Ezen a pályán legfeljebb ${this.venue()?.maxHeadcount} fő játszhat.`,
     });
-    maxLength(p.note, NOTE_MAX_LENGTH, { message: `A megjegyzés legfeljebb ${NOTE_MAX_LENGTH} karakter.` });
+    maxLength(p.note, NOTE_MAX_LENGTH, {
+      message: `A megjegyzés legfeljebb ${NOTE_MAX_LENGTH} karakter.`,
+    });
 
     required(p.name, { message: 'Add meg a neved.' });
     validate(p.name, ({ value }) =>
@@ -269,7 +272,10 @@ export class BookingWizard {
   }
 
   /** Maps the backend's ProblemDetail answers onto the wizard. */
-  private handleSendError(error: unknown, field: FieldTree<BookingDraft>): ValidationError.WithOptionalFieldTree[] | null {
+  private handleSendError(
+    error: unknown,
+    field: FieldTree<BookingDraft>,
+  ): ValidationError.WithOptionalFieldTree[] | null {
     if (!(error instanceof HttpErrorResponse) || error.status === 0 || error.status >= 500) {
       this.sendFailed.set(true);
       return null;

@@ -42,11 +42,15 @@ export class Bookings {
   /** Venues seen so far, for the venue filter (the venue list endpoint is public-site only). */
   private readonly seenVenues = signal(new Map<string, string>());
   protected readonly venues = computed(() =>
-    [...this.seenVenues()].map(([slug, name]) => ({ slug, name })).sort((a, b) => a.name.localeCompare(b.name, 'hu')),
+    [...this.seenVenues()]
+      .map(([slug, name]) => ({ slug, name }))
+      .sort((a, b) => a.name.localeCompare(b.name, 'hu')),
   );
 
   protected readonly filter = computed<BookingFilter>(() => ({
-    status: STATUSES.includes(this.status() as BookingStatus) ? (this.status() as BookingStatus) : undefined,
+    status: STATUSES.includes(this.status() as BookingStatus)
+      ? (this.status() as BookingStatus)
+      : undefined,
     from: this.from() || undefined,
     to: this.to() || undefined,
     venue: this.venue() || undefined,
@@ -55,7 +59,9 @@ export class Bookings {
   protected readonly hasFilter = computed(() => Object.values(this.filter()).some(Boolean));
 
   protected readonly selectedId = computed(() => Number(this.id()) || null);
-  protected readonly selected = computed(() => this.list().find((b) => b.id === this.selectedId()) ?? null);
+  protected readonly selected = computed(
+    () => this.list().find((b) => b.id === this.selectedId()) ?? null,
+  );
 
   constructor() {
     effect(() => {
@@ -70,7 +76,10 @@ export class Bookings {
 
   protected setFilter(key: keyof BookingFilter, event: Event): void {
     const value = (event.target as HTMLInputElement | HTMLSelectElement).value || null;
-    this.router.navigate(['/foglalasok'], { queryParams: { [key]: value }, queryParamsHandling: 'merge' });
+    this.router.navigate(['/foglalasok'], {
+      queryParams: { [key]: value },
+      queryParamsHandling: 'merge',
+    });
   }
 
   protected clearFilters(): void {

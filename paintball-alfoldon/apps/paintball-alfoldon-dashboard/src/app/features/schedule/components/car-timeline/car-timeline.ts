@@ -32,9 +32,10 @@ export class CarTimeline {
 
   protected readonly first = FIRST_HOUR;
   protected readonly last = LAST_HOUR;
-  protected readonly hours = Array.from({ length: LAST_HOUR - FIRST_HOUR + 1 }, (_, i) => FIRST_HOUR + i).filter(
-    (h) => h % 2 === 1,
-  );
+  protected readonly hours = Array.from(
+    { length: LAST_HOUR - FIRST_HOUR + 1 },
+    (_, i) => FIRST_HOUR + i,
+  ).filter((h) => h % 2 === 1);
   protected readonly labels = SEGMENT_LABELS;
   protected readonly legend: SegmentType[] = ['TRAVEL_OUT', 'SETUP', 'GAME', 'TEARDOWN'];
 

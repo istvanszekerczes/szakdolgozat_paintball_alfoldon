@@ -16,7 +16,11 @@ describe('LocationService', () => {
   const service = () => TestBed.inject(LocationService);
 
   it('has the same group limits as the database', () => {
-    const limits = Object.fromEntries(service().getLocations().map((l) => [l.id, [l.minHeadcount, l.maxHeadcount]]));
+    const limits = Object.fromEntries(
+      service()
+        .getLocations()
+        .map((l) => [l.id, [l.minHeadcount, l.maxHeadcount]]),
+    );
     expect(limits).toEqual(DATABASE_LIMITS);
   });
 

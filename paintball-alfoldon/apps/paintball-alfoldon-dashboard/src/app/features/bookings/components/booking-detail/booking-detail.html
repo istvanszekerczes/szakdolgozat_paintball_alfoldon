@@ -1,7 +1,18 @@
 <div class="card-head">
   <h2>Foglalás #{{ bookingId() }}</h2>
   <button class="icon-btn" type="button" aria-label="Bezárás" (click)="closed.emit()">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      aria-hidden="true"
+    >
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
   </button>
 </div>
 
@@ -13,7 +24,9 @@
   <span class="badge" [class]="'badge st-' + b.status">{{ labels[b.status] }}</span>
   <dl>
     <dt>Időpont</dt>
-    <dd>{{ longDay(b.date) }}, <span class="mono">{{ hm(b.startTime) }}–{{ hm(b.endTime) }}</span></dd>
+    <dd>
+      {{ longDay(b.date) }}, <span class="mono">{{ hm(b.startTime) }}–{{ hm(b.endTime) }}</span>
+    </dd>
     <dt>Pálya</dt>
     <dd>{{ b.venueName }}</dd>
     <dt>Létszám</dt>
@@ -21,9 +34,13 @@
     <dt>Foglaló</dt>
     <dd>{{ b.customer.name }}</dd>
     <dt>E-mail</dt>
-    <dd><a [href]="'mailto:' + b.customer.email">{{ b.customer.email }}</a></dd>
+    <dd>
+      <a [href]="'mailto:' + b.customer.email">{{ b.customer.email }}</a>
+    </dd>
     <dt>Telefon</dt>
-    <dd><a [href]="'tel:' + b.customer.phone">{{ b.customer.phone }}</a></dd>
+    <dd>
+      <a [href]="'tel:' + b.customer.phone">{{ b.customer.phone }}</a>
+    </dd>
     @if (b.note) {
       <dt>Megjegyzés</dt>
       <dd class="note">{{ b.note }}</dd>

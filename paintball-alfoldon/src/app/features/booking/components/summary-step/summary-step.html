@@ -6,7 +6,9 @@
   </div>
   <div class="summary__row">
     <dt>Időpont</dt>
-    <dd>{{ date() }}, <span class="mono">{{ time() }}</span></dd>
+    <dd>
+      {{ date() }}, <span class="mono">{{ time() }}</span>
+    </dd>
     <button type="button" class="btn btn--ghost btn--sm" (click)="edit.emit(1)">Módosítás</button>
   </div>
   <div class="summary__row">

@@ -36,7 +36,8 @@ export const CarStore = signalStore(
           backendCommunicator.loadCars().pipe(
             tapResponse({
               next: (cars) => patchState(store, { cars, carsLoading: false, carsError: null }),
-              error: (err) => patchState(store, { carsLoading: false, carsError: errorMessage(err) }),
+              error: (err) =>
+                patchState(store, { carsLoading: false, carsError: errorMessage(err) }),
             }),
           ),
         ),
@@ -49,7 +50,9 @@ export const CarStore = signalStore(
     /** Creates the car when id is null, otherwise updates it; then reloads the list. */
     saveCar(id: number | null, input: CarInput): Observable<Car> {
       const request =
-        id === null ? backendCommunicator.createCar(input) : backendCommunicator.updateCar(id, input);
+        id === null
+          ? backendCommunicator.createCar(input)
+          : backendCommunicator.updateCar(id, input);
       return request.pipe(tap(() => store.loadCars()));
     },
   })),

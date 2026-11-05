@@ -1,6 +1,12 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { EmployeeService } from '../../services/employee-service';
-import { EMPLOYMENT_LABELS, Employee, EmployeeInput, EmploymentType, Exclusion } from '../../models/employee';
+import {
+  EMPLOYMENT_LABELS,
+  Employee,
+  EmployeeInput,
+  EmploymentType,
+  Exclusion,
+} from '../../models/employee';
 import { errorMessage } from '../../../../shared/utils/error-message';
 import { longDay, today } from '../../../../shared/utils/format';
 import { Column, DataTable } from '../../../../shared/components/data-table/data-table';
@@ -39,7 +45,9 @@ export class Employees implements OnInit {
     () => this.actionError() ?? this.employeeService.employeesError(),
   );
   protected readonly showInactive = signal(false);
-  protected readonly visible = computed(() => this.list().filter((e) => e.active || this.showInactive()));
+  protected readonly visible = computed(() =>
+    this.list().filter((e) => e.active || this.showInactive()),
+  );
   protected readonly inactiveCount = computed(() => this.list().filter((e) => !e.active).length);
 
   // Edit dialog
@@ -73,7 +81,12 @@ export class Employees implements OnInit {
 
   protected openEdit(e: Employee): void {
     this.editing.set(e);
-    this.form.set({ name: e.name, phone: e.phone ?? '', employmentType: e.employmentType, active: e.active });
+    this.form.set({
+      name: e.name,
+      phone: e.phone ?? '',
+      employmentType: e.employmentType,
+      active: e.active,
+    });
     this.formError.set(null);
     this.formOpen.set(true);
   }
@@ -109,7 +122,8 @@ export class Employees implements OnInit {
 
   /** Deactivating replaces deleting: past assignments keep pointing at the employee. */
   protected toggleActive(e: Employee): void {
-    if (e.active && !confirm(`${e.name} inaktív lesz, és nem lehet többé beosztani. Folytatod?`)) return;
+    if (e.active && !confirm(`${e.name} inaktív lesz, és nem lehet többé beosztani. Folytatod?`))
+      return;
     const { id, ...input } = e;
     this.actionError.set(null);
     this.employeeService.saveEmployee(id, { ...input, active: !e.active }).subscribe({
@@ -164,5 +178,4 @@ export class Employees implements OnInit {
       error: (err) => this.exclusionActionError.set(errorMessage(err)),
     });
   }
-
 }

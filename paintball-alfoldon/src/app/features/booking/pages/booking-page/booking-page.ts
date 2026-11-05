@@ -9,8 +9,8 @@ import { BookingWizard } from '../../components/booking-wizard/booking-wizard';
   styleUrl: './booking-page.scss',
 })
 export class BookingPage implements OnInit {
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
+  private title = inject(Title);
+  private meta = inject(Meta);
 
   ngOnInit(): void {
     this.title.setTitle('Időpont foglalás – Paintball és lézertag | Paintball Alföldön');

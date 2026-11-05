@@ -16,7 +16,6 @@ import { LocationService } from './features/venues/services/location-service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
   styleUrl: './app.scss',
@@ -25,8 +24,8 @@ import { LocationService } from './features/venues/services/location-service';
   },
 })
 export class App {
-  private readonly router = inject(Router);
-  private readonly document = inject(DOCUMENT);
+  private router = inject(Router);
+  private document = inject(DOCUMENT);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   readonly locations = inject(LocationService).getLocations();

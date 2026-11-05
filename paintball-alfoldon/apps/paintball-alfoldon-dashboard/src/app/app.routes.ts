@@ -16,22 +16,26 @@ export const appRoutes: Route[] = [
       {
         path: '',
         title: 'Áttekintés · Paintball Alföldön admin',
-        loadComponent: () => import('./features/overview/pages/overview/overview').then((m) => m.Overview),
+        loadComponent: () =>
+          import('./features/overview/pages/overview/overview').then((m) => m.Overview),
       },
       {
         path: 'foglalasok',
         title: 'Foglalások · Paintball Alföldön admin',
-        loadComponent: () => import('./features/bookings/pages/bookings/bookings').then((m) => m.Bookings),
+        loadComponent: () =>
+          import('./features/bookings/pages/bookings/bookings').then((m) => m.Bookings),
       },
       {
         path: 'foglalasok/:id',
         title: 'Foglalás · Paintball Alföldön admin',
-        loadComponent: () => import('./features/bookings/pages/bookings/bookings').then((m) => m.Bookings),
+        loadComponent: () =>
+          import('./features/bookings/pages/bookings/bookings').then((m) => m.Bookings),
       },
       {
         path: 'naptar',
         title: 'Naptár · Paintball Alföldön admin',
-        loadComponent: () => import('./features/bookings/pages/calendar/calendar').then((m) => m.Calendar),
+        loadComponent: () =>
+          import('./features/bookings/pages/calendar/calendar').then((m) => m.Calendar),
       },
       {
         path: 'palyak',
@@ -41,22 +45,26 @@ export const appRoutes: Route[] = [
       {
         path: 'beosztas',
         title: 'Beosztás · Paintball Alföldön admin',
-        loadComponent: () => import('./features/schedule/pages/schedule/schedule').then((m) => m.Schedule),
+        loadComponent: () =>
+          import('./features/schedule/pages/schedule/schedule').then((m) => m.Schedule),
       },
       {
         path: 'alkalmazottak',
         title: 'Alkalmazottak · Paintball Alföldön admin',
-        loadComponent: () => import('./features/employees/pages/employees/employees').then((m) => m.Employees),
+        loadComponent: () =>
+          import('./features/employees/pages/employees/employees').then((m) => m.Employees),
       },
       {
         path: 'eroforrasok',
         title: 'Erőforrások · Paintball Alföldön admin',
-        loadComponent: () => import('./features/resources/pages/resources/resources').then((m) => m.Resources),
+        loadComponent: () =>
+          import('./features/resources/pages/resources/resources').then((m) => m.Resources),
       },
       {
         path: 'beallitasok',
         title: 'Beállítások · Paintball Alföldön admin',
-        loadComponent: () => import('./features/auth/pages/settings/settings').then((m) => m.Settings),
+        loadComponent: () =>
+          import('./features/auth/pages/settings/settings').then((m) => m.Settings),
       },
     ],
   },

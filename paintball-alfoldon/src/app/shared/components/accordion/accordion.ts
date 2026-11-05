@@ -6,7 +6,6 @@ import { Component, computed, input, signal } from '@angular/core';
  */
 @Component({
   selector: 'app-accordion',
-  standalone: true,
   templateUrl: './accordion.html',
   styleUrl: './accordion.scss',
 })

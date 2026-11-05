@@ -3,7 +3,11 @@
     <h1>Naptár</h1>
     <p class="muted">
       {{ title() }} ·
-      {{ loading() ? 'Betöltés…' : counts().accepted + ' elfogadott, ' + counts().pending + ' függő játék' }}
+      {{
+        loading()
+          ? 'Betöltés…'
+          : counts().accepted + ' elfogadott, ' + counts().pending + ' függő játék'
+      }}
     </p>
   </div>
 </header>
@@ -15,8 +19,26 @@
     <button class="btn btn-ghost" type="button" aria-label="Következő" (click)="go(1)">›</button>
   </div>
   <div class="group" role="group" aria-label="Nézet">
-    <button class="btn" type="button" [class.btn-primary]="view() === 'het'" [class.btn-ghost]="view() !== 'het'" [attr.aria-pressed]="view() === 'het'" (click)="navigate('het', date())">Hét</button>
-    <button class="btn" type="button" [class.btn-primary]="view() === 'nap'" [class.btn-ghost]="view() !== 'nap'" [attr.aria-pressed]="view() === 'nap'" (click)="navigate('nap', date())">Nap</button>
+    <button
+      class="btn"
+      type="button"
+      [class.btn-primary]="view() === 'het'"
+      [class.btn-ghost]="view() !== 'het'"
+      [attr.aria-pressed]="view() === 'het'"
+      (click)="navigate('het', date())"
+    >
+      Hét
+    </button>
+    <button
+      class="btn"
+      type="button"
+      [class.btn-primary]="view() === 'nap'"
+      [class.btn-ghost]="view() !== 'nap'"
+      [attr.aria-pressed]="view() === 'nap'"
+      (click)="navigate('nap', date())"
+    >
+      Nap
+    </button>
   </div>
   <div class="legend muted">
     <span><i class="ev"></i>Elfogadott</span>
@@ -34,7 +56,13 @@
       <div class="cal-grid" [style.--cols]="columns().length">
         <div class="corner"></div>
         @for (col of columns(); track col.date) {
-          <button class="col-head" type="button" [class.today]="col.isToday" [attr.aria-label]="col.date + ' napi nézet'" (click)="navigate('nap', col.date)">
+          <button
+            class="col-head"
+            type="button"
+            [class.today]="col.isToday"
+            [attr.aria-label]="col.date + ' napi nézet'"
+            (click)="navigate('nap', col.date)"
+          >
             <span class="muted">{{ col.dow }}</span>
             <strong>{{ col.day }}</strong>
           </button>
@@ -60,8 +88,22 @@
                 [style.height.px]="p.height"
                 [style.left.%]="p.left"
                 [style.width]="'calc(' + p.width + '% - 4px)'"
-                [attr.aria-label]="hm(p.booking.startTime) + ' ' + p.booking.venueName + ', ' + p.booking.customer.name"
-                [attr.title]="hm(p.booking.startTime) + ' ' + p.booking.venueName + ', ' + p.booking.headcount + ' fő, ' + p.booking.customer.name"
+                [attr.aria-label]="
+                  hm(p.booking.startTime) +
+                  ' ' +
+                  p.booking.venueName +
+                  ', ' +
+                  p.booking.customer.name
+                "
+                [attr.title]="
+                  hm(p.booking.startTime) +
+                  ' ' +
+                  p.booking.venueName +
+                  ', ' +
+                  p.booking.headcount +
+                  ' fő, ' +
+                  p.booking.customer.name
+                "
                 (click)="selectedId.set(p.booking.id)"
               >
                 <span class="mono">{{ hm(p.booking.startTime) }}–{{ hm(p.booking.endTime) }}</span>
@@ -70,7 +112,11 @@
                 @if (view() === 'nap') {
                   <span class="muted">
                     {{ p.booking.car?.plate ?? 'nincs autó' }} ·
-                    {{ p.booking.employees.length ? p.booking.employees.length + ' dolgozó' : 'nincs dolgozó' }}
+                    {{
+                      p.booking.employees.length
+                        ? p.booking.employees.length + ' dolgozó'
+                        : 'nincs dolgozó'
+                    }}
                   </span>
                 }
               </button>

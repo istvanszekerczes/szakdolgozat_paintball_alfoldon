@@ -207,7 +207,8 @@ function recolorLayer(layer: LooseLayer, options: BlackThemeOptions): void {
       }
       let color: string = T.text;
       if (has('city', 'capital', 'town')) color = T.textStrong;
-      else if (has('country', 'state', 'continent', 'roadname', 'road_label', 'ocean', 'sea')) color = T.textMuted;
+      else if (has('country', 'state', 'continent', 'roadname', 'road_label', 'ocean', 'sea'))
+        color = T.textMuted;
 
       paint['text-color'] = color;
       paint['text-halo-color'] = T.halo;
@@ -228,7 +229,10 @@ function recolorLayer(layer: LooseLayer, options: BlackThemeOptions): void {
 }
 
 /** Returns a deep-copied style with every layer recolored to the black theme. */
-export function applyBlackTheme(style: StyleSpecification, options: BlackThemeOptions = {}): StyleSpecification {
+export function applyBlackTheme(
+  style: StyleSpecification,
+  options: BlackThemeOptions = {},
+): StyleSpecification {
   const themed = structuredClone(style);
   for (const layer of themed.layers as unknown as LooseLayer[]) {
     recolorLayer(layer, options);
@@ -269,7 +273,10 @@ const styleCache = new Map<string, Promise<StyleSpecification>>();
  * Fetches + themes a style once per URL and option set (shared between the home
  * map and the venue pages). Never rejects: falls back to the raster style on any failure.
  */
-export function loadBlackStyle(styleUrl: string, options: BlackThemeOptions = {}): Promise<StyleSpecification> {
+export function loadBlackStyle(
+  styleUrl: string,
+  options: BlackThemeOptions = {},
+): Promise<StyleSpecification> {
   const key = `${styleUrl}|${[...(options.hideLabels ?? [])].sort().join(',')}`;
   let pending = styleCache.get(key);
   if (!pending) {

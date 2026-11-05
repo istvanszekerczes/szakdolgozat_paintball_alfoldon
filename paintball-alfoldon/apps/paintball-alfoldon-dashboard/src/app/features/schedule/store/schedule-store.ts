@@ -40,7 +40,11 @@ export const ScheduleStore = signalStore(
     loadDaySchedule: rxMethod<string>(
       pipe(
         tap(() =>
-          patchState(store, { daySchedule: null, dayScheduleLoading: true, dayScheduleError: null }),
+          patchState(store, {
+            daySchedule: null,
+            dayScheduleLoading: true,
+            dayScheduleError: null,
+          }),
         ),
         switchMap((date) =>
           backendCommunicator.loadDaySchedule(date).pipe(
@@ -86,7 +90,11 @@ export const ScheduleStore = signalStore(
       ),
     ),
 
-    assign(bookingId: number, carId: number | null, employeeIds: number[]): Observable<AdminBooking> {
+    assign(
+      bookingId: number,
+      carId: number | null,
+      employeeIds: number[],
+    ): Observable<AdminBooking> {
       return backendCommunicator.assignBooking(bookingId, carId, employeeIds);
     },
   })),

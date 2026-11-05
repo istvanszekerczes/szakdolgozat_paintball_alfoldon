@@ -32,7 +32,9 @@ describe('Bookings', () => {
     http.match(() => true).forEach((req) => req.flush([BOOKING]));
     await fixture.whenStable();
 
-    const selects = fixture.nativeElement.querySelectorAll('select') as NodeListOf<HTMLSelectElement>;
+    const selects = fixture.nativeElement.querySelectorAll(
+      'select',
+    ) as NodeListOf<HTMLSelectElement>;
     expect(selects[0].value).toBe('ACCEPTED');
     expect(selects[1].value).toBe('szeged');
   });

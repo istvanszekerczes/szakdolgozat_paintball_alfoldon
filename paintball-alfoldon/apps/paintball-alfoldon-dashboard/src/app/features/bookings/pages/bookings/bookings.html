@@ -24,14 +24,31 @@
   </label>
   <label class="field">
     Ettől
-    <input class="input" type="date" [value]="filter().from ?? ''" (change)="setFilter('from', $event)" />
+    <input
+      class="input"
+      type="date"
+      [value]="filter().from ?? ''"
+      (change)="setFilter('from', $event)"
+    />
   </label>
   <label class="field">
     Eddig
-    <input class="input" type="date" [value]="filter().to ?? ''" (change)="setFilter('to', $event)" />
+    <input
+      class="input"
+      type="date"
+      [value]="filter().to ?? ''"
+      (change)="setFilter('to', $event)"
+    />
   </label>
   <!-- Always rendered (disabled when unused) so the dropdowns keep their width when a filter is set. -->
-  <button class="btn btn-ghost clear" type="button" [disabled]="!hasFilter()" (click)="clearFilters()">Szűrők törlése</button>
+  <button
+    class="btn btn-ghost clear"
+    type="button"
+    [disabled]="!hasFilter()"
+    (click)="clearFilters()"
+  >
+    Szűrők törlése
+  </button>
 </form>
 
 @if (error()) {
@@ -56,7 +73,11 @@
           @for (b of list(); track b.id) {
             <tr [class.selected]="selectedId() === b.id">
               <td>
-                <a class="row-link" [routerLink]="['/foglalasok', b.id]" queryParamsHandling="preserve">
+                <a
+                  class="row-link"
+                  [routerLink]="['/foglalasok', b.id]"
+                  queryParamsHandling="preserve"
+                >
                   {{ longDay(b.date) }}
                   <span class="mono muted">{{ hm(b.startTime) }}–{{ hm(b.endTime) }}</span>
                 </a>
@@ -64,12 +85,16 @@
               <td>{{ b.venueName }}</td>
               <td>{{ b.customer.name }}</td>
               <td class="num headcount">{{ b.headcount }}</td>
-              <td><span class="badge" [class]="'badge st-' + b.status">{{ labels[b.status] }}</span></td>
+              <td>
+                <span class="badge" [class]="'badge st-' + b.status">{{ labels[b.status] }}</span>
+              </td>
               <td class="muted created">{{ relative(b.createdAt) }}</td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="6" class="muted none">{{ loading() ? 'Betöltés…' : 'Nincs a szűrésnek megfelelő foglalás.' }}</td>
+              <td colspan="6" class="muted none">
+                {{ loading() ? 'Betöltés…' : 'Nincs a szűrésnek megfelelő foglalás.' }}
+              </td>
             </tr>
           }
         </tbody>
@@ -78,10 +103,6 @@
   </section>
 
   @if (selectedId(); as sid) {
-    <app-booking-detail
-      [bookingId]="sid"
-      [initial]="selected()"
-      (closed)="close()"
-    />
+    <app-booking-detail [bookingId]="sid" [initial]="selected()" (closed)="close()" />
   }
 </div>

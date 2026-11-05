@@ -14,7 +14,11 @@ describe('Schedule', () => {
     TestBed.tick();
     TestBed.inject(HttpTestingController)
       .match(() => true)
-      .forEach((req) => req.flush(req.request.url.includes('schedule') ? { date: '2027-03-16', cars: [], staff: [] } : []));
+      .forEach((req) =>
+        req.flush(
+          req.request.url.includes('schedule') ? { date: '2027-03-16', cars: [], staff: [] } : [],
+        ),
+      );
     await fixture.whenStable();
 
     const input = fixture.nativeElement.querySelector('input[type=date]') as HTMLInputElement;

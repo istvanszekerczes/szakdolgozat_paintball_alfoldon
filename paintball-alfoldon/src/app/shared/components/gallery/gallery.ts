@@ -12,7 +12,6 @@ export interface GalleryItem {
  */
 @Component({
   selector: 'app-gallery',
-  standalone: true,
   templateUrl: './gallery.html',
   styleUrl: './gallery.scss',
 })

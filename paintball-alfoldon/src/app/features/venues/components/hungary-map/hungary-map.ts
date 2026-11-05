@@ -67,16 +67,15 @@ type MapStatus = 'loading' | 'ready' | 'error';
  */
 @Component({
   selector: 'app-hungary-map',
-  standalone: true,
   templateUrl: './hungary-map.html',
   styleUrl: './hungary-map.scss',
 })
 export class HungaryMap implements AfterViewInit {
   private readonly mapContainer = viewChild.required<ElementRef<HTMLDivElement>>('mapContainer');
-  private readonly router = inject(Router);
-  private readonly location = inject(Location);
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly destroyRef = inject(DestroyRef);
+  private router = inject(Router);
+  private location = inject(Location);
+  private platformId = inject(PLATFORM_ID);
+  private destroyRef = inject(DestroyRef);
 
   readonly venues = inject(LocationService).getLocations();
   readonly fieldType = LocationService.fieldType;

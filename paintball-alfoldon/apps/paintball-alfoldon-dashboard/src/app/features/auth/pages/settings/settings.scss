@@ -1,5 +1,21 @@
-:host { display: flex; flex-direction: column; gap: 20px; }
-.box { max-width: 480px; display: flex; flex-direction: column; gap: 14px; }
-.box p { margin: 0; line-height: 1.5; }
-.ok { color: var(--ok); }
-.btn { align-self: flex-start; }
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.box {
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.box p {
+  margin: 0;
+  line-height: 1.5;
+}
+.ok {
+  color: var(--ok);
+}
+.btn {
+  align-self: flex-start;
+}

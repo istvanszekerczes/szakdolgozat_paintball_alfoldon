@@ -7,12 +7,16 @@
     class="input count"
     [formField]="form().headcount"
     [attr.aria-invalid]="showsError(form().headcount)"
-    [attr.aria-describedby]="showsError(form().headcount) ? 'bw-headcount-error' : 'bw-headcount-hint'"
+    [attr.aria-describedby]="
+      showsError(form().headcount) ? 'bw-headcount-error' : 'bw-headcount-hint'
+    "
   />
   @if (showsError(form().headcount)) {
     <app-field-errors [field]="form().headcount" errorId="bw-headcount-error" />
   } @else if (venue(); as v) {
-    <p id="bw-headcount-hint" class="hint">Ezen a pályán {{ v.minHeadcount }}–{{ v.maxHeadcount }} fő játszhat egyszerre.</p>
+    <p id="bw-headcount-hint" class="hint">
+      Ezen a pályán {{ v.minHeadcount }}–{{ v.maxHeadcount }} fő játszhat egyszerre.
+    </p>
   }
 </div>
 
@@ -30,6 +34,8 @@
   @if (showsError(form().note)) {
     <app-field-errors [field]="form().note" errorId="bw-note-error" />
   } @else {
-    <p id="bw-note-hint" class="hint">{{ form().note().value().length }} / {{ noteMax }} karakter</p>
+    <p id="bw-note-hint" class="hint">
+      {{ form().note().value().length }} / {{ noteMax }} karakter
+    </p>
   }
 </div>

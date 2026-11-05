@@ -1,7 +1,12 @@
 <div class="venue-map">
   <!-- Map canvas -->
   <div class="map-shell venue-map__map">
-    <div #mapContainer class="map-shell__canvas" role="region" aria-label="Pályáink térképe az Alföldön"></div>
+    <div
+      #mapContainer
+      class="map-shell__canvas"
+      role="region"
+      aria-label="Pályáink térképe az Alföldön"
+    ></div>
 
     @switch (status()) {
       @case ('loading') {
@@ -9,7 +14,8 @@
       }
       @case ('error') {
         <div class="map-shell__status" role="status">
-          A térkép nem jeleníthető meg ebben a böngészőben. A pályákat a listából továbbra is kiválaszthatod.
+          A térkép nem jeleníthető meg ebben a böngészőben. A pályákat a listából továbbra is
+          kiválaszthatod.
         </div>
       }
     }
@@ -41,7 +47,16 @@
               <span class="venue-list__venue">{{ venue.venue }}</span>
             </span>
             <span class="pill" [class.pill--accent]="venue.indoor">{{ fieldType(venue) }}</span>
-            <svg class="venue-list__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg
+              class="venue-list__arrow"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
           </a>

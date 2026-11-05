@@ -26,7 +26,9 @@ describe('BookingStore', () => {
   let store: InstanceType<typeof BookingStore>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
     http = TestBed.inject(HttpTestingController);
     store = TestBed.inject(BookingStore);
   });
@@ -35,7 +37,11 @@ describe('BookingStore', () => {
 
   it('counts the pending bookings for the side menu', () => {
     store.loadPendingBookings();
-    http.expectOne((r) => r.url.endsWith('/api/admin/bookings') && r.params.get('status') === 'PENDING').flush([PENDING]);
+    http
+      .expectOne(
+        (r) => r.url.endsWith('/api/admin/bookings') && r.params.get('status') === 'PENDING',
+      )
+      .flush([PENDING]);
     expect(store.pendingCount()).toBe(1);
   });
 
@@ -44,7 +50,9 @@ describe('BookingStore', () => {
     http.expectOne((r) => r.params.get('from') === '2027-03-01').flush([PENDING]);
 
     store.changeStatus(1, 'ACCEPTED').subscribe();
-    http.expectOne((r) => r.url.endsWith('/bookings/1/status')).flush({ ...PENDING, status: 'ACCEPTED' });
+    http
+      .expectOne((r) => r.url.endsWith('/bookings/1/status'))
+      .flush({ ...PENDING, status: 'ACCEPTED' });
     expect(store.bookings()[0].status).toBe('ACCEPTED');
 
     http.expectOne((r) => r.params.get('status') === 'PENDING').flush([]);
@@ -53,7 +61,9 @@ describe('BookingStore', () => {
 
   it('keeps a readable message when the list cannot be loaded', () => {
     store.loadBookings({});
-    http.expectOne((r) => r.url.endsWith('/bookings')).flush(null, { status: 0, statusText: 'Unknown Error' });
+    http
+      .expectOne((r) => r.url.endsWith('/bookings'))
+      .flush(null, { status: 0, statusText: 'Unknown Error' });
     expect(store.bookingsLoading()).toBe(false);
     expect(store.bookingsError()).toContain('A szerver nem érhető el');
   });

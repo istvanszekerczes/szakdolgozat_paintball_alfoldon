@@ -32,7 +32,9 @@ export class Login {
       },
       error: (err) => {
         this.busy.set(false);
-        this.error.set(err.status === 401 ? 'Hibás felhasználónév vagy jelszó.' : errorMessage(err));
+        this.error.set(
+          err.status === 401 ? 'Hibás felhasználónév vagy jelszó.' : errorMessage(err),
+        );
       },
     });
   }

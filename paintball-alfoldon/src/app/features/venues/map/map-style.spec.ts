@@ -9,18 +9,64 @@ function sampleStyle(): StyleSpecification {
     sources: { carto: { type: 'vector', url: 'https://example.test/tiles.json' } },
     layers: [
       { id: 'background', type: 'background', paint: { 'background-color': '#0e0e0e' } },
-      { id: 'landcover', type: 'fill', source: 'carto', 'source-layer': 'landcover', paint: { 'fill-color': '#0e0e0e' } },
-      { id: 'park_national_park', type: 'fill', source: 'carto', 'source-layer': 'park', minzoom: 9, paint: { 'fill-color': '#0e0e0e' } },
-      { id: 'park_nature_reserve', type: 'fill', source: 'carto', 'source-layer': 'park', minzoom: 12, paint: { 'fill-color': '#0e0e0e' } },
-      { id: 'landuse_residential', type: 'fill', source: 'carto', 'source-layer': 'landuse', minzoom: 6, paint: { 'fill-color': 'rgba(0,0,0,0.5)' } },
-      { id: 'water', type: 'fill', source: 'carto', 'source-layer': 'water', paint: { 'fill-color': '#2C353C' } },
-      { id: 'water_shadow', type: 'fill', source: 'carto', 'source-layer': 'water', paint: { 'fill-color': 'transparent' } },
+      {
+        id: 'landcover',
+        type: 'fill',
+        source: 'carto',
+        'source-layer': 'landcover',
+        paint: { 'fill-color': '#0e0e0e' },
+      },
+      {
+        id: 'park_national_park',
+        type: 'fill',
+        source: 'carto',
+        'source-layer': 'park',
+        minzoom: 9,
+        paint: { 'fill-color': '#0e0e0e' },
+      },
+      {
+        id: 'park_nature_reserve',
+        type: 'fill',
+        source: 'carto',
+        'source-layer': 'park',
+        minzoom: 12,
+        paint: { 'fill-color': '#0e0e0e' },
+      },
+      {
+        id: 'landuse_residential',
+        type: 'fill',
+        source: 'carto',
+        'source-layer': 'landuse',
+        minzoom: 6,
+        paint: { 'fill-color': 'rgba(0,0,0,0.5)' },
+      },
+      {
+        id: 'water',
+        type: 'fill',
+        source: 'carto',
+        'source-layer': 'water',
+        paint: { 'fill-color': '#2C353C' },
+      },
+      {
+        id: 'water_shadow',
+        type: 'fill',
+        source: 'carto',
+        'source-layer': 'water',
+        paint: { 'fill-color': 'transparent' },
+      },
       {
         id: 'building',
         type: 'fill',
         source: 'carto',
         'source-layer': 'building',
-        paint: { 'fill-color': { stops: [[15.5, 'transparent'], [16, 'transparent']] } as never },
+        paint: {
+          'fill-color': {
+            stops: [
+              [15.5, 'transparent'],
+              [16, 'transparent'],
+            ],
+          } as never,
+        },
       },
       {
         id: 'building-top',
@@ -29,24 +75,93 @@ function sampleStyle(): StyleSpecification {
         'source-layer': 'building',
         paint: { 'fill-color': 'rgba(57, 57, 57, 1)', 'fill-outline-color': '#0e0e0e' },
       },
-      { id: 'waterway', type: 'line', source: 'carto', 'source-layer': 'waterway', paint: { 'line-color': 'rgba(63, 90, 109, 1)' } },
-      { id: 'road_mot_fill_noramp', type: 'line', source: 'carto', 'source-layer': 'transportation', paint: { 'line-color': 'rgba(73, 73, 73, 1)' } },
-      { id: 'road_mot_case_noramp', type: 'line', source: 'carto', 'source-layer': 'transportation', paint: { 'line-color': '#232323' } },
-      { id: 'road_minor_case', type: 'line', source: 'carto', 'source-layer': 'transportation', paint: { 'line-color': '#1c1c1c' } },
-      { id: 'boundary_country_inner', type: 'line', source: 'carto', 'source-layer': 'boundary', paint: { 'line-color': '#666' } },
-      { id: 'boundary_country_outline', type: 'line', source: 'carto', 'source-layer': 'boundary', paint: { 'line-color': '#2C353C', 'line-width': 8, 'line-opacity': 0.5 } },
+      {
+        id: 'waterway',
+        type: 'line',
+        source: 'carto',
+        'source-layer': 'waterway',
+        paint: { 'line-color': 'rgba(63, 90, 109, 1)' },
+      },
+      {
+        id: 'road_mot_fill_noramp',
+        type: 'line',
+        source: 'carto',
+        'source-layer': 'transportation',
+        paint: { 'line-color': 'rgba(73, 73, 73, 1)' },
+      },
+      {
+        id: 'road_mot_case_noramp',
+        type: 'line',
+        source: 'carto',
+        'source-layer': 'transportation',
+        paint: { 'line-color': '#232323' },
+      },
+      {
+        id: 'road_minor_case',
+        type: 'line',
+        source: 'carto',
+        'source-layer': 'transportation',
+        paint: { 'line-color': '#1c1c1c' },
+      },
+      {
+        id: 'boundary_country_inner',
+        type: 'line',
+        source: 'carto',
+        'source-layer': 'boundary',
+        paint: { 'line-color': '#666' },
+      },
+      {
+        id: 'boundary_country_outline',
+        type: 'line',
+        source: 'carto',
+        'source-layer': 'boundary',
+        paint: { 'line-color': '#2C353C', 'line-width': 8, 'line-opacity': 0.5 },
+      },
       {
         id: 'place_city_r5',
         type: 'symbol',
         source: 'carto',
         'source-layer': 'place',
         layout: { 'text-field': '{name}' },
-        paint: { 'text-color': 'rgba(211, 228, 236, 1)', 'text-halo-color': '#222', 'text-halo-width': 1, 'icon-color': '#666' },
+        paint: {
+          'text-color': 'rgba(211, 228, 236, 1)',
+          'text-halo-color': '#222',
+          'text-halo-width': 1,
+          'icon-color': '#666',
+        },
       },
-      { id: 'place_villages', type: 'symbol', source: 'carto', 'source-layer': 'place', filter: ['==', 'class', 'village'], layout: { 'text-field': '{name}' }, paint: { 'text-color': '#999' } },
-      { id: 'place_country_2', type: 'symbol', source: 'carto', 'source-layer': 'place', layout: { 'text-field': '{name}' }, paint: { 'text-color': '#999' } },
-      { id: 'poi_park', type: 'symbol', source: 'carto', 'source-layer': 'poi', layout: { 'text-field': '{name}' }, paint: { 'text-color': '#515151' } },
-      { id: 'housenumber', type: 'symbol', source: 'carto', 'source-layer': 'housenumber', paint: { 'text-color': 'transparent' } },
+      {
+        id: 'place_villages',
+        type: 'symbol',
+        source: 'carto',
+        'source-layer': 'place',
+        filter: ['==', 'class', 'village'],
+        layout: { 'text-field': '{name}' },
+        paint: { 'text-color': '#999' },
+      },
+      {
+        id: 'place_country_2',
+        type: 'symbol',
+        source: 'carto',
+        'source-layer': 'place',
+        layout: { 'text-field': '{name}' },
+        paint: { 'text-color': '#999' },
+      },
+      {
+        id: 'poi_park',
+        type: 'symbol',
+        source: 'carto',
+        'source-layer': 'poi',
+        layout: { 'text-field': '{name}' },
+        paint: { 'text-color': '#515151' },
+      },
+      {
+        id: 'housenumber',
+        type: 'symbol',
+        source: 'carto',
+        'source-layer': 'housenumber',
+        paint: { 'text-color': 'transparent' },
+      },
     ],
   };
 }
@@ -75,7 +190,9 @@ describe('applyBlackTheme', () => {
     expect(layer(themed, 'waterway').paint['line-color']).toBe(MAP_THEME.waterLine);
     expect(layer(themed, 'landuse_residential').paint['fill-color']).toBe(MAP_THEME.landuse);
     expect(layer(themed, 'building-top').paint['fill-color']).toBe(MAP_THEME.building);
-    expect(layer(themed, 'building-top').paint['fill-outline-color']).toBe(MAP_THEME.buildingOutline);
+    expect(layer(themed, 'building-top').paint['fill-outline-color']).toBe(
+      MAP_THEME.buildingOutline,
+    );
   });
 
   it('pushes forest, grass and park fills out of the overview zooms', () => {
@@ -120,14 +237,25 @@ describe('applyBlackTheme', () => {
 
   it('leaves place filters alone when no names are given', () => {
     const themed = applyBlackTheme(sampleStyle());
-    expect((layer(themed, 'place_city_r5') as unknown as { filter?: unknown }).filter).toBeUndefined();
-    expect((layer(themed, 'place_villages') as unknown as { filter: unknown }).filter).toEqual(['==', 'class', 'village']);
+    expect(
+      (layer(themed, 'place_city_r5') as unknown as { filter?: unknown }).filter,
+    ).toBeUndefined();
+    expect((layer(themed, 'place_villages') as unknown as { filter: unknown }).filter).toEqual([
+      '==',
+      'class',
+      'village',
+    ]);
   });
 
   it('keeps intentionally transparent fills transparent', () => {
     const themed = applyBlackTheme(sampleStyle());
     expect(layer(themed, 'water_shadow').paint['fill-color']).toBe('transparent');
-    expect(layer(themed, 'building').paint['fill-color']).toEqual({ stops: [[15.5, 'transparent'], [16, 'transparent']] });
+    expect(layer(themed, 'building').paint['fill-color']).toEqual({
+      stops: [
+        [15.5, 'transparent'],
+        [16, 'transparent'],
+      ],
+    });
   });
 
   it('applies the road hierarchy to fills and casings', () => {
@@ -135,14 +263,18 @@ describe('applyBlackTheme', () => {
     expect(layer(themed, 'road_mot_fill_noramp').paint['line-color']).toBe(MAP_THEME.roadMajor);
     // Casings are the only road representation until the fill layer's zoom, so they are
     // zoom-stepped: road-colored below that zoom, dark outline above it.
-    expect(layer(themed, 'road_mot_case_noramp').paint['line-color']).toEqual(MAP_THEME.roadMajorCase);
+    expect(layer(themed, 'road_mot_case_noramp').paint['line-color']).toEqual(
+      MAP_THEME.roadMajorCase,
+    );
     expect(layer(themed, 'road_minor_case').paint['line-color']).toEqual(MAP_THEME.roadMinorCase);
     expect(MAP_THEME.roadMinorCase).toEqual(['step', ['zoom'], '#222226', 15, '#121214']);
   });
 
   it('draws country borders as a thin line and hides the glow halo', () => {
     const themed = applyBlackTheme(sampleStyle());
-    expect(layer(themed, 'boundary_country_inner').paint['line-color']).toBe(MAP_THEME.boundaryCountry);
+    expect(layer(themed, 'boundary_country_inner').paint['line-color']).toBe(
+      MAP_THEME.boundaryCountry,
+    );
     expect(layer(themed, 'boundary_country_outline').layout['visibility']).toBe('none');
   });
 
@@ -168,7 +300,10 @@ describe('fallbackBlackStyle', () => {
   it('is a valid raster style with attribution and a black background', () => {
     const style = fallbackBlackStyle();
     expect(style.version).toBe(8);
-    expect(style.layers[0]).toMatchObject({ type: 'background', paint: { 'background-color': MAP_THEME.background } });
+    expect(style.layers[0]).toMatchObject({
+      type: 'background',
+      paint: { 'background-color': MAP_THEME.background },
+    });
     expect(style.layers[1]).toMatchObject({ type: 'raster', source: 'carto' });
     const source = style.sources['carto'] as { type: string; tiles: string[]; attribution: string };
     expect(source.type).toBe('raster');

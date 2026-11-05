@@ -3,12 +3,18 @@
     <span class="avatar" aria-hidden="true">{{ s.name.slice(0, 1) }}</span>
     <div class="grow">
       <strong>{{ s.name }}</strong>
-      <span class="muted small">{{ s.venues.join(', ') }}{{ s.cars.length ? ' · ' + s.cars.join(', ') : ' · nincs autó' }}</span>
+      <span class="muted small"
+        >{{ s.venues.join(', ')
+        }}{{ s.cars.length ? ' · ' + s.cars.join(', ') : ' · nincs autó' }}</span
+      >
     </div>
     @if (s.excluded) {
       <app-status-badge label="Távol van!" tone="danger" />
     } @else {
-      <app-status-badge [label]="labels[s.employmentType]" [tone]="s.employmentType === 'FULL_TIME' ? 'info' : 'muted'" />
+      <app-status-badge
+        [label]="labels[s.employmentType]"
+        [tone]="s.employmentType === 'FULL_TIME' ? 'info' : 'muted'"
+      />
     }
     <span class="mono hours">{{ hm(s.from) }}–{{ hm(s.to) }}</span>
   </article>

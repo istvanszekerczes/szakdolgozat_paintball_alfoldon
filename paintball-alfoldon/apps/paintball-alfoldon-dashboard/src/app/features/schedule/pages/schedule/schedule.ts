@@ -23,7 +23,9 @@ export class Schedule {
 
   protected readonly hm = hm;
   protected readonly todayIso = today();
-  protected readonly date = computed(() => (/^\d{4}-\d{2}-\d{2}$/.test(this.datum() ?? '') ? this.datum()! : today()));
+  protected readonly date = computed(() =>
+    /^\d{4}-\d{2}-\d{2}$/.test(this.datum() ?? '') ? this.datum()! : today(),
+  );
   protected readonly title = computed(() => fullDate(this.date()));
 
   /** Accepted games of the day (the list is loaded with status=ACCEPTED). */
@@ -60,5 +62,4 @@ export class Schedule {
   protected setDate(date: string): void {
     this.router.navigate(['/beosztas'], { queryParams: { datum: date === today() ? null : date } });
   }
-
 }

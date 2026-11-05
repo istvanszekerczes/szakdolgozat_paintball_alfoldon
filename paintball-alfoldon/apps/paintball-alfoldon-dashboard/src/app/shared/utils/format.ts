@@ -27,9 +27,11 @@ export function hm(time: string): string {
 
 /** "okt. 31., péntek" */
 export function longDay(iso: string): string {
-  return new Intl.DateTimeFormat('hu-HU', { month: 'short', day: 'numeric', weekday: 'long' }).format(
-    parseDate(iso),
-  );
+  return new Intl.DateTimeFormat('hu-HU', {
+    month: 'short',
+    day: 'numeric',
+    weekday: 'long',
+  }).format(parseDate(iso));
 }
 
 /** "2026. október 27., kedd" */
@@ -51,7 +53,9 @@ export function shortDow(iso: string): string {
 /** "ma 8:12", "tegnap 16:40", "3 napja" */
 export function relative(instant: string): string {
   const t = new Date(instant);
-  const days = Math.floor((parseDate(today()).getTime() - parseDate(isoDate(t)).getTime()) / 86_400_000);
+  const days = Math.floor(
+    (parseDate(today()).getTime() - parseDate(isoDate(t)).getTime()) / 86_400_000,
+  );
   const time = t.toLocaleTimeString('hu-HU', { hour: 'numeric', minute: '2-digit' });
   if (days <= 0) return `ma ${time}`;
   if (days === 1) return `tegnap ${time}`;

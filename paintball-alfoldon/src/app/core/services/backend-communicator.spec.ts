@@ -22,7 +22,9 @@ describe('BackendCommunicator', () => {
   let backendCommunicator: BackendCommunicator;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
     http = TestBed.inject(HttpTestingController);
     backendCommunicator = TestBed.inject(BackendCommunicator);
   });

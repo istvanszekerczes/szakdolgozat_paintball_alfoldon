@@ -18,7 +18,12 @@ const EMPTY: CarInput = { plate: '', seats: 5, active: true };
 export class Resources implements OnInit {
   private carService = inject(CarService);
 
-  protected readonly columns: Column[] = [{ label: 'Rendszám' }, { label: 'Férőhely', num: true }, { label: 'Állapot' }, { label: '' }];
+  protected readonly columns: Column[] = [
+    { label: 'Rendszám' },
+    { label: 'Férőhely', num: true },
+    { label: 'Állapot' },
+    { label: '' },
+  ];
   protected readonly cars = this.carService.cars;
   protected readonly loading = this.carService.carsLoading;
   protected readonly error = this.carService.carsError;
@@ -70,5 +75,4 @@ export class Resources implements OnInit {
       },
     });
   }
-
 }

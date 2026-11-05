@@ -45,7 +45,10 @@ export function loadMapLibre(): Promise<MapLibre> {
 }
 
 export function prefersReducedMotion(): boolean {
-  return typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+  return (
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
+  );
 }
 
 /**
@@ -69,7 +72,10 @@ export function waitForSize(el: HTMLElement, maxFrames = 30): Promise<void> {
  * pans or zooms — or the caller reports an interaction via the returned
  * `stop()` — their view is left alone.
  */
-export function reframeUntilInteraction(map: MapLibreMap, reframe: () => void): { stop: () => void } {
+export function reframeUntilInteraction(
+  map: MapLibreMap,
+  reframe: () => void,
+): { stop: () => void } {
   let touched = false;
   const stop = () => {
     touched = true;
@@ -153,7 +159,10 @@ export async function createBlackMap(ml: MapLibre, opts: BlackMapOptions): Promi
 
   const map = new ml.Map(options);
   map.touchZoomRotate.disableRotation();
-  map.addControl(new ml.NavigationControl({ showCompass: false, visualizePitch: false }), 'top-right');
+  map.addControl(
+    new ml.NavigationControl({ showCompass: false, visualizePitch: false }),
+    'top-right',
+  );
   map.addControl(new ml.AttributionControl({ compact: true }), 'bottom-right');
   exposeForDebugging(map, opts.container);
   return map;
@@ -167,7 +176,10 @@ export const MAP_LOAD_TIMEOUT_MS = 15000;
  * event of its own, so a timeout ends the wait; if the style still arrives after that
  * (a very slow connection), `ready` replaces the error.
  */
-export function trackMapLoad(map: MapLibreMap, setStatus: (status: 'ready' | 'error') => void): void {
+export function trackMapLoad(
+  map: MapLibreMap,
+  setStatus: (status: 'ready' | 'error') => void,
+): void {
   let ready = false;
   const timer = setTimeout(() => {
     console.error(`[map] The style did not load within ${MAP_LOAD_TIMEOUT_MS / 1000} seconds.`);
@@ -218,7 +230,12 @@ export const MARKER_PIN_SIZE = 44;
  * Builds the DOM for a themed marker: `[pin][caption]`. Styles live in
  * `styles.scss` (`.pb-marker`).
  */
-export function createMarkerElement({ label, caption, count, interactive = true }: MarkerElementOptions): HTMLElement {
+export function createMarkerElement({
+  label,
+  caption,
+  count,
+  interactive = true,
+}: MarkerElementOptions): HTMLElement {
   const el = document.createElement(interactive ? 'button' : 'div');
   if (el instanceof HTMLButtonElement) {
     el.type = 'button';
@@ -260,7 +277,9 @@ export function setMarkerCaption(element: HTMLElement, caption: string): void {
 
 /** Places the marker so the pin centre (not the centre of pin + chip) sits on the coordinate. */
 export function createMarker(ml: MapLibre, element: HTMLElement, lngLat: LngLatLike): Marker {
-  return new ml.Marker({ element, anchor: 'left', offset: [-MARKER_PIN_SIZE / 2, 0] }).setLngLat(lngLat);
+  return new ml.Marker({ element, anchor: 'left', offset: [-MARKER_PIN_SIZE / 2, 0] }).setLngLat(
+    lngLat,
+  );
 }
 
 /* ----------------------------------------------------------------- popups */
@@ -297,7 +316,10 @@ export function createPopupContent({ eyebrow, title, meta }: PopupContent): HTML
 }
 
 /** Hover/label popup: no close button, never steals focus, themed via `.pb-popup`. */
-export function createPopup(ml: MapLibre, options: Pick<PopupOptions, 'offset' | 'anchor'> = {}): Popup {
+export function createPopup(
+  ml: MapLibre,
+  options: Pick<PopupOptions, 'offset' | 'anchor'> = {},
+): Popup {
   return new ml.Popup({
     closeButton: false,
     closeOnClick: false,
@@ -322,14 +344,20 @@ export function toLngLat(p: GeoPoint): [number, number] {
 }
 
 export function boundsOf(points: readonly GeoPoint[]): LngLatBoundsLike {
-  let minLng = Infinity, minLat = Infinity, maxLng = -Infinity, maxLat = -Infinity;
+  let minLng = Infinity,
+    minLat = Infinity,
+    maxLng = -Infinity,
+    maxLat = -Infinity;
   for (const p of points) {
     minLng = Math.min(minLng, p.lng);
     maxLng = Math.max(maxLng, p.lng);
     minLat = Math.min(minLat, p.lat);
     maxLat = Math.max(maxLat, p.lat);
   }
-  return [[minLng, minLat], [maxLng, maxLat]];
+  return [
+    [minLng, minLat],
+    [maxLng, maxLat],
+  ];
 }
 
 export function centroidOf(points: readonly GeoPoint[]): [number, number] {

@@ -45,7 +45,11 @@ export class ScheduleService {
    * @param employeeIds The IDs of the employees working on the game.
    * @returns An Observable of the updated booking.
    */
-  assign(booking: AdminBooking, carId: number | null, employeeIds: number[]): Observable<AdminBooking> {
+  assign(
+    booking: AdminBooking,
+    carId: number | null,
+    employeeIds: number[],
+  ): Observable<AdminBooking> {
     return this.store.assign(booking.id, carId, employeeIds).pipe(
       tap((updated) => {
         this.bookingService.replaceBooking(updated);

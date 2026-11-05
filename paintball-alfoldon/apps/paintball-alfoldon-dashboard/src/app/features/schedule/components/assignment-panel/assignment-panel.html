@@ -6,7 +6,9 @@
     <select class="input" (change)="carId.set(num($event))">
       <option value="" [selected]="carId() === null">— nincs autó —</option>
       @for (c of carOptions(); track c.id) {
-        <option [value]="c.id" [selected]="c.id === carId()">{{ c.plate }} · {{ c.seats }} hely{{ c.active ? '' : ' (inaktív)' }}</option>
+        <option [value]="c.id" [selected]="c.id === carId()">
+          {{ c.plate }} · {{ c.seats }} hely{{ c.active ? '' : ' (inaktív)' }}
+        </option>
       }
     </select>
   </label>
@@ -19,7 +21,9 @@
           {{ e.name }} <span class="muted small">{{ labels[e.employmentType] }}</span>
         </label>
       } @empty {
-        <span class="muted small">{{ loading() ? 'Betöltés…' : 'Még nincs alkalmazott felvéve.' }}</span>
+        <span class="muted small">{{
+          loading() ? 'Betöltés…' : 'Még nincs alkalmazott felvéve.'
+        }}</span>
       }
     </div>
   </div>

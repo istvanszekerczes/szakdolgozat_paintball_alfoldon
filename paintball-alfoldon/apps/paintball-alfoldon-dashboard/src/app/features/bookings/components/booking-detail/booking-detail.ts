@@ -1,4 +1,13 @@
-import { Component, computed, effect, inject, input, output, signal, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  untracked,
+} from '@angular/core';
 import { BookingService } from '../../services/booking-service';
 import { AdminBooking, BookingStatus, NEXT_STATUSES, STATUS_LABELS } from '../../models/booking';
 import { errorMessage } from '../../../../shared/utils/error-message';
@@ -58,7 +67,8 @@ export class BookingDetail {
   protected changeStatus(status: BookingStatus): void {
     const b = this.booking();
     if (!b) return;
-    if (status === 'CANCELLED' && !confirm(`Biztosan lemondod ${b.customer.name} foglalását?`)) return;
+    if (status === 'CANCELLED' && !confirm(`Biztosan lemondod ${b.customer.name} foglalását?`))
+      return;
     this.busy.set(true);
     this.error.set(null);
     this.bookingService.changeStatus(b.id, status).subscribe({

@@ -12,7 +12,9 @@
         <ng-content />
         @if (!rows()) {
           <tr>
-            <td class="muted" [attr.colspan]="columns().length">{{ loading() ? 'Betöltés…' : emptyText() }}</td>
+            <td class="muted" [attr.colspan]="columns().length">
+              {{ loading() ? 'Betöltés…' : emptyText() }}
+            </td>
           </tr>
         }
       </tbody>

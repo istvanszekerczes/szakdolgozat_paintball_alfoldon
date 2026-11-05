@@ -1,4 +1,14 @@
-import { Component, DestroyRef, PLATFORM_ID, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  PLATFORM_ID,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { BookingService } from '../../services/booking-service';
@@ -46,20 +56,23 @@ export class Calendar {
   readonly datum = input<string>();
 
   protected readonly hm = hm;
-  protected readonly hours = Array.from({ length: LAST_HOUR - FIRST_HOUR }, (_, i) => FIRST_HOUR + i);
+  protected readonly hours = Array.from(
+    { length: LAST_HOUR - FIRST_HOUR },
+    (_, i) => FIRST_HOUR + i,
+  );
   protected readonly gridHeight = (LAST_HOUR - FIRST_HOUR) * HOUR_PX;
   protected readonly hourPx = HOUR_PX;
 
   /** Pending and accepted games; rejected and cancelled ones are not shown. */
   protected readonly list = computed(() =>
-    this.bookingService
-      .bookings()
-      .filter((b) => b.status === 'PENDING' || b.status === 'ACCEPTED'),
+    this.bookingService.bookings().filter((b) => b.status === 'PENDING' || b.status === 'ACCEPTED'),
   );
   protected readonly loading = this.bookingService.bookingsLoading;
   protected readonly error = this.bookingService.bookingsError;
   protected readonly selectedId = signal<number | null>(null);
-  protected readonly selected = computed(() => this.list().find((b) => b.id === this.selectedId()) ?? null);
+  protected readonly selected = computed(
+    () => this.list().find((b) => b.id === this.selectedId()) ?? null,
+  );
   private readonly now = signal(new Date());
 
   /** Phones: seven day columns don't fit, so the calendar opens on the day view there. */
@@ -70,7 +83,9 @@ export class Calendar {
     const nezet = this.nezet();
     return nezet === 'nap' || nezet === 'het' ? nezet : this.defaultView();
   });
-  protected readonly date = computed(() => (/^\d{4}-\d{2}-\d{2}$/.test(this.datum() ?? '') ? this.datum()! : today()));
+  protected readonly date = computed(() =>
+    /^\d{4}-\d{2}-\d{2}$/.test(this.datum() ?? '') ? this.datum()! : today(),
+  );
 
   /** First and last day shown. */
   protected readonly range = computed(() => {
@@ -142,10 +157,12 @@ export class Calendar {
 
   protected navigate(view: 'het' | 'nap', date: string): void {
     this.router.navigate(['/naptar'], {
-      queryParams: { nezet: view === this.defaultView() ? null : view, datum: date === today() ? null : date },
+      queryParams: {
+        nezet: view === this.defaultView() ? null : view,
+        datum: date === today() ? null : date,
+      },
     });
   }
-
 }
 
 function minutes(time: string): number {
@@ -155,7 +172,10 @@ function minutes(time: string): number {
 
 /** Puts the games of one day into lanes: overlapping games get separate lanes of equal width. */
 function place(bookings: AdminBooking[]): Placed[] {
-  const sorted = [...bookings].sort((a, b) => a.startTime.localeCompare(b.startTime) || a.venueName.localeCompare(b.venueName, 'hu'));
+  const sorted = [...bookings].sort(
+    (a, b) =>
+      a.startTime.localeCompare(b.startTime) || a.venueName.localeCompare(b.venueName, 'hu'),
+  );
   const laneEnds: number[] = [];
   const lanes = sorted.map((b) => {
     let lane = laneEnds.findIndex((end) => end <= minutes(b.startTime));
@@ -176,4 +196,3 @@ function place(bookings: AdminBooking[]): Placed[] {
     };
   });
 }
-
