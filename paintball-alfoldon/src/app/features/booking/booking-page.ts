@@ -97,6 +97,30 @@ import { BookingWizard } from './wizard/booking-wizard';
         color: var(--fg-2);
       }
 
+      /* Phones: the form starts on the first screen. The lead repeats the phone/e-mail option
+         that has its own section under the form. */
+      @media (max-width: 640px) {
+        .page-header__lead {
+          display: none;
+        }
+
+        .booking {
+          gap: 1rem;
+        }
+
+        .notice {
+          padding: 0.75rem 1rem;
+        }
+
+        .notice p {
+          font-size: 0.875rem;
+        }
+
+        .channel p {
+          min-height: 0;
+        }
+      }
+
       .notice strong {
         color: var(--warn);
       }

@@ -20,8 +20,8 @@
       </td>
       <td>{{ v.indoor ? 'Fedett' : 'Szabadtéri' }}</td>
       <td class="num">{{ v.minHeadcount }}–{{ v.maxHeadcount }} fő</td>
-      <td class="num mono">{{ v.travelMinutes }} perc</td>
-      <td class="num mono">{{ v.setupMinutes }} / {{ v.teardownMinutes }} perc</td>
+      <td class="num mono" data-label="Út">{{ v.travelMinutes }} perc</td>
+      <td class="num mono" data-label="Ki/elpakolás">{{ v.setupMinutes }} / {{ v.teardownMinutes }} perc</td>
       <td><app-status-badge [label]="v.active ? 'Foglalható' : 'Inaktív'" [tone]="v.active ? 'ok' : 'muted'" /></td>
       <td class="actions-cell">
         <button class="btn btn-ghost btn-sm" type="button" (click)="openBlocks(v)">Zárolások</button>

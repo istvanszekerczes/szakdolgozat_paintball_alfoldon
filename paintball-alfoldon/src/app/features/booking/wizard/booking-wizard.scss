@@ -3,8 +3,15 @@
 }
 
 .wizard {
+  /* Same value as .card's padding, so the sticky action row can reach the card's edges */
+  --wizard-pad: clamp(1.125rem, 3vw, 2rem);
+
   display: grid;
   gap: 1.5rem;
+
+  @media (max-width: 640px) {
+    gap: 1.25rem;
+  }
 }
 
 .wizard__title {
@@ -31,6 +38,19 @@
   gap: 0.75rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--line);
+
+  /* Phones: Back / Next stay on screen at the bottom while a long step scrolls */
+  @media (max-width: 640px) {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    margin: 0 calc(-1 * var(--wizard-pad)) calc(-1 * var(--wizard-pad));
+    padding: 0.75rem var(--wizard-pad) calc(0.75rem + env(safe-area-inset-bottom));
+    background: rgba(17, 17, 17, 0.94);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
 
   .btn--primary {
     margin-left: auto;

@@ -160,3 +160,13 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+@media (max-width: 640px) {
+  .toolbar {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .legend {
+    margin-left: 0;
+  }
+}

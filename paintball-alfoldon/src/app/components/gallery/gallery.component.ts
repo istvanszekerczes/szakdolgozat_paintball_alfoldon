@@ -112,6 +112,32 @@ export interface GalleryItem {
         gap: 1rem;
       }
 
+      /* Phones: two columns, so the seven pictures take two screens instead of six */
+      @media (max-width: 640px) {
+        .gallery {
+          grid-template-columns: 1fr 1fr;
+          gap: 1.25rem 0.75rem;
+        }
+
+        /* Seven pictures: the first one goes full width, the other six fill three rows */
+        .gallery > li:first-child {
+          grid-column: 1 / -1;
+        }
+
+        .tile {
+          gap: 0.5rem;
+        }
+
+        .tile__media {
+          padding: 0.75rem;
+          border-radius: var(--radius);
+        }
+
+        .tile__caption {
+          font-size: 0.8125rem;
+        }
+      }
+
       .tile {
         display: grid;
         gap: 0.75rem;

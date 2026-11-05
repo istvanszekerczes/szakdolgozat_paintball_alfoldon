@@ -28,8 +28,9 @@
     gap: 0.5rem;
   }
 
+  /* Phones get the booking bar at the bottom instead */
   &__cta {
-    @media (max-width: 480px) {
+    @media (max-width: 640px) {
       display: none;
     }
   }
@@ -308,14 +309,49 @@
     display: grid;
     grid-template-columns: 1.6fr 1fr 1.3fr 1.2fr;
     gap: 2.5rem;
-    padding-block: clamp(3rem, 6vw, 4.5rem);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
 
     @media (max-width: 992px) {
       grid-template-columns: 1fr 1fr;
     }
 
-    @media (max-width: 560px) {
-      grid-template-columns: 1fr;
+    /* Phones: brand on top, navigation and contact side by side, venues in two columns below */
+    @media (max-width: 640px) {
+      gap: 2rem 1.25rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    &__brand {
+      grid-column: 1 / -1;
+      gap: 1rem;
+    }
+
+    &__col--venues {
+      grid-column: 1 / -1;
+      order: 1;
+
+      .site-footer__links {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem 1.25rem;
+      }
+
+      a {
+        display: grid;
+        line-height: 1.3;
+      }
+    }
+
+    &__venue {
+      font-size: 0.8125rem;
+
+      > span {
+        display: none;
+      }
+    }
+
+    &__cities {
+      display: none;
     }
   }
 
@@ -332,7 +368,7 @@
   }
 
   &__title {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
     font: 500 0.75rem/1 var(--font-mono);
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -372,6 +408,53 @@
 
     p {
       color: var(--fg-3);
+    }
+  }
+}
+
+/* ------------------------------------------------------- phone booking bar */
+.action-bar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  :host(.has-action-bar) {
+    --action-bar-h: calc(68px + env(safe-area-inset-bottom));
+    padding-bottom: var(--action-bar-h);
+  }
+
+  .action-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 80;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.625rem var(--gutter) calc(0.625rem + env(safe-area-inset-bottom));
+    background: rgba(0, 0, 0, 0.86);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    transition:
+      translate var(--dur) var(--ease),
+      opacity var(--dur) var(--ease);
+
+    &.is-hidden {
+      translate: 0 100%;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .btn {
+      min-height: 48px;
+    }
+
+    &__call {
+      flex: none;
+      padding-inline: 1.1rem;
+    }
+
+    &__book {
+      flex: 1;
     }
   }
 }

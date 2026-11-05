@@ -13,6 +13,11 @@
 .head p {
   margin: 0;
 }
+@media (max-width: 900px) {
+  .head {
+    padding-right: 0;
+  }
+}
 
 .small {
   font-size: 12px;

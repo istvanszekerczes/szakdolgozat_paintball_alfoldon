@@ -53,10 +53,18 @@
   --gutter: clamp(1rem, 4vw, 2rem);
   --section-y: clamp(4rem, 9vw, 7rem);
   --header-h: 72px;
+  /* Height of the fixed booking bar on phones (0 where it is not shown) */
+  --action-bar-h: 0px;
 
   /* Motion */
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --dur: 180ms;
+
+  /* Phones: a shorter header and tighter vertical rhythm, so a screen shows content, not padding */
+  @media (max-width: 640px) {
+    --header-h: 60px;
+    --section-y: 3.25rem;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -179,14 +187,14 @@ h4 {
 }
 
 h1 {
-  font-size: clamp(2.5rem, 1.6rem + 4.2vw, 5rem);
+  font-size: clamp(2.25rem, 1.6rem + 4.2vw, 5rem);
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1;
 }
 
 h2 {
-  font-size: clamp(1.875rem, 1.3rem + 2vw, 2.75rem);
+  font-size: clamp(1.625rem, 1.3rem + 2vw, 2.75rem);
   letter-spacing: -0.03em;
 }
 
@@ -271,7 +279,11 @@ h4 {
   display: grid;
   gap: 1rem;
   max-width: 720px;
-  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: clamp(1.5rem, 5vw, 3.5rem);
+
+  @media (max-width: 640px) {
+    gap: 0.75rem;
+  }
 
   &--center {
     margin-inline: auto;
@@ -286,7 +298,7 @@ h4 {
 }
 
 .page-header {
-  padding: clamp(3rem, 8vw, 6rem) 0 clamp(2.5rem, 6vw, 4rem);
+  padding: clamp(2rem, 8vw, 6rem) 0 clamp(2rem, 6vw, 4rem);
   border-bottom: 1px solid var(--line);
 
   &__title {
@@ -295,6 +307,10 @@ h4 {
 
   &__lead {
     margin-top: 1.25rem;
+
+    @media (max-width: 640px) {
+      margin-top: 0.875rem;
+    }
   }
 
   &--center {
@@ -417,7 +433,7 @@ h4 {
   background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  padding: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1.125rem, 3vw, 2rem);
 
   &--interactive {
     display: flex;
@@ -432,6 +448,36 @@ h4 {
       border-color: var(--line-3);
       background: var(--bg-3);
       transform: translateY(-2px);
+    }
+  }
+}
+
+/* Rail: on phones a grid of cards becomes one swipeable row, so a section is one screen tall
+   instead of six. The next card peeks in from the right to show there is more. The repeated class
+   outranks a component's own grid rules (class + attribute) without !important. */
+@media (max-width: 640px) {
+  .rail.rail.rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    grid-auto-columns: 84%;
+    gap: 0.75rem;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    padding-bottom: 0.25rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    > * {
+      scroll-snap-align: start;
+      min-height: 0;
     }
   }
 }

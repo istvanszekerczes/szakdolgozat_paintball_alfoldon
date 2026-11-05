@@ -64,9 +64,9 @@
               </td>
               <td>{{ b.venueName }}</td>
               <td>{{ b.customer.name }}</td>
-              <td class="num">{{ b.headcount }}</td>
+              <td class="num headcount">{{ b.headcount }}</td>
               <td><span class="badge" [class]="'badge st-' + b.status">{{ labels[b.status] }}</span></td>
-              <td class="muted">{{ relative(b.createdAt) }}</td>
+              <td class="muted created">{{ relative(b.createdAt) }}</td>
             </tr>
           } @empty {
             <tr>

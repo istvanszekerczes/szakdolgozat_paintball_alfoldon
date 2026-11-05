@@ -228,6 +228,38 @@ import { LocationService, PaintballLocation } from '../../services/location.serv
         margin-bottom: 0.5rem;
         font-size: 0.9375rem;
       }
+
+      /* Phones: label and value on one line, and the booking bar at the bottom replaces the card's
+         own booking button */
+      @media (max-width: 640px) {
+        .loc__main {
+          gap: 2rem;
+        }
+
+        .specs-card {
+          gap: 1.125rem;
+        }
+
+        .specs {
+          gap: 0.75rem;
+        }
+
+        .specs__row {
+          grid-template-columns: 8.5rem minmax(0, 1fr);
+          align-items: baseline;
+          gap: 0.75rem;
+          padding-bottom: 0.75rem;
+        }
+
+        .specs-card__cta {
+          padding-top: 1rem;
+        }
+
+        .specs-card__cta p,
+        .specs-card__cta .btn--primary {
+          display: none;
+        }
+      }
     `,
   ],
 })

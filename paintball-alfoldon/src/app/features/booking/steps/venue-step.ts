@@ -65,6 +65,34 @@ import { Venue } from '../data/booking.models';
       font-size: 0.8125rem;
       color: var(--fg-3);
     }
+    /* Phones: two columns of compact tiles, so all seven fields fit on about one screen */
+    @media (max-width: 640px) {
+      .venues {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+      }
+      .venue {
+        align-content: start;
+        gap: 0.2rem;
+        padding: 0.875rem;
+        border-radius: var(--radius);
+      }
+      .venue__head {
+        display: contents;
+      }
+      .venue__city {
+        font-size: 1rem;
+      }
+      .venue__name {
+        font-size: 0.875rem;
+        line-height: 1.35;
+      }
+      .venue .pill {
+        order: 1;
+        justify-self: start;
+        margin-top: 0.4rem;
+      }
+    }
   `,
 })
 export class VenueStep {

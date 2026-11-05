@@ -376,3 +376,81 @@ h2 {
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 12px;
 }
+
+/* ---------------------------------------------------------------------------
+   Phones and tablets. The theme switch moves into the top bar at 900px (see Shell),
+   so the page heads no longer keep room for it.
+   --------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .page-head {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 24px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+  .dt-card {
+    padding: 0;
+  }
+
+  /* app-data-table: each row becomes a small card. The first cell is the title, the others wrap
+     under it, and the action buttons get a row of their own. A cell with data-label shows it as a
+     prefix, for numbers that mean nothing without one. */
+  .dt-scroll .dt {
+    min-width: 0 !important;
+  }
+  .dt thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .dt tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .dt tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .dt td,
+  .dt td.num {
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+  .dt td:first-child {
+    flex: 1 0 100%;
+    font-weight: 600;
+  }
+  .dt td[data-label]::before {
+    content: attr(data-label) ': ';
+    color: var(--fg-2);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+  }
+  .dt .actions-cell {
+    flex: 1 0 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+    white-space: normal;
+  }
+
+  .dialog-form {
+    padding: 16px;
+  }
+}

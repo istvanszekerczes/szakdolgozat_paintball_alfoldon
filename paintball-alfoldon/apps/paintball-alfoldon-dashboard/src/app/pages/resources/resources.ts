@@ -29,7 +29,7 @@ const EMPTY: CarInput = { plate: '', seats: 5, active: true };
       @for (c of cars(); track c.id) {
         <tr [class.inactive]="!c.active">
           <td class="mono plate">{{ c.plate }}</td>
-          <td class="num">{{ c.seats }}</td>
+          <td class="num" data-label="Férőhely">{{ c.seats }}</td>
           <td><app-status-badge [label]="c.active ? 'Aktív' : 'Inaktív'" [tone]="c.active ? 'ok' : 'muted'" /></td>
           <td class="actions-cell"><button class="btn btn-ghost btn-sm" type="button" (click)="openEdit(c)">Szerkesztés</button></td>
         </tr>

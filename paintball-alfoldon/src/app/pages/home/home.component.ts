@@ -74,7 +74,7 @@ interface Testimonial {
           <span class="eyebrow">Pályáink</span>
           <h2 id="venues-title">Erdei terepek és fedett csarnokok</h2>
         </div>
-        <div class="venue-grid">
+        <div class="venue-grid rail">
           @for (loc of locations; track loc.id) {
             <a [routerLink]="['/', loc.id]" class="card card--interactive venue-card">
               <div class="venue-card__top">
@@ -157,7 +157,7 @@ interface Testimonial {
             pályáinkon.
           </p>
         </div>
-        <div class="activity-grid">
+        <div class="activity-grid rail">
           @for (activity of activities; track activity.title; let i = $index) {
             <article class="card activity">
               <span class="activity__index">0{{ i + 1 }}</span>
@@ -176,7 +176,7 @@ interface Testimonial {
           <span class="eyebrow">Visszajelzések</span>
           <h2 id="quotes-title">Vélemények rólunk</h2>
         </div>
-        <div class="quotes">
+        <div class="quotes rail">
           @for (t of testimonials; track t.name) {
             <figure class="card quote">
               <blockquote class="quote__text">„{{ t.quote }}”</blockquote>
@@ -251,6 +251,45 @@ interface Testimonial {
         border-top: 1px solid var(--line);
       }
 
+      /* Phones: the hero fits one screen; two equal buttons and a 2 × 2 fact grid */
+      @media (max-width: 640px) {
+        .hero {
+          padding: 2.5rem 0 2.75rem;
+        }
+
+        .hero__inner {
+          gap: 1.125rem;
+        }
+
+        .hero__actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.5rem;
+        }
+
+        .hero__actions .btn {
+          padding-inline: 0.75rem;
+          white-space: normal;
+          text-align: center;
+        }
+
+        .hero__facts {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1.25rem 1rem;
+          margin-top: 1.25rem;
+          padding-top: 1.5rem;
+        }
+
+        .fact__num {
+          font-size: 1.5rem;
+        }
+
+        .fact__label {
+          font-size: 0.8125rem;
+        }
+      }
+
       .fact {
         display: grid;
         gap: 0.25rem;
@@ -278,6 +317,12 @@ interface Testimonial {
         gap: 0.5rem;
         min-height: 240px;
         color: var(--fg);
+      }
+
+      @media (max-width: 640px) {
+        .venue-card {
+          min-height: 0;
+        }
       }
 
       .venue-card__top {
@@ -354,9 +399,10 @@ interface Testimonial {
         gap: 1rem;
       }
 
-      @media (max-width: 480px) {
+      /* Phones: the hero already shows these numbers, so the cards would only repeat them */
+      @media (max-width: 640px) {
         .why__stats {
-          grid-template-columns: 1fr;
+          display: none;
         }
       }
 
@@ -395,7 +441,7 @@ interface Testimonial {
       }
 
       .quote__text {
-        font-size: 1.125rem;
+        font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
         line-height: 1.6;
         color: var(--fg);
         text-wrap: pretty;
@@ -430,6 +476,15 @@ interface Testimonial {
         justify-content: center;
         gap: 0.75rem;
         margin-top: 0.5rem;
+      }
+
+      @media (max-width: 640px) {
+        .cta__actions {
+          display: grid;
+          justify-content: stretch;
+          width: 100%;
+          gap: 0.5rem;
+        }
       }
     `,
   ],

@@ -93,3 +93,99 @@ tr.selected {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+@media (max-width: 900px) {
+  .head {
+    padding-right: 0;
+  }
+}
+
+/* Phones: filters in a 2 × 2 grid, and each booking as a card instead of a 720px wide table row */
+@media (max-width: 640px) {
+  :host {
+    gap: 14px;
+  }
+
+  .filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px;
+  }
+  .filters .field {
+    min-width: 0;
+  }
+  .filters .input {
+    min-width: 0;
+    width: 100%;
+  }
+  .clear {
+    grid-column: 1 / -1;
+  }
+
+  table {
+    min-width: 0;
+  }
+  thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  tbody tr {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  tbody tr:last-child {
+    border-bottom: 0;
+  }
+  td,
+  td.num {
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+  /* Date + time on the left, the status badge on the right of the first line */
+  td:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  td:has(.badge) {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+  }
+  td:nth-child(2),
+  td:nth-child(3),
+  td.headcount {
+    grid-column: 1 / -1;
+    color: var(--fg-2);
+  }
+  td:nth-child(3) {
+    color: var(--fg);
+  }
+  td.headcount::after {
+    content: ' fő';
+  }
+  td.created {
+    position: absolute;
+    right: 16px;
+    bottom: 14px;
+    font-size: 12px;
+  }
+  /* The whole card opens the booking */
+  .row-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .none {
+    grid-column: 1 / -1;
+  }
+}

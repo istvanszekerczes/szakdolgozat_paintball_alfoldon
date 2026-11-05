@@ -1,4 +1,5 @@
-import { Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import { Component, DestroyRef, PLATFORM_ID, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { BookingsService } from '../../core/bookings.service';
 import { AdminBooking } from '../../core/models';
@@ -57,7 +58,14 @@ export class CalendarPage {
   protected readonly selected = computed(() => this.list().find((b) => b.id === this.selectedId()) ?? null);
   private readonly now = signal(new Date());
 
-  protected readonly view = computed<'het' | 'nap'>(() => (this.nezet() === 'nap' ? 'nap' : 'het'));
+  /** Phones: seven day columns don't fit, so the calendar opens on the day view there. */
+  private readonly narrow = signal(false);
+  private readonly defaultView = computed<'het' | 'nap'>(() => (this.narrow() ? 'nap' : 'het'));
+
+  protected readonly view = computed<'het' | 'nap'>(() => {
+    const nezet = this.nezet();
+    return nezet === 'nap' || nezet === 'het' ? nezet : this.defaultView();
+  });
   protected readonly date = computed(() => (/^\d{4}-\d{2}-\d{2}$/.test(this.datum() ?? '') ? this.datum()! : today()));
 
   /** First and last day shown. */
@@ -102,6 +110,13 @@ export class CalendarPage {
   }));
 
   constructor() {
+    if (isPlatformBrowser(inject(PLATFORM_ID))) {
+      const query = window.matchMedia('(max-width: 640px)');
+      this.narrow.set(query.matches);
+      const onChange = (e: MediaQueryListEvent) => this.narrow.set(e.matches);
+      query.addEventListener('change', onChange);
+      inject(DestroyRef).onDestroy(() => query.removeEventListener('change', onChange));
+    }
     effect(() => {
       const range = this.range();
       untracked(() => this.load(range.from, range.to));
@@ -123,7 +138,7 @@ export class CalendarPage {
 
   protected navigate(view: 'het' | 'nap', date: string): void {
     this.router.navigate(['/naptar'], {
-      queryParams: { nezet: view === 'nap' ? 'nap' : null, datum: date === today() ? null : date },
+      queryParams: { nezet: view === this.defaultView() ? null : view, datum: date === today() ? null : date },
     });
   }
 
