@@ -14,7 +14,7 @@
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
 
-  &__inner {
+  &-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -22,14 +22,14 @@
     height: var(--header-h);
   }
 
-  &__actions {
+  &-actions {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
   /* Phones get the booking bar at the bottom instead */
-  &__cta {
+  &-cta {
     @media (max-width: 640px) {
       display: none;
     }
@@ -46,7 +46,7 @@
   letter-spacing: -0.02em;
   white-space: nowrap;
 
-  &__mark {
+  &-mark {
     flex: none;
     width: 10px;
     height: 10px;
@@ -62,17 +62,17 @@
     display: none;
   }
 
-  &__list {
+  &-list {
     display: flex;
     align-items: center;
     gap: 0.125rem;
   }
 
-  &__item {
+  &-item {
     position: relative;
   }
 
-  &__link {
+  &-link {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
@@ -93,13 +93,13 @@
     }
   }
 
-  &__chevron {
+  &-chevron {
     width: 14px;
     height: 14px;
     transition: transform var(--dur) var(--ease);
   }
 
-  &__toggle.is-active &__chevron {
+  &-toggle.is-active &-chevron {
     transform: rotate(180deg);
   }
 }
@@ -125,7 +125,7 @@
     translate: 0 0;
   }
 
-  &__panel {
+  &-panel {
     display: grid;
     gap: 2px;
     padding: 0.5rem;
@@ -135,7 +135,7 @@
     box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
   }
 
-  &__link {
+  &-link {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -155,17 +155,17 @@
     }
   }
 
-  &__text {
+  &-text {
     display: grid;
     line-height: 1.3;
   }
 
-  &__city {
+  &-city {
     font-size: 0.9375rem;
     font-weight: 600;
   }
 
-  &__venue {
+  &-venue {
     font-size: 0.8125rem;
     color: var(--fg-3);
   }
@@ -189,7 +189,7 @@
     background: var(--bg-2);
   }
 
-  &__bar {
+  &-bar {
     position: absolute;
     width: 20px;
     height: 2px;
@@ -209,12 +209,12 @@
     }
   }
 
-  &.is-open &__bar:nth-child(2) {
+  &.is-open &-bar:nth-child(2) {
     translate: 0 0;
     transform: rotate(45deg);
   }
 
-  &.is-open &__bar:nth-child(3) {
+  &.is-open &-bar:nth-child(3) {
     translate: 0 0;
     transform: rotate(-45deg);
   }
@@ -229,17 +229,17 @@
   overflow-y: auto;
   animation: menu-in var(--dur) var(--ease);
 
-  &__inner {
+  &-inner {
     display: grid;
     gap: 2rem;
     padding-block: 1.5rem 2.5rem;
   }
 
-  &__list {
+  &-list {
     display: grid;
   }
 
-  &__link {
+  &-link {
     display: block;
     padding: 0.9rem 0;
     border-bottom: 1px solid var(--line);
@@ -254,17 +254,17 @@
     }
   }
 
-  &__group {
+  &-group {
     display: grid;
     gap: 0.75rem;
   }
 
-  &__venues {
+  &-venues {
     display: grid;
     gap: 2px;
   }
 
-  &__venue {
+  &-venue {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -280,7 +280,7 @@
     }
   }
 
-  &__venue-text {
+  &-venue-text {
     display: flex;
     flex-wrap: wrap;
     gap: 0 0.5rem;
@@ -305,7 +305,7 @@
   border-top: 1px solid var(--line);
   background: var(--bg);
 
-  &__grid {
+  &-grid {
     display: grid;
     grid-template-columns: 1.6fr 1fr 1.3fr 1.2fr;
     gap: 2.5rem;
@@ -322,16 +322,16 @@
   }
 
   @media (max-width: 640px) {
-    &__brand {
+    &-brand {
       grid-column: 1 / -1;
       gap: 1rem;
     }
 
-    &__col--venues {
+    &-col-venues {
       grid-column: 1 / -1;
       order: 1;
 
-      .site-footer__links {
+      .site-footer-links {
         grid-template-columns: 1fr 1fr;
         gap: 0.75rem 1.25rem;
       }
@@ -342,7 +342,7 @@
       }
     }
 
-    &__venue {
+    &-venue {
       font-size: 0.8125rem;
 
       > span {
@@ -350,12 +350,12 @@
       }
     }
 
-    &__cities {
+    &-cities {
       display: none;
     }
   }
 
-  &__brand {
+  &-brand {
     display: grid;
     gap: 1.25rem;
     align-content: start;
@@ -367,7 +367,7 @@
     }
   }
 
-  &__title {
+  &-title {
     margin-bottom: 1rem;
     font: 500 0.75rem/1 var(--font-mono);
     letter-spacing: 0.12em;
@@ -375,8 +375,8 @@
     color: var(--fg-3);
   }
 
-  &__links,
-  &__contact {
+  &-links,
+  &-contact {
     display: grid;
     gap: 0.6rem;
     font-size: 0.9375rem;
@@ -394,13 +394,13 @@
     }
   }
 
-  &__bottom {
+  &-bottom {
     border-top: 1px solid var(--line);
     padding-block: 1.25rem;
     font-size: 0.8125rem;
   }
 
-  &__bottom-inner {
+  &-bottom-inner {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -448,12 +448,12 @@
       min-height: 48px;
     }
 
-    &__call {
+    &-call {
       flex: none;
       padding-inline: 1.1rem;
     }
 
-    &__book {
+    &-book {
       flex: 1;
     }
   }

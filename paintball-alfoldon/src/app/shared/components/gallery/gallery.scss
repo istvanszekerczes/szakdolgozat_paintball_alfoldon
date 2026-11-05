@@ -24,12 +24,12 @@
     gap: 0.5rem;
   }
 
-  .tile__media {
+  .tile-media {
     padding: 0.75rem;
     border-radius: var(--radius);
   }
 
-  .tile__caption {
+  .tile-caption {
     font-size: 0.8125rem;
   }
 }
@@ -47,7 +47,7 @@
   outline-offset: 4px;
 }
 
-.tile__media {
+.tile-media {
   position: relative;
   display: grid;
   place-items: end start;
@@ -63,26 +63,26 @@
     transform var(--dur) var(--ease);
 }
 
-.tile:hover .tile__media,
-.tile:focus-visible .tile__media {
+.tile:hover .tile-media,
+.tile:focus-visible .tile-media {
   border-color: var(--line-3);
   transform: translateY(-2px);
 }
 
-.tile__index {
+.tile-index {
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   color: var(--fg-3);
 }
 
-.tile__caption {
+.tile-caption {
   font-size: 0.9375rem;
   font-weight: 500;
   color: var(--fg-2);
   line-height: 1.4;
 }
 
-.tile:hover .tile__caption {
+.tile:hover .tile-caption {
   color: var(--fg);
 }
 
@@ -98,20 +98,20 @@
   backdrop-filter: blur(10px);
 }
 
-.lightbox__dialog {
+.lightbox-dialog {
   position: relative;
   width: min(100%, 960px);
   display: grid;
   gap: 1.25rem;
 }
 
-.lightbox__figure {
+.lightbox-figure {
   display: grid;
   gap: 1rem;
   margin: 0;
 }
 
-.lightbox__media {
+.lightbox-media {
   display: grid;
   place-items: center;
   aspect-ratio: 16 / 10;
@@ -123,20 +123,20 @@
     linear-gradient(160deg, var(--bg-3), var(--bg-1));
 }
 
-.lightbox__index {
+.lightbox-index {
   font-size: 0.875rem;
   letter-spacing: 0.1em;
   color: var(--fg-3);
 }
 
-.lightbox__caption {
+.lightbox-caption {
   text-align: center;
   font-size: 1.0625rem;
   font-weight: 500;
   color: var(--fg);
 }
 
-.lightbox__btn {
+.lightbox-btn {
   display: grid;
   place-items: center;
   width: 44px;
@@ -150,24 +150,24 @@
     border-color var(--dur) var(--ease);
 }
 
-.lightbox__btn:hover {
+.lightbox-btn:hover {
   background: var(--bg-3);
   border-color: var(--line-3);
 }
 
-.lightbox__btn svg {
+.lightbox-btn svg {
   width: 20px;
   height: 20px;
 }
 
-.lightbox__close {
+.lightbox-close {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
   z-index: 1;
 }
 
-.lightbox__nav {
+.lightbox-nav {
   display: flex;
   justify-content: center;
   gap: 0.75rem;

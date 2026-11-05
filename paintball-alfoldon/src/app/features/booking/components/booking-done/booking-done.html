@@ -1,5 +1,5 @@
 <div class="done" role="status">
-  <span class="done__icon" aria-hidden="true">
+  <span class="done-icon" aria-hidden="true">
     <svg
       viewBox="0 0 24 24"
       fill="none"
@@ -11,16 +11,16 @@
       <path d="M20 6 9 17l-5-5" />
     </svg>
   </span>
-  <h2 class="done__title" tabindex="-1">Foglalásodat megkaptuk</h2>
+  <h2 class="done-title" tabindex="-1">Foglalásodat megkaptuk</h2>
   <p>
     Foglalási szám: <strong class="mono">#{{ booking().id }}</strong
     ><br />
     {{ booking().venueName }}, {{ date() }}, <span class="mono">{{ time() }}</span
     >, {{ booking().headcount }} fő
   </p>
-  <p class="done__status">
+  <p class="done-status">
     Állapot: <span class="pill">függőben</span>. Kollégánk hamarosan visszaigazolja a foglalást
     e-mailben vagy telefonon.
   </p>
-  <button type="button" class="btn btn--secondary" (click)="again.emit()">Új foglalás</button>
+  <button type="button" class="btn btn-secondary" (click)="again.emit()">Új foglalás</button>
 </div>

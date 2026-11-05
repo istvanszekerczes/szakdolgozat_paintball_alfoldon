@@ -46,7 +46,7 @@ const FOCUS_ZOOM = CLUSTER_SPLIT_ZOOM + 0.5;
  */
 const easeInOutCubic = (t: number): number => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);
 
-/** Container width (px) above which pins carry a name chip — keep in sync with `.pb-marker__label`. */
+/** Container width (px) above which pins carry a name chip — keep in sync with `.pb-marker-label`. */
 const LABEL_BREAKPOINT = 700;
 
 interface Cluster {

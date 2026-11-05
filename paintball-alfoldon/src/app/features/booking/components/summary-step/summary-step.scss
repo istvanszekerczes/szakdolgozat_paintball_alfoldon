@@ -2,7 +2,7 @@
   display: grid;
   margin: 0;
 }
-.summary__row {
+.summary-row {
   display: grid;
   grid-template-columns: 9rem 1fr auto;
   gap: 0.75rem;
@@ -10,7 +10,7 @@
   padding: 0.875rem 0;
   border-bottom: 1px solid var(--line);
 }
-.summary__row:last-child {
+.summary-row:last-child {
   border-bottom: 0;
 }
 dt {
@@ -20,7 +20,7 @@ dt {
 dd {
   margin: 0;
 }
-.summary__note {
+.summary-note {
   white-space: pre-line;
   overflow-wrap: anywhere;
 }
@@ -30,7 +30,7 @@ dd {
   overflow-wrap: anywhere;
 }
 @media (max-width: 560px) {
-  .summary__row {
+  .summary-row {
     grid-template-columns: 1fr auto;
   }
   dt {

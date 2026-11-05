@@ -71,7 +71,7 @@ export class Gallery {
   /** Keep Tab focus inside the dialog while it is open. */
   onKeydown(event: KeyboardEvent): void {
     if (event.key !== 'Tab') return;
-    const dialog = (event.currentTarget as HTMLElement).querySelector('.lightbox__dialog');
+    const dialog = (event.currentTarget as HTMLElement).querySelector('.lightbox-dialog');
     const focusable = dialog?.querySelectorAll<HTMLElement>('button:not([disabled])');
     if (!focusable?.length) return;
 

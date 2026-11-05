@@ -16,7 +16,7 @@
   }
 }
 
-.fb-note__icon {
+.fb-note-icon {
   display: grid;
   place-items: center;
   flex: none;
@@ -27,21 +27,21 @@
   color: var(--accent);
 }
 
-.fb-note__icon svg {
+.fb-note-icon svg {
   width: 22px;
   height: 22px;
 }
 
-.fb-note__title {
+.fb-note-title {
   font-size: 1.125rem;
   margin-bottom: 0.25rem;
 }
 
-.fb-note__text p {
+.fb-note-text p {
   font-size: 0.9375rem;
 }
 
-.fb-note__link {
+.fb-note-link {
   color: var(--fg);
   font-weight: 500;
   text-decoration: underline;
@@ -49,6 +49,6 @@
   text-underline-offset: 3px;
 }
 
-.fb-note__link:hover {
+.fb-note-link:hover {
   color: var(--accent);
 }

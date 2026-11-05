@@ -242,19 +242,19 @@ export function createMarkerElement({
   } else {
     el.setAttribute('role', 'img');
   }
-  el.className = count ? 'pb-marker pb-marker--cluster' : 'pb-marker';
+  el.className = count ? 'pb-marker pb-marker-cluster' : 'pb-marker';
   el.setAttribute('aria-label', label);
   el.title = label;
 
   const pin = document.createElement('span');
-  pin.className = 'pb-marker__pin';
+  pin.className = 'pb-marker-pin';
   pin.setAttribute('aria-hidden', 'true');
 
   const ring = document.createElement('span');
-  ring.className = 'pb-marker__ring';
+  ring.className = 'pb-marker-ring';
 
   const dot = document.createElement('span');
-  dot.className = 'pb-marker__dot';
+  dot.className = 'pb-marker-dot';
   if (count) dot.textContent = String(count);
 
   pin.append(ring, dot);
@@ -262,7 +262,7 @@ export function createMarkerElement({
 
   if (caption) {
     const chip = document.createElement('span');
-    chip.className = 'pb-marker__label';
+    chip.className = 'pb-marker-label';
     chip.setAttribute('aria-hidden', 'true');
     chip.textContent = caption;
     el.append(chip);
@@ -271,7 +271,7 @@ export function createMarkerElement({
 }
 
 export function setMarkerCaption(element: HTMLElement, caption: string): void {
-  const chip = element.querySelector('.pb-marker__label');
+  const chip = element.querySelector('.pb-marker-label');
   if (chip) chip.textContent = caption;
 }
 
@@ -292,23 +292,23 @@ export interface PopupContent {
 
 export function createPopupContent({ eyebrow, title, meta }: PopupContent): HTMLElement {
   const body = document.createElement('div');
-  body.className = 'pb-popup__body';
+  body.className = 'pb-popup-body';
 
   if (eyebrow) {
     const e = document.createElement('span');
-    e.className = 'pb-popup__eyebrow';
+    e.className = 'pb-popup-eyebrow';
     e.textContent = eyebrow;
     body.append(e);
   }
 
   const t = document.createElement('strong');
-  t.className = 'pb-popup__title';
+  t.className = 'pb-popup-title';
   t.textContent = title;
   body.append(t);
 
   if (meta) {
     const m = document.createElement('span');
-    m.className = 'pb-popup__meta';
+    m.className = 'pb-popup-meta';
     m.textContent = meta;
     body.append(m);
   }

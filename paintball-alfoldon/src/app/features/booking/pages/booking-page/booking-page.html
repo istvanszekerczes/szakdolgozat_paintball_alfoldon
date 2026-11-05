@@ -1,8 +1,8 @@
-<section class="page-header page-header--center">
+<section class="page-header page-header-center">
   <div class="container">
     <span class="eyebrow">Foglalás</span>
-    <h1 class="page-header__title">Időpont foglalása</h1>
-    <p class="page-header__lead lead">
+    <h1 class="page-header-title">Időpont foglalása</h1>
+    <p class="page-header-lead lead">
       Válassz pályát, időpontot és létszámot, és pár perc alatt elküldheted a foglalásod. Inkább
       beszélnél velünk? Telefonon és e-mailben is foglalhatsz.
     </p>
@@ -13,7 +13,7 @@
   <div class="container booking">
     <div class="notice" role="note">
       <svg
-        class="notice__icon"
+        class="notice-icon"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -36,30 +36,30 @@
     @defer (on idle) {
       <app-booking-wizard />
     } @placeholder {
-      <div class="card booking__placeholder" aria-busy="true">Foglalási űrlap betöltése…</div>
+      <div class="card booking-placeholder" aria-busy="true">Foglalási űrlap betöltése…</div>
     }
 
-    <h2 class="booking__alt">Inkább telefonon vagy e-mailben?</h2>
+    <h2 class="booking-alt">Inkább telefonon vagy e-mailben?</h2>
 
     <div class="channels">
       <article class="card channel">
         <span class="eyebrow">Telefon</span>
-        <h2 class="channel__value">+36 30/977 14 86</h2>
+        <h2 class="channel-value">+36 30/977 14 86</h2>
         <p>Hétfőtől vasárnapig 06:00–22:00, ünnepnapokon is.</p>
-        <a href="tel:+36309771486" class="btn btn--primary btn--lg btn--block">Hívás most</a>
+        <a href="tel:+36309771486" class="btn btn-primary btn-lg btn-block">Hívás most</a>
       </article>
 
       <article class="card channel">
         <span class="eyebrow">E-mail</span>
-        <h2 class="channel__value">paintball&#64;alfoldon.hu</h2>
+        <h2 class="channel-value">paintball&#64;alfoldon.hu</h2>
         <p>Ajánlatkérésre és levelekre 24 órán belül válaszolunk.</p>
-        <a href="mailto:paintball@alfoldon.hu" class="btn btn--secondary btn--lg btn--block"
+        <a href="mailto:paintball@alfoldon.hu" class="btn btn-secondary btn-lg btn-block"
           >E-mail küldése</a
         >
       </article>
     </div>
 
-    <p class="booking__hint">
+    <p class="booking-hint">
       Telefonon vagy e-mailben írd meg a tervezett dátumot, a létszámot és a választott pályát, így
       azonnal pontos ajánlatot tudunk adni.
     </p>

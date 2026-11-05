@@ -20,20 +20,20 @@
   border-color: var(--accent);
   box-shadow: 0 0 0 1px var(--accent);
 }
-.venue__head {
+.venue-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
 }
-.venue__city {
+.venue-city {
   font-weight: 600;
   font-size: 1.0625rem;
 }
-.venue__name {
+.venue-name {
   color: var(--fg-2);
 }
-.venue__meta {
+.venue-meta {
   font-size: 0.8125rem;
   color: var(--fg-3);
 }
@@ -49,13 +49,13 @@
     padding: 0.875rem;
     border-radius: var(--radius);
   }
-  .venue__head {
+  .venue-head {
     display: contents;
   }
-  .venue__city {
+  .venue-city {
     font-size: 1rem;
   }
-  .venue__name {
+  .venue-name {
     font-size: 0.875rem;
     line-height: 1.35;
   }

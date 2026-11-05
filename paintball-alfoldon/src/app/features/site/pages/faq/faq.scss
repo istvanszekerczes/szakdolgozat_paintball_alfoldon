@@ -11,11 +11,11 @@
   }
 }
 
-.faq__list {
+.faq-list {
   border-top: 1px solid var(--line);
 }
 
-.faq__help {
+.faq-help {
   display: grid;
   gap: 1rem;
   position: sticky;
@@ -23,20 +23,20 @@
 }
 
 @media (max-width: 900px) {
-  .faq__help {
+  .faq-help {
     position: static;
   }
 }
 
-.faq__help-title {
+.faq-help-title {
   font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
 }
 
-.faq__help p {
+.faq-help p {
   font-size: 0.9375rem;
 }
 
-.faq__help-actions {
+.faq-help-actions {
   display: grid;
   gap: 0.5rem;
   margin-top: 0.5rem;

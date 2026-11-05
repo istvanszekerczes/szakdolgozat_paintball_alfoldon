@@ -7,10 +7,10 @@
         (click)="open(i)"
         [attr.aria-label]="'Megnyitás: ' + item.caption"
       >
-        <span class="tile__media" aria-hidden="true">
-          <span class="tile__index mono">{{ pad(i + 1) }}</span>
+        <span class="tile-media" aria-hidden="true">
+          <span class="tile-index mono">{{ pad(i + 1) }}</span>
         </span>
-        <span class="tile__caption">{{ item.caption }}</span>
+        <span class="tile-caption">{{ item.caption }}</span>
       </button>
     </li>
   }
@@ -19,7 +19,7 @@
 @if (active(); as idx) {
   <div class="lightbox" (click)="onBackdrop($event)" (keydown)="onKeydown($event)">
     <div
-      class="lightbox__dialog"
+      class="lightbox-dialog"
       role="dialog"
       aria-modal="true"
       [attr.aria-label]="items[idx.value].caption"
@@ -27,7 +27,7 @@
       <button
         #closeBtn
         type="button"
-        class="lightbox__btn lightbox__close"
+        class="lightbox-btn lightbox-close"
         (click)="close()"
         aria-label="Bezárás"
       >
@@ -43,17 +43,17 @@
         </svg>
       </button>
 
-      <figure class="lightbox__figure">
-        <div class="lightbox__media" aria-hidden="true">
-          <span class="lightbox__index mono"
+      <figure class="lightbox-figure">
+        <div class="lightbox-media" aria-hidden="true">
+          <span class="lightbox-index mono"
             >{{ pad(idx.value + 1) }} / {{ pad(items.length) }}</span
           >
         </div>
-        <figcaption class="lightbox__caption">{{ items[idx.value].caption }}</figcaption>
+        <figcaption class="lightbox-caption">{{ items[idx.value].caption }}</figcaption>
       </figure>
 
-      <div class="lightbox__nav">
-        <button type="button" class="lightbox__btn" (click)="prev()" aria-label="Előző kép">
+      <div class="lightbox-nav">
+        <button type="button" class="lightbox-btn" (click)="prev()" aria-label="Előző kép">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -66,7 +66,7 @@
             <path d="m15 18-6-6 6-6" />
           </svg>
         </button>
-        <button type="button" class="lightbox__btn" (click)="next()" aria-label="Következő kép">
+        <button type="button" class="lightbox-btn" (click)="next()" aria-label="Következő kép">
           <svg
             viewBox="0 0 24 24"
             fill="none"

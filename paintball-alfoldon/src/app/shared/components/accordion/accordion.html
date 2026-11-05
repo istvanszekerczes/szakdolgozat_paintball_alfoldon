@@ -1,16 +1,16 @@
 <div class="accordion" [class.is-open]="isOpen()">
-  <h3 class="accordion__heading">
+  <h3 class="accordion-heading">
     <button
       type="button"
-      class="accordion__trigger"
+      class="accordion-trigger"
       [id]="triggerId()"
       [attr.aria-expanded]="isOpen()"
       [attr.aria-controls]="panelId()"
       (click)="toggle()"
     >
-      <span class="accordion__question">{{ question() }}</span>
+      <span class="accordion-question">{{ question() }}</span>
       <svg
-        class="accordion__icon"
+        class="accordion-icon"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -24,13 +24,13 @@
   </h3>
 
   <div
-    class="accordion__panel"
+    class="accordion-panel"
     [id]="panelId()"
     role="region"
     [attr.aria-labelledby]="triggerId()"
     [attr.aria-hidden]="!isOpen()"
   >
-    <div class="accordion__content">
+    <div class="accordion-content">
       <p>{{ answer() }}</p>
     </div>
   </div>

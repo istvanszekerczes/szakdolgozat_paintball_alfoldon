@@ -18,7 +18,7 @@
   }
 }
 
-.loc__main {
+.loc-main {
   display: grid;
   gap: 2.5rem;
 }
@@ -35,7 +35,7 @@
   gap: 1rem;
 }
 
-.loc-map__head {
+.loc-map-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -43,13 +43,13 @@
   gap: 1rem;
 }
 
-.loc__side {
+.loc-side {
   position: sticky;
   top: calc(var(--header-h) + 1.5rem);
 }
 
 @media (max-width: 900px) {
-  .loc__side {
+  .loc-side {
     position: static;
   }
 }
@@ -59,7 +59,7 @@
   gap: 1.5rem;
 }
 
-.specs-card__title {
+.specs-card-title {
   font-size: 1.125rem;
 }
 
@@ -68,14 +68,14 @@
   gap: 1rem;
 }
 
-.specs__row {
+.specs-row {
   display: grid;
   gap: 0.2rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--line);
 }
 
-.specs__row:last-child {
+.specs-row:last-child {
   padding-bottom: 0;
   border-bottom: 0;
 }
@@ -98,14 +98,14 @@
   font-size: 0.9375rem;
 }
 
-.specs-card__cta {
+.specs-card-cta {
   display: grid;
   gap: 0.5rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--line);
 }
 
-.specs-card__cta p {
+.specs-card-cta p {
   margin-bottom: 0.5rem;
   font-size: 0.9375rem;
 }
@@ -113,7 +113,7 @@
 /* Phones: label and value on one line, and the booking bar at the bottom replaces the card's
    own booking button */
 @media (max-width: 640px) {
-  .loc__main {
+  .loc-main {
     gap: 2rem;
   }
 
@@ -125,19 +125,19 @@
     gap: 0.75rem;
   }
 
-  .specs__row {
+  .specs-row {
     grid-template-columns: 8.5rem minmax(0, 1fr);
     align-items: baseline;
     gap: 0.75rem;
     padding-bottom: 0.75rem;
   }
 
-  .specs-card__cta {
+  .specs-card-cta {
     padding-top: 1rem;
   }
 
-  .specs-card__cta p,
-  .specs-card__cta .btn--primary {
+  .specs-card-cta p,
+  .specs-card-cta .btn-primary {
     display: none;
   }
 }

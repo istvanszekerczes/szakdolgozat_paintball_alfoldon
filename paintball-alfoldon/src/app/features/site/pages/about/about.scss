@@ -11,23 +11,23 @@
   }
 }
 
-.about__story h2 {
+.about-story h2 {
   margin-bottom: 0.5rem;
 }
 
-.about__timeline {
+.about-timeline {
   font-size: 0.8125rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--fg-3);
 }
 
-.about__mission {
+.about-mission {
   display: grid;
   gap: 1rem;
 }
 
-.about__mission-title {
+.about-mission-title {
   font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
 }
 
@@ -43,7 +43,7 @@
   }
 }
 
-.cta__inner {
+.cta-inner {
   display: grid;
   justify-items: center;
   gap: 1.25rem;

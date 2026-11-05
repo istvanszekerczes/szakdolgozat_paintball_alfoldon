@@ -4,7 +4,7 @@
   padding: clamp(5rem, 12vw, 9rem) 0 clamp(4rem, 9vw, 6rem);
 }
 
-.hero__glow {
+.hero-glow {
   position: absolute;
   top: -30%;
   right: -10%;
@@ -15,25 +15,25 @@
   pointer-events: none;
 }
 
-.hero__inner {
+.hero-inner {
   position: relative;
   display: grid;
   gap: 1.5rem;
   max-width: 820px;
 }
 
-.hero__title {
+.hero-title {
   margin-top: 0.25rem;
 }
 
-.hero__actions {
+.hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 0.5rem;
 }
 
-.hero__facts {
+.hero-facts {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem 3rem;
@@ -48,23 +48,23 @@
     padding: 2.5rem 0 2.75rem;
   }
 
-  .hero__inner {
+  .hero-inner {
     gap: 1.125rem;
   }
 
-  .hero__actions {
+  .hero-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
   }
 
-  .hero__actions .btn {
+  .hero-actions .btn {
     padding-inline: 0.75rem;
     white-space: normal;
     text-align: center;
   }
 
-  .hero__facts {
+  .hero-facts {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.25rem 1rem;
@@ -72,11 +72,11 @@
     padding-top: 1.5rem;
   }
 
-  .fact__num {
+  .fact-num {
     font-size: 1.5rem;
   }
 
-  .fact__label {
+  .fact-label {
     font-size: 0.8125rem;
   }
 }
@@ -86,14 +86,14 @@
   gap: 0.25rem;
 }
 
-.fact__num {
+.fact-num {
   font-size: 1.75rem;
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1;
 }
 
-.fact__label {
+.fact-label {
   font-size: 0.875rem;
   color: var(--fg-3);
 }
@@ -116,30 +116,30 @@
   }
 }
 
-.venue-card__top {
+.venue-card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.75rem;
 }
 
-.venue-card__capacity {
+.venue-card-capacity {
   font-size: 0.8125rem;
   color: var(--fg-3);
 }
 
-.venue-card__venue {
+.venue-card-venue {
   font-size: 0.9375rem;
   font-weight: 500;
   color: var(--accent);
 }
 
-.venue-card__desc {
+.venue-card-desc {
   flex: 1;
   font-size: 0.9375rem;
 }
 
-.venue-card__more {
+.venue-card-more {
   margin-top: 1rem;
   font-size: 0.9375rem;
 }
@@ -157,23 +157,23 @@
   }
 }
 
-.why__text {
+.why-text {
   display: grid;
   gap: 1.25rem;
 }
 
-.why__points {
+.why-points {
   display: grid;
   gap: 0.75rem;
   color: var(--fg-2);
 }
 
-.why__points li {
+.why-points li {
   position: relative;
   padding-left: 1.25rem;
 }
 
-.why__points li::before {
+.why-points li::before {
   content: '';
   position: absolute;
   left: 0;
@@ -184,7 +184,7 @@
   background: var(--accent);
 }
 
-.why__stats {
+.why-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
@@ -192,7 +192,7 @@
 
 /* Phones: the hero already shows these numbers, so the cards would only repeat them */
 @media (max-width: 640px) {
-  .why__stats {
+  .why-stats {
     display: none;
   }
 }
@@ -209,7 +209,7 @@
   align-content: start;
 }
 
-.activity__index {
+.activity-index {
   font: 500 0.75rem var(--font-mono);
   letter-spacing: 0.1em;
   color: var(--fg-3);
@@ -231,29 +231,29 @@
   align-content: space-between;
 }
 
-.quote__text {
+.quote-text {
   font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
   line-height: 1.6;
   color: var(--fg);
   text-wrap: pretty;
 }
 
-.quote__author {
+.quote-author {
   display: grid;
   gap: 0.15rem;
   font-size: 0.875rem;
 }
 
-.quote__name {
+.quote-name {
   font-weight: 600;
   color: var(--fg);
 }
 
-.quote__role {
+.quote-role {
   color: var(--fg-3);
 }
 
-.cta__inner {
+.cta-inner {
   display: grid;
   justify-items: center;
   gap: 1.25rem;
@@ -261,7 +261,7 @@
   text-align: center;
 }
 
-.cta__actions {
+.cta-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -270,7 +270,7 @@
 }
 
 @media (max-width: 640px) {
-  .cta__actions {
+  .cta-actions {
     display: grid;
     justify-content: stretch;
     width: 100%;

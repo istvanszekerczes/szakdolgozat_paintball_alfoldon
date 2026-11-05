@@ -8,16 +8,16 @@
 .done p {
   max-width: 46ch;
 }
-.done__title:focus {
+.done-title:focus {
   outline: none;
 }
-.done__status {
+.done-status {
   color: var(--fg-2);
 }
 .done .btn {
   margin-top: 0.75rem;
 }
-.done__icon {
+.done-icon {
   display: grid;
   place-items: center;
   width: 56px;
@@ -27,7 +27,7 @@
   background: var(--accent);
   color: var(--on-accent);
 }
-.done__icon svg {
+.done-icon svg {
   width: 26px;
   height: 26px;
 }
