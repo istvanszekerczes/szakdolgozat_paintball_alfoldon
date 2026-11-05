@@ -1,9 +1,9 @@
 import { Component, OnInit, computed, effect, inject, input, output, signal } from '@angular/core';
-import { forkJoin } from 'rxjs';
-import { CarsService } from '../../../resources/services/car-service';
-import { EmployeesService } from '../../../employees/services/employee-service';
+import { CarService } from '../../../resources/services/car-service';
+import { EmployeeService } from '../../../employees/services/employee-service';
 import { ScheduleService } from '../../services/schedule-service';
-import { AdminBooking, Car, EMPLOYMENT_LABELS, Employee } from '../../../bookings/models/booking';
+import { AdminBooking } from '../../../bookings/models/booking';
+import { EMPLOYMENT_LABELS } from '../../../employees/models/employee';
 import { errorMessage } from '../../../../shared/utils/error-message';
 
 /**
@@ -16,19 +16,25 @@ import { errorMessage } from '../../../../shared/utils/error-message';
   styleUrl: './assignment-panel.scss',
 })
 export class AssignmentPanel implements OnInit {
-  private readonly carsApi = inject(CarsService);
-  private readonly employeesApi = inject(EmployeesService);
-  private readonly schedule = inject(ScheduleService);
+  private carService = inject(CarService);
+  private employeeService = inject(EmployeeService);
+  private scheduleService = inject(ScheduleService);
 
   readonly booking = input.required<AdminBooking>();
   readonly updated = output<AdminBooking>();
 
   protected readonly labels = EMPLOYMENT_LABELS;
-  protected readonly cars = signal<Car[]>([]);
-  protected readonly employees = signal<Employee[]>([]);
-  protected readonly loading = signal(true);
+  protected readonly cars = this.carService.cars;
+  protected readonly employees = this.employeeService.employees;
+  protected readonly loading = computed(
+    () => this.carService.carsLoading() || this.employeeService.employeesLoading(),
+  );
   protected readonly busy = signal(false);
-  protected readonly error = signal<string | null>(null);
+  /** A refused save (clash, absence), or else a failed load of the cars or the staff. */
+  private readonly saveError = signal<string | null>(null);
+  protected readonly error = computed(
+    () => this.saveError() ?? this.carService.carsError() ?? this.employeeService.employeesError(),
+  );
   protected readonly saved = signal(false);
 
   protected readonly carId = signal<number | null>(null);
@@ -59,22 +65,13 @@ export class AssignmentPanel implements OnInit {
       const b = this.booking();
       this.carId.set(b.car?.id ?? null);
       this.employeeIds.set(new Set(b.employees.map((e) => e.id)));
-      this.error.set(null);
+      this.saveError.set(null);
     });
   }
 
   ngOnInit(): void {
-    forkJoin({ cars: this.carsApi.list(), employees: this.employeesApi.list() }).subscribe({
-      next: ({ cars, employees }) => {
-        this.cars.set(cars);
-        this.employees.set(employees);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(errorMessage(err));
-        this.loading.set(false);
-      },
-    });
+    this.carService.loadCars();
+    this.employeeService.loadEmployees();
   }
 
   protected num(event: Event): number | null {
@@ -92,9 +89,9 @@ export class AssignmentPanel implements OnInit {
 
   protected save(): void {
     this.busy.set(true);
-    this.error.set(null);
+    this.saveError.set(null);
     this.saved.set(false);
-    this.schedule.assign(this.booking().id, this.carId(), [...this.employeeIds()]).subscribe({
+    this.scheduleService.assign(this.booking(), this.carId(), [...this.employeeIds()]).subscribe({
       next: (b) => {
         this.busy.set(false);
         this.saved.set(true);
@@ -102,7 +99,7 @@ export class AssignmentPanel implements OnInit {
       },
       error: (err) => {
         this.busy.set(false);
-        this.error.set(errorMessage(err));
+        this.saveError.set(errorMessage(err));
       },
     });
   }

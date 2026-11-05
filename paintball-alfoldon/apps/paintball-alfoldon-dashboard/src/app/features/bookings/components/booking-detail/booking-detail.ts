@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, input, output, signal, untracked } from '@angular/core';
-import { BookingsService } from '../../services/booking-service';
+import { BookingService } from '../../services/booking-service';
 import { AdminBooking, BookingStatus, NEXT_STATUSES, STATUS_LABELS } from '../../models/booking';
 import { errorMessage } from '../../../../shared/utils/error-message';
 import { hm, longDay, relative } from '../../../../shared/utils/format';
@@ -21,12 +21,11 @@ const ACTION_LABELS: Record<BookingStatus, string> = {
   host: { class: 'card', 'aria-label': 'Foglalás részletei', role: 'complementary' },
 })
 export class BookingDetail {
-  private readonly bookings = inject(BookingsService);
+  private bookingService = inject(BookingService);
 
   readonly bookingId = input.required<number>();
   /** A copy the page already has, shown until the fresh one arrives. */
   readonly initial = input<AdminBooking | null>(null);
-  readonly changed = output<AdminBooking>();
   readonly closed = output<void>();
 
   protected readonly labels = STATUS_LABELS;
@@ -62,7 +61,7 @@ export class BookingDetail {
     if (status === 'CANCELLED' && !confirm(`Biztosan lemondod ${b.customer.name} foglalását?`)) return;
     this.busy.set(true);
     this.error.set(null);
-    this.bookings.changeStatus(b.id, status).subscribe({
+    this.bookingService.changeStatus(b.id, status).subscribe({
       next: (updated) => {
         this.busy.set(false);
         this.update(updated);
@@ -76,14 +75,13 @@ export class BookingDetail {
 
   protected update(updated: AdminBooking): void {
     this.booking.set(updated);
-    this.changed.emit(updated);
   }
 
   private load(id: number): void {
     this.error.set(null);
     const initial = this.initial();
     this.booking.set(initial?.id === id ? initial : null);
-    this.bookings.get(id).subscribe({
+    this.bookingService.loadBooking(id).subscribe({
       next: (b) => this.booking.set(b),
       error: (err) => this.error.set(errorMessage(err)),
     });

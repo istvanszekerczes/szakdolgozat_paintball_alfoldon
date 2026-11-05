@@ -1,6 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { EmployeesService } from '../../services/employee-service';
-import { EMPLOYMENT_LABELS, Employee, EmployeeInput, EmploymentType, Exclusion } from '../../../bookings/models/booking';
+import { EmployeeService } from '../../services/employee-service';
+import { EMPLOYMENT_LABELS, Employee, EmployeeInput, EmploymentType, Exclusion } from '../../models/employee';
 import { errorMessage } from '../../../../shared/utils/error-message';
 import { longDay, today } from '../../../../shared/utils/format';
 import { Column, DataTable } from '../../../../shared/components/data-table/data-table';
@@ -17,7 +17,7 @@ const EMPTY: EmployeeInput = { name: '', phone: '', employmentType: 'FULL_TIME',
   styleUrl: './employees.scss',
 })
 export class Employees implements OnInit {
-  private readonly api = inject(EmployeesService);
+  private employeeService = inject(EmployeeService);
 
   protected readonly labels = EMPLOYMENT_LABELS;
   protected readonly types: EmploymentType[] = ['FULL_TIME', 'ON_CALL'];
@@ -31,9 +31,13 @@ export class Employees implements OnInit {
     { label: '' },
   ];
 
-  protected readonly list = signal<Employee[]>([]);
-  protected readonly loading = signal(true);
-  protected readonly error = signal<string | null>(null);
+  protected readonly list = this.employeeService.employees;
+  protected readonly loading = this.employeeService.employeesLoading;
+  /** A failed (de)activation, or else a failed load. */
+  private readonly actionError = signal<string | null>(null);
+  protected readonly error = computed(
+    () => this.actionError() ?? this.employeeService.employeesError(),
+  );
   protected readonly showInactive = signal(false);
   protected readonly visible = computed(() => this.list().filter((e) => e.active || this.showInactive()));
   protected readonly inactiveCount = computed(() => this.list().filter((e) => !e.active).length);
@@ -47,13 +51,17 @@ export class Employees implements OnInit {
 
   // Absences dialog
   protected readonly absenceOf = signal<Employee | null>(null);
-  protected readonly exclusions = signal<Exclusion[]>([]);
+  protected readonly exclusions = this.employeeService.exclusions;
   protected readonly exclusionForm = signal({ dateFrom: '', dateTo: '', reason: '' });
   protected readonly exclusionBusy = signal(false);
-  protected readonly exclusionError = signal<string | null>(null);
+  /** A refused or invalid absence, or else a failed load of the list. */
+  private readonly exclusionActionError = signal<string | null>(null);
+  protected readonly exclusionError = computed(
+    () => this.exclusionActionError() ?? this.employeeService.exclusionsError(),
+  );
 
   ngOnInit(): void {
-    this.load();
+    this.employeeService.loadEmployees();
   }
 
   protected openNew(): void {
@@ -87,11 +95,10 @@ export class Employees implements OnInit {
     const input = { ...this.form(), phone: this.form().phone?.trim() || null };
     this.formBusy.set(true);
     this.formError.set(null);
-    (editing ? this.api.update(editing.id, input) : this.api.create(input)).subscribe({
+    this.employeeService.saveEmployee(editing?.id ?? null, input).subscribe({
       next: () => {
         this.formBusy.set(false);
         this.formOpen.set(false);
-        this.load();
       },
       error: (err) => {
         this.formBusy.set(false);
@@ -104,21 +111,17 @@ export class Employees implements OnInit {
   protected toggleActive(e: Employee): void {
     if (e.active && !confirm(`${e.name} inaktív lesz, és nem lehet többé beosztani. Folytatod?`)) return;
     const { id, ...input } = e;
-    this.api.update(id, { ...input, active: !e.active }).subscribe({
-      next: () => this.load(),
-      error: (err) => this.error.set(errorMessage(err)),
+    this.actionError.set(null);
+    this.employeeService.saveEmployee(id, { ...input, active: !e.active }).subscribe({
+      error: (err) => this.actionError.set(errorMessage(err)),
     });
   }
 
   protected openAbsences(e: Employee): void {
     this.absenceOf.set(e);
-    this.exclusions.set([]);
     this.exclusionForm.set({ dateFrom: '', dateTo: '', reason: '' });
-    this.exclusionError.set(null);
-    this.api.exclusions(e.id).subscribe({
-      next: (list) => this.exclusions.set(list),
-      error: (err) => this.exclusionError.set(errorMessage(err)),
-    });
+    this.exclusionActionError.set(null);
+    this.employeeService.loadExclusions(e.id);
   }
 
   protected setExclusion(key: 'dateFrom' | 'dateTo' | 'reason', event: Event): void {
@@ -136,20 +139,20 @@ export class Employees implements OnInit {
     const f = this.exclusionForm();
     if (!e) return;
     if (!f.dateFrom || !f.dateTo) {
-      this.exclusionError.set('Add meg az első és az utolsó napot.');
+      this.exclusionActionError.set('Add meg az első és az utolsó napot.');
       return;
     }
     this.exclusionBusy.set(true);
-    this.exclusionError.set(null);
-    this.api.addExclusion(e.id, { dateFrom: f.dateFrom, dateTo: f.dateTo, reason: f.reason.trim() || null }).subscribe({
-      next: (x) => {
+    this.exclusionActionError.set(null);
+    const input = { dateFrom: f.dateFrom, dateTo: f.dateTo, reason: f.reason.trim() || null };
+    this.employeeService.addExclusion(e.id, input).subscribe({
+      next: () => {
         this.exclusionBusy.set(false);
-        this.exclusions.update((list) => [x, ...list].sort((a, b) => b.dateFrom.localeCompare(a.dateFrom)));
         this.exclusionForm.set({ dateFrom: '', dateTo: '', reason: '' });
       },
       error: (err) => {
         this.exclusionBusy.set(false);
-        this.exclusionError.set(errorMessage(err));
+        this.exclusionActionError.set(errorMessage(err));
       },
     });
   }
@@ -157,24 +160,9 @@ export class Employees implements OnInit {
   protected deleteExclusion(x: Exclusion): void {
     const e = this.absenceOf();
     if (!e) return;
-    this.api.deleteExclusion(e.id, x.id).subscribe({
-      next: () => this.exclusions.update((list) => list.filter((y) => y.id !== x.id)),
-      error: (err) => this.exclusionError.set(errorMessage(err)),
+    this.employeeService.deleteExclusion(e.id, x.id).subscribe({
+      error: (err) => this.exclusionActionError.set(errorMessage(err)),
     });
   }
 
-  private load(): void {
-    this.loading.set(true);
-    this.api.list().subscribe({
-      next: (list) => {
-        this.list.set(list);
-        this.loading.set(false);
-        this.error.set(null);
-      },
-      error: (err) => {
-        this.error.set(errorMessage(err));
-        this.loading.set(false);
-      },
-    });
-  }
 }

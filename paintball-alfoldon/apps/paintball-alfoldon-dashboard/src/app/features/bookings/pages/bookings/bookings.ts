@@ -1,8 +1,7 @@
 import { Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { BookingsService } from '../../services/booking-service';
+import { BookingService } from '../../services/booking-service';
 import { AdminBooking, BookingFilter, BookingStatus, STATUS_LABELS } from '../../models/booking';
-import { errorMessage } from '../../../../shared/utils/error-message';
 import { hm, longDay, relative } from '../../../../shared/utils/format';
 import { BookingDetail } from '../../components/booking-detail/booking-detail';
 
@@ -16,8 +15,8 @@ const STATUSES: BookingStatus[] = ['PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED
   styleUrl: './bookings.scss',
 })
 export class Bookings {
-  private readonly bookings = inject(BookingsService);
-  private readonly router = inject(Router);
+  private bookingService = inject(BookingService);
+  private router = inject(Router);
 
   // Route params and query params, bound by withComponentInputBinding().
   readonly id = input<string>();
@@ -32,9 +31,13 @@ export class Bookings {
   protected readonly longDay = longDay;
   protected readonly relative = relative;
 
-  protected readonly list = signal<AdminBooking[]>([]);
-  protected readonly loading = signal(true);
-  protected readonly error = signal<string | null>(null);
+  protected readonly list = computed(() =>
+    [...this.bookingService.bookings()].sort((a, b) =>
+      (a.date + a.startTime).localeCompare(b.date + b.startTime),
+    ),
+  );
+  protected readonly loading = this.bookingService.bookingsLoading;
+  protected readonly error = this.bookingService.bookingsError;
 
   /** Venues seen so far, for the venue filter (the venue list endpoint is public-site only). */
   private readonly seenVenues = signal(new Map<string, string>());
@@ -57,7 +60,11 @@ export class Bookings {
   constructor() {
     effect(() => {
       const filter = this.filter();
-      untracked(() => this.load(filter));
+      untracked(() => this.bookingService.loadBookings(filter));
+    });
+    effect(() => {
+      const list = this.bookingService.bookings();
+      untracked(() => this.rememberVenues(list));
     });
   }
 
@@ -72,27 +79,6 @@ export class Bookings {
 
   protected close(): void {
     this.router.navigate(['/foglalasok'], { queryParamsHandling: 'preserve' });
-  }
-
-  /** Keeps the list in step with a status change or assignment made in the side panel. */
-  protected onChanged(updated: AdminBooking): void {
-    this.list.update((list) => list.map((x) => (x.id === updated.id ? updated : x)));
-  }
-
-  private load(filter: BookingFilter): void {
-    this.loading.set(true);
-    this.error.set(null);
-    this.bookings.list(filter).subscribe({
-      next: (list) => {
-        this.list.set([...list].sort((a, b) => (a.date + a.startTime).localeCompare(b.date + b.startTime)));
-        this.rememberVenues(list);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(errorMessage(err));
-        this.loading.set(false);
-      },
-    });
   }
 
   private rememberVenues(list: AdminBooking[]): void {

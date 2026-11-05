@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
-import { DaySchedule, EMPLOYMENT_LABELS } from '../../../bookings/models/booking';
+import { DaySchedule } from '../../models/schedule';
+import { EMPLOYMENT_LABELS } from '../../../employees/models/employee';
 import { hm } from '../../../../shared/utils/format';
 import { StatusBadge } from '../../../../shared/components/status-badge/status-badge';
 

@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
-import { BookingsService } from '../../../features/bookings/services/booking-service';
+import { BookingService } from '../../../features/bookings/services/booking-service';
 import { NavIcon } from '../nav-icon/nav-icon';
 
 const THEME_KEY = 'pa-admin-theme';
@@ -25,15 +25,15 @@ interface NavItem {
   styleUrl: './shell.scss',
 })
 export class Shell implements OnInit {
-  protected readonly auth = inject(AuthService);
-  private readonly bookings = inject(BookingsService);
+  protected authService = inject(AuthService);
+  private bookingService = inject(BookingService);
   private readonly document = inject(DOCUMENT);
   private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
 
   protected readonly menuOpen = signal(false);
   protected readonly dark = signal(this.readTheme());
-  protected readonly pending = this.bookings.pendingCount;
-  protected readonly initials = computed(() => (this.auth.username() ?? '?').slice(0, 2));
+  protected readonly pending = this.bookingService.pendingCount;
+  protected readonly initials = computed(() => (this.authService.username() ?? '?').slice(0, 2));
 
   protected readonly nav: NavItem[] = [
     { path: '/', label: 'Áttekintés', exact: true, icon: 'overview' },
@@ -71,7 +71,7 @@ export class Shell implements OnInit {
   }
 
   ngOnInit(): void {
-    this.bookings.refreshPendingCount();
+    this.bookingService.loadPendingBookings();
   }
 
   private readTheme(): boolean {

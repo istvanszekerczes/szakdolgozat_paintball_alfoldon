@@ -45,7 +45,7 @@
           </div>
           <a class="link" [routerLink]="['/foglalasok', g.id]">Részletek →</a>
         </div>
-        <app-assignment-panel [booking]="g" (updated)="onAssigned($event)" />
+        <app-assignment-panel [booking]="g" />
       </article>
     } @empty {
       <p class="empty">{{ loading() ? 'Betöltés…' : 'Ezen a napon nincs elfogadott játék.' }}</p>

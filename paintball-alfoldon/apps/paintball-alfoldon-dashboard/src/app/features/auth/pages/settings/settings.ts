@@ -9,7 +9,7 @@ import { errorMessage } from '../../../../shared/utils/error-message';
   styleUrl: './settings.scss',
 })
 export class Settings {
-  protected readonly auth = inject(AuthService);
+  protected authService = inject(AuthService);
 
   protected readonly current = signal('');
   protected readonly next = signal('');
@@ -22,7 +22,7 @@ export class Settings {
     return (event.target as HTMLInputElement).value;
   }
 
-  protected async submit(event: Event): Promise<void> {
+  protected submit(event: Event): void {
     event.preventDefault();
     this.done.set(false);
     if (this.next().length < 8) {
@@ -35,16 +35,18 @@ export class Settings {
     }
     this.busy.set(true);
     this.error.set(null);
-    try {
-      await this.auth.changePassword(this.current(), this.next());
-      this.done.set(true);
-      this.current.set('');
-      this.next.set('');
-      this.repeat.set('');
-    } catch (err) {
-      this.error.set(errorMessage(err));
-    } finally {
-      this.busy.set(false);
-    }
+    this.authService.changePassword(this.current(), this.next()).subscribe({
+      next: () => {
+        this.busy.set(false);
+        this.done.set(true);
+        this.current.set('');
+        this.next.set('');
+        this.repeat.set('');
+      },
+      error: (err) => {
+        this.busy.set(false);
+        this.error.set(errorMessage(err));
+      },
+    });
   }
 }

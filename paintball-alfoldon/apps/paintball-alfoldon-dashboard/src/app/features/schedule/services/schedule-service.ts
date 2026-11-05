@@ -1,25 +1,58 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { API_URL } from '../../../shared/utils/error-message';
-import { AdminBooking, Alert, DaySchedule } from '../../bookings/models/booking';
+import { Service, computed, inject } from '@angular/core';
+import { Observable, tap } from 'rxjs';
+import { AdminBooking } from '../../bookings/models/booking';
+import { BookingService } from '../../bookings/services/booking-service';
+import { ScheduleStore } from '../store/schedule-store';
 
 /** Beosztás: assignments, the computed day plan and the alerts built on them. */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ScheduleService {
-  private readonly http = inject(HttpClient);
-  private readonly api = `${inject(API_URL)}/api/admin`;
+  private store = inject(ScheduleStore);
+  private bookingService = inject(BookingService);
 
-  /** Replaces the car and staff of a game; 409 with a message when someone is elsewhere or away. */
-  assign(bookingId: number, carId: number | null, employeeIds: number[]): Observable<AdminBooking> {
-    return this.http.put<AdminBooking>(`${this.api}/bookings/${bookingId}/assignment`, { carId, employeeIds });
+  readonly daySchedule = computed(() => this.store.daySchedule());
+  readonly dayScheduleLoading = computed(() => this.store.dayScheduleLoading());
+  readonly dayScheduleError = computed(() => this.store.dayScheduleError());
+
+  readonly alerts = computed(() => this.store.alerts());
+  readonly alertsLoading = computed(() => this.store.alertsLoading());
+  readonly alertsError = computed(() => this.store.alertsError());
+
+  /**
+   * Loads the day plan (car timeline and staff) of one date.
+   *
+   * @param date The day as `YYYY-MM-DD`.
+   * @returns void
+   */
+  loadDaySchedule(date: string) {
+    this.store.loadDaySchedule(date);
   }
 
-  day(date: string): Observable<DaySchedule> {
-    return this.http.get<DaySchedule>(`${this.api}/schedule`, { params: { date } });
+  /**
+   * Loads the alerts the backend computed for the coming days.
+   *
+   * @returns void
+   */
+  loadAlerts() {
+    this.store.loadAlerts();
   }
 
-  alerts(): Observable<Alert[]> {
-    return this.http.get<Alert[]>(`${this.api}/alerts`);
+  /**
+   * Saves the car and the staff of one game, then updates the booking lists and the day plan.
+   *
+   * @param booking The game to assign.
+   * @param carId The ID of the car, or null for no car.
+   * @param employeeIds The IDs of the employees working on the game.
+   * @returns An Observable of the updated booking.
+   */
+  assign(booking: AdminBooking, carId: number | null, employeeIds: number[]): Observable<AdminBooking> {
+    return this.store.assign(booking.id, carId, employeeIds).pipe(
+      tap((updated) => {
+        this.bookingService.replaceBooking(updated);
+        if (this.store.daySchedule()?.date === updated.date) {
+          this.store.refreshDaySchedule(updated.date);
+        }
+      }),
+    );
   }
 }

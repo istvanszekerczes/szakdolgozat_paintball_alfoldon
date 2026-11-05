@@ -1,33 +1,68 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, computed, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { API_URL } from '../../../shared/utils/error-message';
-import { AdminVenue, VenueBlock } from '../../bookings/models/booking';
+import { AdminVenue, VenueBlock, VenueSettings } from '../models/venue';
+import { VenueStore } from '../store/venue-store';
 
-export type VenueSettings = Pick<AdminVenue, 'active' | 'travelMinutes' | 'setupMinutes' | 'teardownMinutes'>;
+/** Pályák: active switch, travel / setup / teardown minutes and blocks. */
+@Service()
+export class VenueService {
+  private store = inject(VenueStore);
 
-@Injectable({ providedIn: 'root' })
-export class VenuesService {
-  private readonly http = inject(HttpClient);
-  private readonly base = `${inject(API_URL)}/api/admin/venues`;
+  readonly venues = computed(() => this.store.venues());
+  readonly venuesLoading = computed(() => this.store.venuesLoading());
+  readonly venuesError = computed(() => this.store.venuesError());
+  readonly blocks = computed(() => this.store.blocks());
+  readonly blocksError = computed(() => this.store.blocksError());
 
-  list(): Observable<AdminVenue[]> {
-    return this.http.get<AdminVenue[]>(this.base);
+  /**
+   * Loads every venue with its dashboard settings.
+   *
+   * @returns void
+   */
+  loadVenues() {
+    this.store.loadVenues();
   }
 
-  update(id: number, settings: VenueSettings): Observable<AdminVenue> {
-    return this.http.put<AdminVenue>(`${this.base}/${id}`, settings);
+  /**
+   * Saves the settings of one venue.
+   *
+   * @param id The ID of the venue.
+   * @param settings Active flag and the travel, setup and teardown minutes.
+   * @returns An Observable of the updated venue.
+   */
+  updateVenue(id: number, settings: VenueSettings): Observable<AdminVenue> {
+    return this.store.updateVenue(id, settings);
   }
 
-  blocks(id: number): Observable<VenueBlock[]> {
-    return this.http.get<VenueBlock[]>(`${this.base}/${id}/blocks`);
+  /**
+   * Loads the blocks (closed periods) of one venue.
+   *
+   * @param venueId The ID of the venue.
+   * @returns void
+   */
+  loadBlocks(venueId: number) {
+    this.store.loadBlocks(venueId);
   }
 
-  addBlock(id: number, block: Omit<VenueBlock, 'id'>): Observable<VenueBlock> {
-    return this.http.post<VenueBlock>(`${this.base}/${id}/blocks`, block);
+  /**
+   * Adds a block: nobody can book the venue in this period.
+   *
+   * @param venueId The ID of the venue.
+   * @param block Start, end and an optional reason.
+   * @returns An Observable of the saved block.
+   */
+  addBlock(venueId: number, block: Omit<VenueBlock, 'id'>): Observable<VenueBlock> {
+    return this.store.addBlock(venueId, block);
   }
 
-  deleteBlock(id: number, blockId: number): Observable<void> {
-    return this.http.delete<void>(`${this.base}/${id}/blocks/${blockId}`);
+  /**
+   * Deletes a block.
+   *
+   * @param venueId The ID of the venue.
+   * @param blockId The ID of the block.
+   * @returns An Observable that completes when the block is deleted.
+   */
+  deleteBlock(venueId: number, blockId: number): Observable<void> {
+    return this.store.deleteBlock(venueId, blockId);
   }
 }

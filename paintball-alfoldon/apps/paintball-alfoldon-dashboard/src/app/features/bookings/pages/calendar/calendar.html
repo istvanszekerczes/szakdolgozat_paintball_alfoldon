@@ -82,6 +82,6 @@
   </section>
 
   @if (selectedId(); as sid) {
-    <app-booking-detail [bookingId]="sid" [initial]="selected()" (changed)="onChanged($event)" (closed)="selectedId.set(null)" />
+    <app-booking-detail [bookingId]="sid" [initial]="selected()" (closed)="selectedId.set(null)" />
   }
 </div>

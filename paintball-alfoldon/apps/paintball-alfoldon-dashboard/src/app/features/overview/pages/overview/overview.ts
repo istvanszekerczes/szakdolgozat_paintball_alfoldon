@@ -1,9 +1,8 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { forkJoin } from 'rxjs';
-import { BookingsService } from '../../../bookings/services/booking-service';
+import { BookingService } from '../../../bookings/services/booking-service';
 import { ScheduleService } from '../../../schedule/services/schedule-service';
-import { AdminBooking, Alert, BookingStatus, DaySchedule, STATUS_LABELS } from '../../../bookings/models/booking';
+import { AdminBooking, BookingStatus, STATUS_LABELS } from '../../../bookings/models/booking';
 import { errorMessage } from '../../../../shared/utils/error-message';
 import { addDays, fullDate, hm, hoursSince, longDay, relative, shortDow, today } from '../../../../shared/utils/format';
 import { CarTimeline } from '../../../schedule/components/car-timeline/car-timeline';
@@ -19,8 +18,8 @@ const LONG_PENDING_HOURS = 48;
   styleUrl: './overview.scss',
 })
 export class Overview implements OnInit {
-  private readonly bookings = inject(BookingsService);
-  private readonly scheduleApi = inject(ScheduleService);
+  private bookingService = inject(BookingService);
+  private scheduleService = inject(ScheduleService);
 
   protected readonly today = today();
   protected readonly todayLabel = fullDate(this.today);
@@ -29,18 +28,37 @@ export class Overview implements OnInit {
   protected readonly longDay = longDay;
   protected readonly relative = relative;
 
-  protected readonly loading = signal(true);
-  protected readonly error = signal<string | null>(null);
+  protected readonly loading = computed(
+    () =>
+      this.bookingService.pendingLoading() ||
+      this.bookingService.bookingsLoading() ||
+      this.scheduleService.alertsLoading() ||
+      this.scheduleService.dayScheduleLoading(),
+  );
+  /** A failed decision, or else the first failed load. */
+  private readonly decideError = signal<string | null>(null);
+  protected readonly error = computed(
+    () =>
+      this.decideError() ??
+      this.bookingService.pendingError() ??
+      this.bookingService.bookingsError() ??
+      this.scheduleService.alertsError() ??
+      this.scheduleService.dayScheduleError(),
+  );
   protected readonly busyId = signal<number | null>(null);
 
   /** All pending bookings, oldest request first. */
-  private readonly pending = signal<AdminBooking[]>([]);
+  private readonly pending = this.bookingService.pendingBookings;
   /** Pending and accepted bookings for today and the next 6 days. */
-  private readonly week = signal<AdminBooking[]>([]);
+  private readonly week = computed(() =>
+    this.bookingService
+      .bookings()
+      .filter((b) => b.status === 'PENDING' || b.status === 'ACCEPTED'),
+  );
   /** Computed by the backend (/api/admin/alerts), most severe first. */
-  protected readonly alerts = signal<Alert[]>([]);
+  protected readonly alerts = this.scheduleService.alerts;
   /** Today's plan: car timeline and who works. */
-  protected readonly schedule = signal<DaySchedule | null>(null);
+  protected readonly schedule = this.scheduleService.daySchedule;
 
   protected readonly incoming = computed(() =>
     [...this.pending()].sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
@@ -84,40 +102,25 @@ export class Overview implements OnInit {
     this.load();
   }
 
+  /** Loads everything the overview shows; also used by the "Újra" button. */
   protected load(): void {
-    this.loading.set(true);
-    this.error.set(null);
-    forkJoin({
-      pending: this.bookings.list({ status: 'PENDING' }),
-      week: this.bookings.list({ from: this.today, to: addDays(this.today, 6) }),
-      alerts: this.scheduleApi.alerts(),
-      schedule: this.scheduleApi.day(this.today),
-    }).subscribe({
-      next: ({ pending, week, alerts, schedule }) => {
-        this.pending.set(pending);
-        this.alerts.set(alerts);
-        this.schedule.set(schedule);
-        this.week.set(week.filter((b) => b.status === 'PENDING' || b.status === 'ACCEPTED'));
-        this.bookings.pendingCount.set(pending.length);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(errorMessage(err));
-        this.loading.set(false);
-      },
-    });
+    this.bookingService.loadPendingBookings();
+    this.bookingService.loadBookings({ from: this.today, to: addDays(this.today, 6) });
+    this.scheduleService.loadAlerts();
+    this.scheduleService.loadDaySchedule(this.today);
   }
 
   protected decide(booking: AdminBooking, status: BookingStatus): void {
     this.busyId.set(booking.id);
-    this.bookings.changeStatus(booking.id, status).subscribe({
+    this.decideError.set(null);
+    this.bookingService.changeStatus(booking.id, status).subscribe({
       next: () => {
         this.busyId.set(null);
         this.load();
       },
       error: (err) => {
         this.busyId.set(null);
-        this.error.set(errorMessage(err));
+        this.decideError.set(errorMessage(err));
       },
     });
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CarsService } from '../../services/car-service';
-import { Car, CarInput } from '../../../bookings/models/booking';
+import { CarService } from '../../services/car-service';
+import { Car, CarInput } from '../../models/car';
 import { errorMessage } from '../../../../shared/utils/error-message';
 import { Column, DataTable } from '../../../../shared/components/data-table/data-table';
 import { FormDialog } from '../../../../shared/components/form-dialog/form-dialog';
@@ -16,12 +16,12 @@ const EMPTY: CarInput = { plate: '', seats: 5, active: true };
   styleUrl: './resources.scss',
 })
 export class Resources implements OnInit {
-  private readonly api = inject(CarsService);
+  private carService = inject(CarService);
 
   protected readonly columns: Column[] = [{ label: 'Rendszám' }, { label: 'Férőhely', num: true }, { label: 'Állapot' }, { label: '' }];
-  protected readonly cars = signal<Car[]>([]);
-  protected readonly loading = signal(true);
-  protected readonly error = signal<string | null>(null);
+  protected readonly cars = this.carService.cars;
+  protected readonly loading = this.carService.carsLoading;
+  protected readonly error = this.carService.carsError;
 
   protected readonly editing = signal<Car | null>(null);
   protected readonly formOpen = signal(false);
@@ -30,7 +30,7 @@ export class Resources implements OnInit {
   protected readonly formError = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.load();
+    this.carService.loadCars();
   }
 
   protected openNew(): void {
@@ -59,11 +59,10 @@ export class Resources implements OnInit {
     const editing = this.editing();
     this.busy.set(true);
     this.formError.set(null);
-    (editing ? this.api.update(editing.id, this.form()) : this.api.create(this.form())).subscribe({
+    this.carService.saveCar(editing?.id ?? null, this.form()).subscribe({
       next: () => {
         this.busy.set(false);
         this.formOpen.set(false);
-        this.load();
       },
       error: (err) => {
         this.busy.set(false);
@@ -72,17 +71,4 @@ export class Resources implements OnInit {
     });
   }
 
-  private load(): void {
-    this.loading.set(true);
-    this.api.list().subscribe({
-      next: (cars) => {
-        this.cars.set(cars);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(errorMessage(err));
-        this.loading.set(false);
-      },
-    });
-  }
 }

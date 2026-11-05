@@ -1,6 +1,6 @@
 import { Component, computed, effect, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DaySchedule, SEGMENT_LABELS, SegmentType } from '../../../bookings/models/booking';
+import { DaySchedule, SEGMENT_LABELS, SegmentType } from '../../models/schedule';
 import { hm, isoDate } from '../../../../shared/utils/format';
 
 const FIRST_HOUR = 7;

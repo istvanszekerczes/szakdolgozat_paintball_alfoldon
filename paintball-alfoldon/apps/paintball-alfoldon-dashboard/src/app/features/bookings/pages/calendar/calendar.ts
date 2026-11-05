@@ -1,9 +1,8 @@
 import { Component, DestroyRef, PLATFORM_ID, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { BookingsService } from '../../services/booking-service';
+import { BookingService } from '../../services/booking-service';
 import { AdminBooking } from '../../models/booking';
-import { errorMessage } from '../../../../shared/utils/error-message';
 import { addDays, fullDate, hm, parseDate, shortDow, today } from '../../../../shared/utils/format';
 import { BookingDetail } from '../../components/booking-detail/booking-detail';
 
@@ -40,8 +39,8 @@ interface DayColumn {
   styleUrl: './calendar.scss',
 })
 export class Calendar {
-  private readonly bookings = inject(BookingsService);
-  private readonly router = inject(Router);
+  private bookingService = inject(BookingService);
+  private router = inject(Router);
 
   readonly nezet = input<string>();
   readonly datum = input<string>();
@@ -51,9 +50,14 @@ export class Calendar {
   protected readonly gridHeight = (LAST_HOUR - FIRST_HOUR) * HOUR_PX;
   protected readonly hourPx = HOUR_PX;
 
-  protected readonly list = signal<AdminBooking[]>([]);
-  protected readonly loading = signal(true);
-  protected readonly error = signal<string | null>(null);
+  /** Pending and accepted games; rejected and cancelled ones are not shown. */
+  protected readonly list = computed(() =>
+    this.bookingService
+      .bookings()
+      .filter((b) => b.status === 'PENDING' || b.status === 'ACCEPTED'),
+  );
+  protected readonly loading = this.bookingService.bookingsLoading;
+  protected readonly error = this.bookingService.bookingsError;
   protected readonly selectedId = signal<number | null>(null);
   protected readonly selected = computed(() => this.list().find((b) => b.id === this.selectedId()) ?? null);
   private readonly now = signal(new Date());
@@ -119,7 +123,7 @@ export class Calendar {
     }
     effect(() => {
       const range = this.range();
-      untracked(() => this.load(range.from, range.to));
+      untracked(() => this.bookingService.loadBookings({ from: range.from, to: range.to }));
     });
     effect((onCleanup) => {
       const timer = setInterval(() => this.now.set(new Date()), 60_000);
@@ -142,28 +146,6 @@ export class Calendar {
     });
   }
 
-  protected onChanged(updated: AdminBooking): void {
-    this.list.update((list) =>
-      updated.status === 'PENDING' || updated.status === 'ACCEPTED'
-        ? list.map((b) => (b.id === updated.id ? updated : b))
-        : list.filter((b) => b.id !== updated.id),
-    );
-  }
-
-  private load(from: string, to: string): void {
-    this.loading.set(true);
-    this.error.set(null);
-    this.bookings.list({ from, to }).subscribe({
-      next: (list) => {
-        this.list.set(list.filter((b) => b.status === 'PENDING' || b.status === 'ACCEPTED'));
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(errorMessage(err));
-        this.loading.set(false);
-      },
-    });
-  }
 }
 
 function minutes(time: string): number {

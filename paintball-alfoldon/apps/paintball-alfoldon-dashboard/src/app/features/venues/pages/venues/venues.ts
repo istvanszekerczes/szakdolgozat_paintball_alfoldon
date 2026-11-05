@@ -1,6 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { VenueSettings, VenuesService } from '../../services/venue-service';
-import { AdminVenue, VenueBlock } from '../../../bookings/models/booking';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { VenueService } from '../../services/venue-service';
+import { AdminVenue, VenueBlock, VenueSettings } from '../../models/venue';
 import { errorMessage } from '../../../../shared/utils/error-message';
 import { today } from '../../../../shared/utils/format';
 import { Column, DataTable } from '../../../../shared/components/data-table/data-table';
@@ -15,7 +15,7 @@ import { StatusBadge } from '../../../../shared/components/status-badge/status-b
   styleUrl: './venues.scss',
 })
 export class Venues implements OnInit {
-  private readonly api = inject(VenuesService);
+  private venueService = inject(VenueService);
 
   protected readonly columns: Column[] = [
     { label: 'Pálya' },
@@ -27,9 +27,11 @@ export class Venues implements OnInit {
     { label: '' },
   ];
 
-  protected readonly venues = signal<AdminVenue[]>([]);
-  protected readonly loading = signal(true);
-  protected readonly error = signal<string | null>(null);
+  protected readonly venues = this.venueService.venues;
+  protected readonly loading = this.venueService.venuesLoading;
+  /** A failed (de)activation, or else a failed load. */
+  private readonly actionError = signal<string | null>(null);
+  protected readonly error = computed(() => this.actionError() ?? this.venueService.venuesError());
 
   protected readonly editing = signal<AdminVenue | null>(null);
   protected readonly form = signal<VenueSettings>({ active: true, travelMinutes: 0, setupMinutes: 45, teardownMinutes: 30 });
@@ -37,14 +39,18 @@ export class Venues implements OnInit {
   protected readonly formError = signal<string | null>(null);
 
   protected readonly blocksOf = signal<AdminVenue | null>(null);
-  protected readonly blocks = signal<VenueBlock[]>([]);
+  protected readonly blocks = this.venueService.blocks;
   protected readonly blockForm = signal({ date: '', from: '08:00', toDate: '', to: '20:00', reason: '' });
   protected readonly blockBusy = signal(false);
-  protected readonly blockError = signal<string | null>(null);
+  /** A refused or invalid block, or else a failed load of the list. */
+  private readonly blockActionError = signal<string | null>(null);
+  protected readonly blockError = computed(
+    () => this.blockActionError() ?? this.venueService.blocksError(),
+  );
   protected readonly today = today();
 
   ngOnInit(): void {
-    this.load();
+    this.venueService.loadVenues();
   }
 
   protected openEdit(v: AdminVenue): void {
@@ -68,11 +74,10 @@ export class Venues implements OnInit {
     if (!v) return;
     this.busy.set(true);
     this.formError.set(null);
-    this.api.update(v.id, this.form()).subscribe({
-      next: (updated) => {
+    this.venueService.updateVenue(v.id, this.form()).subscribe({
+      next: () => {
         this.busy.set(false);
         this.editing.set(null);
-        this.venues.update((list) => list.map((x) => (x.id === updated.id ? updated : x)));
       },
       error: (err) => {
         this.busy.set(false);
@@ -84,21 +89,17 @@ export class Venues implements OnInit {
   protected toggleActive(v: AdminVenue): void {
     if (v.active && !confirm(`A(z) ${v.name} pálya inaktív lesz, és nem lehet rá foglalni. Folytatod?`)) return;
     const { active, travelMinutes, setupMinutes, teardownMinutes } = v;
-    this.api.update(v.id, { active: !active, travelMinutes, setupMinutes, teardownMinutes }).subscribe({
-      next: (updated) => this.venues.update((list) => list.map((x) => (x.id === updated.id ? updated : x))),
-      error: (err) => this.error.set(errorMessage(err)),
-    });
+    this.actionError.set(null);
+    this.venueService
+      .updateVenue(v.id, { active: !active, travelMinutes, setupMinutes, teardownMinutes })
+      .subscribe({ error: (err) => this.actionError.set(errorMessage(err)) });
   }
 
   protected openBlocks(v: AdminVenue): void {
     this.blocksOf.set(v);
-    this.blocks.set([]);
-    this.blockError.set(null);
+    this.blockActionError.set(null);
     this.blockForm.set({ date: '', from: '08:00', toDate: '', to: '20:00', reason: '' });
-    this.api.blocks(v.id).subscribe({
-      next: (list) => this.blocks.set(list),
-      error: (err) => this.blockError.set(errorMessage(err)),
-    });
+    this.venueService.loadBlocks(v.id);
   }
 
   protected setBlock(key: 'date' | 'from' | 'toDate' | 'to' | 'reason', event: Event): void {
@@ -111,21 +112,20 @@ export class Venues implements OnInit {
     const f = this.blockForm();
     if (!v) return;
     if (!f.date || !f.toDate || !f.from || !f.to) {
-      this.blockError.set('Add meg a zárolás kezdetét és végét.');
+      this.blockActionError.set('Add meg a zárolás kezdetét és végét.');
       return;
     }
     this.blockBusy.set(true);
-    this.blockError.set(null);
+    this.blockActionError.set(null);
     const block = { startsAt: `${f.date}T${f.from}:00`, endsAt: `${f.toDate}T${f.to}:00`, reason: f.reason.trim() || null };
-    this.api.addBlock(v.id, block).subscribe({
-      next: (b) => {
+    this.venueService.addBlock(v.id, block).subscribe({
+      next: () => {
         this.blockBusy.set(false);
-        this.blocks.update((list) => [...list, b].sort((x, y) => x.startsAt.localeCompare(y.startsAt)));
         this.blockForm.set({ date: '', from: '08:00', toDate: '', to: '20:00', reason: '' });
       },
       error: (err) => {
         this.blockBusy.set(false);
-        this.blockError.set(errorMessage(err));
+        this.blockActionError.set(errorMessage(err));
       },
     });
   }
@@ -133,9 +133,8 @@ export class Venues implements OnInit {
   protected deleteBlock(b: VenueBlock): void {
     const v = this.blocksOf();
     if (!v) return;
-    this.api.deleteBlock(v.id, b.id).subscribe({
-      next: () => this.blocks.update((list) => list.filter((x) => x.id !== b.id)),
-      error: (err) => this.blockError.set(errorMessage(err)),
+    this.venueService.deleteBlock(v.id, b.id).subscribe({
+      error: (err) => this.blockActionError.set(errorMessage(err)),
     });
   }
 
@@ -146,17 +145,4 @@ export class Venues implements OnInit {
     );
   }
 
-  private load(): void {
-    this.loading.set(true);
-    this.api.list().subscribe({
-      next: (list) => {
-        this.venues.set(list);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(errorMessage(err));
-        this.loading.set(false);
-      },
-    });
-  }
 }

@@ -1,23 +1,34 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, computed, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { API_URL } from '../../../shared/utils/error-message';
-import { Car, CarInput } from '../../bookings/models/booking';
+import { Car, CarInput } from '../models/car';
+import { CarStore } from '../store/car-store';
 
-@Injectable({ providedIn: 'root' })
-export class CarsService {
-  private readonly http = inject(HttpClient);
-  private readonly base = `${inject(API_URL)}/api/admin/cars`;
+/** Erőforrások: the cars that take the equipment and the staff to the venues. */
+@Service()
+export class CarService {
+  private store = inject(CarStore);
 
-  list(): Observable<Car[]> {
-    return this.http.get<Car[]>(this.base);
+  readonly cars = computed(() => this.store.cars());
+  readonly carsLoading = computed(() => this.store.carsLoading());
+  readonly carsError = computed(() => this.store.carsError());
+
+  /**
+   * Loads every car, inactive ones included.
+   *
+   * @returns void
+   */
+  loadCars() {
+    this.store.loadCars();
   }
 
-  create(input: CarInput): Observable<Car> {
-    return this.http.post<Car>(this.base, input);
-  }
-
-  update(id: number, input: CarInput): Observable<Car> {
-    return this.http.put<Car>(`${this.base}/${id}`, input);
+  /**
+   * Creates a new car or updates an existing one, then reloads the list.
+   *
+   * @param id The ID of the car to update, or null for a new one.
+   * @param input Plate, seats and the active flag.
+   * @returns An Observable of the saved car.
+   */
+  saveCar(id: number | null, input: CarInput): Observable<Car> {
+    return this.store.saveCar(id, input);
   }
 }
