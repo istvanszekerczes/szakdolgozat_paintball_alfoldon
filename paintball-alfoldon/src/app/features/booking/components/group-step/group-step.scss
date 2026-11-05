@@ -1,0 +1,11 @@
+:host {
+  display: grid;
+  gap: 1.25rem;
+}
+.count {
+  max-width: 160px;
+}
+.hint {
+  font-size: 0.875rem;
+  color: var(--fg-3);
+}

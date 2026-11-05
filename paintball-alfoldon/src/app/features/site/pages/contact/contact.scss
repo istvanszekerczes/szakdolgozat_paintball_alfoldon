@@ -1,0 +1,29 @@
+.channels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 880px;
+}
+
+@media (max-width: 700px) {
+  .channels {
+    grid-template-columns: 1fr;
+  }
+}
+
+.channel {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.channel__value {
+  font-size: clamp(1.375rem, 1.1rem + 1.2vw, 1.875rem);
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.channel p {
+  font-size: 0.9375rem;
+  min-height: 3em;
+}

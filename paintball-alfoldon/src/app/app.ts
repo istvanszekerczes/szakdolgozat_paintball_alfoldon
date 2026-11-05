@@ -12,7 +12,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
-import { LocationService } from './services/location.service';
+import { LocationService } from './features/venues/services/location-service';
 
 @Component({
   selector: 'app-root',

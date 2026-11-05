@@ -1,0 +1,33 @@
+<section class="page-header">
+  <div class="container">
+    <span class="eyebrow">GYIK</span>
+    <h1 class="page-header__title">Gyakori kérdések</h1>
+    <p class="page-header__lead lead">
+      Mindent összeszedtünk, amit a játék előtt tudnod kell. Ha további kérdésed van, keress
+      minket bizalommal.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container faq">
+    <div class="faq__list">
+      @for (faq of faqs; track faq.q; let i = $index) {
+        <app-accordion [question]="faq.q" [answer]="faq.a" [index]="i" />
+      }
+    </div>
+
+    <aside class="card faq__help">
+      <span class="eyebrow">Segítség</span>
+      <h2 class="faq__help-title">További kérdésed van?</h2>
+      <p>
+        Ha nem találtál választ a kérdésedre, vagy egyedi igényekkel érkeznél, szívesen segítünk
+        telefonon vagy e-mailben is.
+      </p>
+      <div class="faq__help-actions">
+        <a routerLink="/kapcsolat" class="btn btn--primary">Kapcsolatfelvétel</a>
+        <a href="tel:+36309771486" class="btn btn--secondary">+36 30/977 14 86</a>
+      </div>
+    </aside>
+  </div>
+</section>

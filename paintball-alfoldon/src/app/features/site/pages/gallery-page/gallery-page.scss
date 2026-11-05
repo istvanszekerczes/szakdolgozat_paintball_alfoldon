@@ -1,0 +1,54 @@
+.gallery-page {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+}
+
+.fb-note {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+@media (max-width: 560px) {
+  .fb-note {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.fb-note__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent-a10);
+  color: var(--accent);
+}
+
+.fb-note__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.fb-note__title {
+  font-size: 1.125rem;
+  margin-bottom: 0.25rem;
+}
+
+.fb-note__text p {
+  font-size: 0.9375rem;
+}
+
+.fb-note__link {
+  color: var(--fg);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+.fb-note__link:hover {
+  color: var(--accent);
+}

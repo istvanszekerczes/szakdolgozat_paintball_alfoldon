@@ -1,0 +1,174 @@
+:host {
+  display: block;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+/* Phones: two columns, so the seven pictures take two screens instead of six */
+@media (max-width: 640px) {
+  .gallery {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 0.75rem;
+  }
+
+  /* Seven pictures: the first one goes full width, the other six fill three rows */
+  .gallery > li:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .tile {
+    gap: 0.5rem;
+  }
+
+  .tile__media {
+    padding: 0.75rem;
+    border-radius: var(--radius);
+  }
+
+  .tile__caption {
+    font-size: 0.8125rem;
+  }
+}
+
+.tile {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  color: var(--fg);
+  border-radius: var(--radius-lg);
+}
+
+.tile:focus-visible {
+  outline-offset: 4px;
+}
+
+.tile__media {
+  position: relative;
+  display: grid;
+  place-items: end start;
+  aspect-ratio: 4 / 3;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(120% 90% at 100% 0%, var(--accent-a10), transparent 55%),
+    linear-gradient(160deg, var(--bg-3), var(--bg-1));
+  transition:
+    border-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.tile:hover .tile__media,
+.tile:focus-visible .tile__media {
+  border-color: var(--line-3);
+  transform: translateY(-2px);
+}
+
+.tile__index {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--fg-3);
+}
+
+.tile__caption {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--fg-2);
+  line-height: 1.4;
+}
+
+.tile:hover .tile__caption {
+  color: var(--fg);
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.9);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.lightbox__dialog {
+  position: relative;
+  width: min(100%, 960px);
+  display: grid;
+  gap: 1.25rem;
+}
+
+.lightbox__figure {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+
+.lightbox__media {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  max-height: 70vh;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(120% 90% at 100% 0%, var(--accent-a10), transparent 55%),
+    linear-gradient(160deg, var(--bg-3), var(--bg-1));
+}
+
+.lightbox__index {
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  color: var(--fg-3);
+}
+
+.lightbox__caption {
+  text-align: center;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.lightbox__btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: rgba(12, 12, 12, 0.9);
+  color: var(--fg);
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.lightbox__btn:hover {
+  background: var(--bg-3);
+  border-color: var(--line-3);
+}
+
+.lightbox__btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.lightbox__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1;
+}
+
+.lightbox__nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
