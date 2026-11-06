@@ -1,0 +1,35 @@
+.wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.box {
+  width: 100%;
+  max-width: 380px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.brand h1 {
+  font-size: 20px;
+}
+.brand p {
+  margin: 2px 0 0;
+  font-size: 13px;
+}
+.error {
+  margin: 0;
+}
+.submit {
+  min-height: 44px;
+  font-size: 14px;
+}

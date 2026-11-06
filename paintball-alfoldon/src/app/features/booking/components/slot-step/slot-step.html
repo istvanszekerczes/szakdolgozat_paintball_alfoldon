@@ -1,0 +1,66 @@
+<div class="field">
+  <label for="bw-date" class="field-label">Dátum</label>
+  <input
+    id="bw-date"
+    type="date"
+    class="input slot-date"
+    [formField]="form().date"
+    [attr.min]="minDate()"
+    [attr.max]="maxDate()"
+    [attr.aria-invalid]="showsError(form().date)"
+    [attr.aria-describedby]="showsError(form().date) ? 'bw-date-error' : 'bw-date-hint'"
+  />
+  @if (showsError(form().date)) {
+    <app-field-errors [field]="form().date" errorId="bw-date-error" />
+  } @else {
+    <p id="bw-date-hint" class="hint">Online legalább egy héttel előre lehet foglalni.</p>
+  }
+</div>
+
+@if (dateReady()) {
+  <fieldset class="slots">
+    <legend class="field-label">Kezdési időpont (2 órás játék)</legend>
+    @if (loading()) {
+      <p class="hint" aria-live="polite">Szabad időpontok betöltése…</p>
+    } @else if (loadError()) {
+      <p class="field-error" role="alert">
+        Nem sikerült betölteni a szabad időpontokat.
+        <button type="button" class="btn btn-ghost btn-sm" (click)="retry.emit()">Újra</button>
+      </p>
+    } @else if (availability(); as day) {
+      @if (!day.bookable) {
+        <p class="hint">
+          Erre a napra online nem lehet foglalni. Hívj minket: <a [href]="phoneHref">{{ phone }}</a
+          >.
+        </p>
+      } @else if (!hasFreeSlot(day)) {
+        <p class="hint">
+          Ezen a napon minden időpont foglalt. Válassz másik napot, vagy hívj minket.
+        </p>
+      } @else {
+        <div class="slots-grid">
+          @for (slot of day.slots; track slot.start) {
+            <button
+              type="button"
+              class="slot"
+              [class.is-selected]="slot.start === form().startTime().value()"
+              [attr.aria-pressed]="slot.start === form().startTime().value()"
+              [disabled]="!slot.available"
+              (click)="pick(slot.start)"
+            >
+              <span class="mono">{{ short(slot.start) }}–{{ short(slot.end) }}</span>
+              @if (!slot.available) {
+                <span class="slot-taken">foglalt</span>
+              }
+            </button>
+          }
+        </div>
+      }
+    }
+    <app-field-errors [field]="form().startTime" errorId="bw-time-error" />
+  </fieldset>
+}
+
+@if (ruleError(); as message) {
+  <p class="field-error" role="alert">{{ message }}</p>
+}

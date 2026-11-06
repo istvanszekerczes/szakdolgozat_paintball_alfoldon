@@ -1,0 +1,279 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(5rem, 12vw, 9rem) 0 clamp(4rem, 9vw, 6rem);
+}
+
+.hero-glow {
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: min(60vw, 720px);
+  aspect-ratio: 1;
+  background: radial-gradient(closest-side, var(--accent-a10), transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  max-width: 820px;
+}
+
+.hero-title {
+  margin-top: 0.25rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.hero-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem 3rem;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+
+/* Phones: the hero fits one screen; two equal buttons and a 2 × 2 fact grid */
+@media (max-width: 640px) {
+  .hero {
+    padding: 2.5rem 0 2.75rem;
+  }
+
+  .hero-inner {
+    gap: 1.125rem;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .hero-actions .btn {
+    padding-inline: 0.75rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .hero-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1rem;
+    margin-top: 1.25rem;
+    padding-top: 1.5rem;
+  }
+
+  .fact-num {
+    font-size: 1.5rem;
+  }
+
+  .fact-label {
+    font-size: 0.8125rem;
+  }
+}
+
+.fact {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.fact-num {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.fact-label {
+  font-size: 0.875rem;
+  color: var(--fg-3);
+}
+
+.venue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.venue-card {
+  gap: 0.5rem;
+  min-height: 240px;
+  color: var(--fg);
+}
+
+@media (max-width: 640px) {
+  .venue-card {
+    min-height: 0;
+  }
+}
+
+.venue-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.venue-card-capacity {
+  font-size: 0.8125rem;
+  color: var(--fg-3);
+}
+
+.venue-card-venue {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.venue-card-desc {
+  flex: 1;
+  font-size: 0.9375rem;
+}
+
+.venue-card-more {
+  margin-top: 1rem;
+  font-size: 0.9375rem;
+}
+
+.why {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .why {
+    grid-template-columns: 1fr;
+  }
+}
+
+.why-text {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.why-points {
+  display: grid;
+  gap: 0.75rem;
+  color: var(--fg-2);
+}
+
+.why-points li {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.why-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.why-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Phones: the hero already shows these numbers, so the cards would only repeat them */
+@media (max-width: 640px) {
+  .why-stats {
+    display: none;
+  }
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.activity {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.activity-index {
+  font: 500 0.75rem var(--font-mono);
+  letter-spacing: 0.1em;
+  color: var(--fg-3);
+}
+
+.activity p {
+  font-size: 0.9375rem;
+}
+
+.quotes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.quote {
+  display: grid;
+  gap: 1.5rem;
+  align-content: space-between;
+}
+
+.quote-text {
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--fg);
+  text-wrap: pretty;
+}
+
+.quote-author {
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.875rem;
+}
+
+.quote-name {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.quote-role {
+  color: var(--fg-3);
+}
+
+.cta-inner {
+  display: grid;
+  justify-items: center;
+  gap: 1.25rem;
+  max-width: 640px;
+  text-align: center;
+}
+
+.cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .cta-actions {
+    display: grid;
+    justify-content: stretch;
+    width: 100%;
+    gap: 0.5rem;
+  }
+}

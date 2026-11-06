@@ -4,6 +4,7 @@ import {
   DOCUMENT,
   HostListener,
   PLATFORM_ID,
+  computed,
   effect,
   inject,
   signal,
@@ -11,18 +12,20 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
-import { LocationService } from './services/location.service';
+import { LocationService } from './features/venues/services/location-service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
   styleUrl: './app.scss',
+  host: {
+    '[class.has-action-bar]': 'showActionBar()',
+  },
 })
 export class App {
-  private readonly router = inject(Router);
-  private readonly document = inject(DOCUMENT);
+  private router = inject(Router);
+  private document = inject(DOCUMENT);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   readonly locations = inject(LocationService).getLocations();
@@ -34,13 +37,28 @@ export class App {
   readonly venuesOpen = signal(false);
   private venuesOpenedByHover = false;
 
+  /** Path of the current page, without query string or fragment. */
+  private readonly path = signal(this.router.url.split(/[?#]/)[0]);
+
+  /** The fixed booking bar on phones; the booking page has its own buttons. */
+  readonly showActionBar = computed(() => !this.path().startsWith('/foglalas'));
+
+  /** On a venue page the bar books that venue, like the page's own button. */
+  readonly bookingParams = computed(() => {
+    const slug = this.path().slice(1);
+    return this.locations.some((loc) => loc.id === slug) ? { palya: slug } : null;
+  });
+
   constructor() {
     this.router.events
       .pipe(
-        filter((event) => event instanceof NavigationEnd),
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         takeUntilDestroyed(),
       )
-      .subscribe(() => this.closeAll());
+      .subscribe((event) => {
+        this.path.set(event.urlAfterRedirects.split(/[?#]/)[0]);
+        this.closeAll();
+      });
 
     // Lock page scrolling while the mobile menu covers the viewport.
     effect(() => {

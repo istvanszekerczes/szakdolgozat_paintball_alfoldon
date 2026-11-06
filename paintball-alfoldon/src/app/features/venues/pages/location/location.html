@@ -1,0 +1,99 @@
+@if (location(); as loc) {
+  <section class="page-header">
+    <div class="container">
+      <span class="eyebrow">{{ loc.venue }}</span>
+      <h1 class="page-header-title">{{ loc.city }}</h1>
+      <p class="page-header-lead lead">{{ loc.terrainType }}. {{ loc.address }}.</p>
+      <ul class="loc-meta" aria-label="Fő adatok">
+        <li class="pill" [class.pill-accent]="loc.indoor">{{ fieldType(loc) }}</li>
+        <li class="pill">Ajánlott {{ loc.optHeadcount }} fő</li>
+        <li class="pill">Max. {{ loc.maxHeadcount }} fő</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container loc">
+      <div class="loc-main">
+        <div class="prose">
+          <h2>A pályáról</h2>
+          <p class="lead">{{ loc.detailedDescription }}</p>
+        </div>
+
+        <div class="prose">
+          <h3>Kiegészítő programok</h3>
+          <p>A klasszikus paintball mellett ezen a pályán előzetes egyeztetés szerint elérhető:</p>
+          <ul class="tags" aria-label="Kiegészítő programok">
+            @for (activity of loc.extraActivities; track activity) {
+              <li class="pill">{{ activity }}</li>
+            }
+          </ul>
+        </div>
+
+        <div class="loc-map">
+          <div class="loc-map-head">
+            <h3>Térkép</h3>
+            <a [href]="directions(loc)" target="_blank" rel="noopener" class="link-arrow">
+              Útvonalterv
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M7 17 17 7M8 7h9v9" />
+              </svg>
+            </a>
+          </div>
+          <app-venue-map [location]="loc" />
+        </div>
+      </div>
+
+      <aside class="loc-side">
+        <div class="card specs-card">
+          <h2 class="specs-card-title">Adatok</h2>
+          <dl class="specs">
+            <div class="specs-row">
+              <dt>Cím</dt>
+              <dd>{{ loc.address }}</dd>
+            </div>
+            <div class="specs-row">
+              <dt>Terep</dt>
+              <dd>{{ loc.terrainType }}</dd>
+            </div>
+            <div class="specs-row">
+              <dt>Minimális létszám</dt>
+              <dd>{{ loc.minHeadcount }} fő</dd>
+            </div>
+            <div class="specs-row">
+              <dt>Ajánlott létszám</dt>
+              <dd class="is-accent">{{ loc.optHeadcount }} fő</dd>
+            </div>
+            <div class="specs-row">
+              <dt>Maximális létszám</dt>
+              <dd>{{ loc.maxHeadcount }} fő</dd>
+            </div>
+            <div class="specs-row">
+              <dt>Koordináták</dt>
+              <dd class="mono">{{ coords(loc) }}</dd>
+            </div>
+          </dl>
+
+          <div class="specs-card-cta">
+            <p>Szeretnéd lefoglalni ezt a pályát a csapatodnak?</p>
+            <a
+              routerLink="/foglalas"
+              [queryParams]="{ palya: loc.id }"
+              class="btn btn-primary btn-block"
+              >Foglalás erre a pályára</a
+            >
+            <a routerLink="/kapcsolat" class="btn btn-secondary btn-block">Árajánlatot kérek</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+}

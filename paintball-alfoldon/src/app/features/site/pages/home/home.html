@@ -1,0 +1,183 @@
+<!-- Hero -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="container hero-inner">
+    <span class="eyebrow">Paintball · lézertag · íjászat · csapatjátékok</span>
+    <h1 id="hero-title" class="hero-title">Paintball az Alföldön,<br />hét pályán.</h1>
+    <p class="lead">
+      Szabadtéri erdei terepek és fedett csarnokok Szegedtől Szolnokig. Baráti társaságoknak,
+      gyerekzsúrokra és több száz fős céges rendezvényekre.
+    </p>
+    <div class="hero-actions">
+      <a routerLink="/foglalas" class="btn btn-primary btn-lg">Foglalás</a>
+      <a routerLink="/kapcsolat" class="btn btn-secondary btn-lg">Árajánlatot kérek</a>
+    </div>
+    <ul class="hero-facts" aria-label="Röviden">
+      <li class="fact">
+        <span class="fact-num">7</span><span class="fact-label">pálya, 6 város</span>
+      </li>
+      <li class="fact">
+        <span class="fact-num">20+</span><span class="fact-label">év tapasztalat</span>
+      </li>
+      <li class="fact">
+        <span class="fact-num">{{ groups.min }}–{{ groups.max }}</span
+        ><span class="fact-label">fős csoportok</span>
+      </li>
+      <li class="fact">
+        <span class="fact-num">3</span><span class="fact-label">fedett, télen is játszható</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- Map -->
+<section class="section section-line" aria-labelledby="map-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Helyszíneink</span>
+      <h2 id="map-title">Válassz pályát a térképen</h2>
+      <p>
+        Válassz a listából, hogy a térkép ráközelítsen, majd kattints a jelölőre a részletekért. A
+        fedett pályák télen és rossz időben is játszhatók.
+      </p>
+    </div>
+    <app-hungary-map />
+  </div>
+</section>
+
+<!-- Venue cards -->
+<section class="section section-alt" aria-labelledby="venues-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Pályáink</span>
+      <h2 id="venues-title">Erdei terepek és fedett csarnokok</h2>
+    </div>
+    <div class="venue-grid rail">
+      @for (loc of locations; track loc.id) {
+        <a [routerLink]="['/', loc.id]" class="card card-interactive venue-card">
+          <div class="venue-card-top">
+            <span class="pill" [class.pill-accent]="loc.indoor">{{ fieldType(loc) }}</span>
+            <span class="venue-card-capacity mono">{{ loc.optHeadcount }} fő</span>
+          </div>
+          <h3>{{ loc.city }}</h3>
+          <p class="venue-card-venue">{{ loc.venue }}</p>
+          <p class="venue-card-desc">{{ loc.terrainType }}</p>
+          <span class="link-arrow venue-card-more">
+            Részletek
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </span>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Why us -->
+<section class="section" aria-labelledby="why-title">
+  <div class="container why">
+    <div class="why-text">
+      <span class="eyebrow">Miért mi?</span>
+      <h2 id="why-title">Két évtized tapasztalat, gördülékeny szervezés</h2>
+      <p class="lead">
+        Tudjuk, hogyan kell megszervezni a tökéletes paintball összecsapást. Akár baráti játékról,
+        akár több száz fős céges rendezvényről van szó, ránk számíthatsz.
+      </p>
+      <ul class="why-points">
+        <li>
+          <strong>Teljes felszerelés</strong> – marker, páramentes maszk, korlátlan hajtógáz, igény
+          szerint overál.
+        </li>
+        <li>
+          <strong>Képzett játékvezetők</strong> – biztonságos, jól vezetett játékmenet minden
+          korosztálynak.
+        </li>
+        <li><strong>Rugalmas létszám</strong> – kis baráti köröktől óriásrendezvényekig.</li>
+      </ul>
+    </div>
+    <div class="why-stats">
+      <div class="card stat">
+        <span class="stat-num">20<em>+</em></span
+        ><span class="stat-label">év tapasztalat</span>
+      </div>
+      <div class="card stat">
+        <span class="stat-num">100k<em>+</em></span
+        ><span class="stat-label">elégedett játékos</span>
+      </div>
+      <div class="card stat">
+        <span class="stat-num">7</span><span class="stat-label">pálya, 6 város</span>
+      </div>
+      <div class="card stat">
+        <span class="stat-num">{{ groups.min }}–{{ groups.max }}</span
+        ><span class="stat-label">fős csoportok</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Activities -->
+<section class="section section-alt" aria-labelledby="activities-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Szolgáltatások</span>
+      <h2 id="activities-title">Kiegészítő tevékenységek</h2>
+      <p>
+        A klasszikus paintball mellett az alábbi csapatjátékokat kínáljuk a különböző pályáinkon.
+      </p>
+    </div>
+    <div class="activity-grid rail">
+      @for (activity of activities; track activity.title; let i = $index) {
+        <article class="card activity">
+          <span class="activity-index">0{{ i + 1 }}</span>
+          <h3>{{ activity.title }}</h3>
+          <p>{{ activity.text }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section" aria-labelledby="quotes-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Visszajelzések</span>
+      <h2 id="quotes-title">Vélemények rólunk</h2>
+    </div>
+    <div class="quotes rail">
+      @for (t of testimonials; track t.name) {
+        <figure class="card quote">
+          <blockquote class="quote-text">„{{ t.quote }}”</blockquote>
+          <figcaption class="quote-author">
+            <span class="quote-name">{{ t.name }}</span>
+            <span class="quote-role">{{ t.role }}</span>
+          </figcaption>
+        </figure>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Closing CTA -->
+<section class="section section-line cta" aria-labelledby="cta-title">
+  <div class="container cta-inner">
+    <span class="eyebrow">Foglalás</span>
+    <h2 id="cta-title">Készen állsz a bevetésre?</h2>
+    <p class="lead">
+      Foglald le az időpontodat még ma, vagy kérj egyedi árajánlatot a rendezvényedre.
+    </p>
+    <div class="cta-actions">
+      <a routerLink="/foglalas" class="btn btn-primary btn-lg">Időpont foglalása</a>
+      <a routerLink="/kapcsolat" class="btn btn-secondary btn-lg">Kapcsolatfelvétel</a>
+    </div>
+  </div>
+</section>

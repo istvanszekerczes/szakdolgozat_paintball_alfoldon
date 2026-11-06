@@ -1,0 +1,43 @@
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .faq {
+    grid-template-columns: 1fr;
+  }
+}
+
+.faq-list {
+  border-top: 1px solid var(--line);
+}
+
+.faq-help {
+  display: grid;
+  gap: 1rem;
+  position: sticky;
+  top: calc(var(--header-h) + 1.5rem);
+}
+
+@media (max-width: 900px) {
+  .faq-help {
+    position: static;
+  }
+}
+
+.faq-help-title {
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+}
+
+.faq-help p {
+  font-size: 0.9375rem;
+}
+
+.faq-help-actions {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}

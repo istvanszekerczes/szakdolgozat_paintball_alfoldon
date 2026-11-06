@@ -1,0 +1,48 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.name {
+  font-weight: 600;
+}
+.actions-cell .btn + .btn {
+  margin-left: 6px;
+}
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.x-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.x-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.x-list .grow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.x-list .past {
+  opacity: 0.6;
+}
+.sub {
+  font-size: 13px;
+  color: var(--fg-2);
+  margin: 0;
+}
+h3 {
+  margin: 6px 0 0;
+  font-size: 14px;
+}

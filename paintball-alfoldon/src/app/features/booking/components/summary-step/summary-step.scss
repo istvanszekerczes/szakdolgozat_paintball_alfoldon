@@ -1,0 +1,39 @@
+.summary {
+  display: grid;
+  margin: 0;
+}
+.summary-row {
+  display: grid;
+  grid-template-columns: 9rem 1fr auto;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.summary-row:last-child {
+  border-bottom: 0;
+}
+dt {
+  color: var(--fg-3);
+  font-size: 0.875rem;
+}
+dd {
+  margin: 0;
+}
+.summary-note {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.muted {
+  color: var(--fg-2);
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 560px) {
+  .summary-row {
+    grid-template-columns: 1fr auto;
+  }
+  dt {
+    grid-column: 1 / -1;
+  }
+}

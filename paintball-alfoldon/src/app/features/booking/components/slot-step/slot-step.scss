@@ -1,0 +1,55 @@
+:host {
+  display: grid;
+  gap: 1.5rem;
+}
+.slot-date {
+  max-width: 260px;
+  color-scheme: dark;
+}
+.hint {
+  font-size: 0.875rem;
+  color: var(--fg-3);
+}
+.hint a {
+  color: var(--accent-2);
+}
+.slots {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.5rem;
+}
+.slot {
+  display: grid;
+  gap: 0.15rem;
+  justify-items: center;
+  padding: 0.75rem 0.5rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-sm);
+  background: var(--bg-2);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease);
+}
+.slot:hover:not(:disabled) {
+  border-color: var(--line-3);
+}
+.slot.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-a10);
+}
+.slot:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.slot-taken {
+  font-size: 0.75rem;
+  color: var(--fg-3);
+}

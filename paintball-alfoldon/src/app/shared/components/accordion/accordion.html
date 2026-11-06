@@ -1,0 +1,37 @@
+<div class="accordion" [class.is-open]="isOpen()">
+  <h3 class="accordion-heading">
+    <button
+      type="button"
+      class="accordion-trigger"
+      [id]="triggerId()"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="panelId()"
+      (click)="toggle()"
+    >
+      <span class="accordion-question">{{ question() }}</span>
+      <svg
+        class="accordion-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M12 5v14M5 12h14" />
+      </svg>
+    </button>
+  </h3>
+
+  <div
+    class="accordion-panel"
+    [id]="panelId()"
+    role="region"
+    [attr.aria-labelledby]="triggerId()"
+    [attr.aria-hidden]="!isOpen()"
+  >
+    <div class="accordion-content">
+      <p>{{ answer() }}</p>
+    </div>
+  </div>
+</div>

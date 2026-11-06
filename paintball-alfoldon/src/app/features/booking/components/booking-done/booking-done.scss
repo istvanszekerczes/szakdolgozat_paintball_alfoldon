@@ -1,0 +1,33 @@
+.done {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 0;
+  text-align: center;
+}
+.done p {
+  max-width: 46ch;
+}
+.done-title:focus {
+  outline: none;
+}
+.done-status {
+  color: var(--fg-2);
+}
+.done .btn {
+  margin-top: 0.75rem;
+}
+.done-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 0.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.done-icon svg {
+  width: 26px;
+  height: 26px;
+}

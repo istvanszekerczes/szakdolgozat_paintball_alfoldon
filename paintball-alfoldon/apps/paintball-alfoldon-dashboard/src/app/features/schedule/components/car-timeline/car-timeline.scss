@@ -1,0 +1,104 @@
+.tl {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.row {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+.plate {
+  font-size: 12px;
+}
+.track {
+  position: relative;
+  height: 30px;
+}
+.axis .track {
+  height: 16px;
+}
+.lane {
+  background: var(--bg-2);
+  border-radius: 8px;
+}
+.tick {
+  position: absolute;
+  font-size: 10px;
+  color: var(--fg-2);
+  transform: translateX(-50%);
+}
+.seg {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  border-radius: 5px;
+  min-width: 2px;
+}
+.seg-GAME {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 6px;
+  line-height: 24px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+.seg-SETUP,
+.seg-TEARDOWN {
+  background: var(--warn-a);
+  border: 1px solid var(--warn);
+}
+.seg-TRAVEL_OUT,
+.seg-TRAVEL_BETWEEN,
+.seg-TRAVEL_HOME {
+  background: repeating-linear-gradient(135deg, var(--line-2) 0 4px, transparent 4px 8px);
+  border: 1px solid var(--line-2);
+}
+.free {
+  position: absolute;
+  left: 10px;
+  line-height: 30px;
+  font-size: 12px;
+}
+.now {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--danger);
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 12px;
+  font-size: 12px;
+}
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend i {
+  width: 16px;
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+}
+.now-key {
+  background: var(--danger);
+  width: 2px !important;
+}
+.none {
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .row {
+    grid-template-columns: 64px 1fr;
+  }
+}

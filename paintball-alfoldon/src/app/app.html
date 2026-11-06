@@ -2,27 +2,33 @@
 
 <!-- Header -->
 <header class="site-header">
-  <div class="container site-header__inner">
+  <div class="container site-header-inner">
     <a routerLink="/" class="brand" aria-label="Paintball Alföldön – főoldal">
-      <span class="brand__mark" aria-hidden="true"></span>
-      <span class="brand__name">Paintball Alföldön</span>
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Paintball Alföldön</span>
     </a>
 
     <nav class="nav" aria-label="Fő navigáció">
-      <ul class="nav__list">
+      <ul class="nav-list">
         <li>
-          <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" class="nav__link">Főoldal</a>
+          <a
+            routerLink="/"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link"
+            >Főoldal</a
+          >
         </li>
 
         <li
-          class="nav__item"
+          class="nav-item"
           (mouseenter)="openVenues()"
           (mouseleave)="closeVenues()"
           (focusout)="onVenuesFocusOut($event)"
         >
           <button
             type="button"
-            class="nav__link nav__toggle"
+            class="nav-link nav-toggle"
             [class.is-active]="venuesOpen()"
             aria-haspopup="true"
             [attr.aria-expanded]="venuesOpen()"
@@ -30,21 +36,35 @@
             (click)="toggleVenues()"
           >
             Pályák
-            <svg class="nav__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg
+              class="nav-chevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
               <path d="m6 9 6 6 6-6" />
             </svg>
           </button>
 
           <div id="venues-menu" class="dropdown" [class.is-open]="venuesOpen()">
-            <ul class="dropdown__panel">
+            <ul class="dropdown-panel">
               @for (loc of locations; track loc.id) {
                 <li>
-                  <a [routerLink]="['/', loc.id]" routerLinkActive="is-active" class="dropdown__link" (click)="closeVenues()">
-                    <span class="dropdown__text">
-                      <span class="dropdown__city">{{ loc.city }}</span>
-                      <span class="dropdown__venue">{{ loc.venue }}</span>
+                  <a
+                    [routerLink]="['/', loc.id]"
+                    routerLinkActive="is-active"
+                    class="dropdown-link"
+                    (click)="closeVenues()"
+                  >
+                    <span class="dropdown-text">
+                      <span class="dropdown-city">{{ loc.city }}</span>
+                      <span class="dropdown-venue">{{ loc.venue }}</span>
                     </span>
-                    <span class="pill" [class.pill--accent]="loc.indoor">{{ fieldType(loc) }}</span>
+                    <span class="pill" [class.pill-accent]="loc.indoor">{{ fieldType(loc) }}</span>
                   </a>
                 </li>
               }
@@ -52,15 +72,17 @@
           </div>
         </li>
 
-        <li><a routerLink="/rolunk" routerLinkActive="is-active" class="nav__link">Rólunk</a></li>
-        <li><a routerLink="/gyik" routerLinkActive="is-active" class="nav__link">GYIK</a></li>
-        <li><a routerLink="/galeria" routerLinkActive="is-active" class="nav__link">Galéria</a></li>
-        <li><a routerLink="/kapcsolat" routerLinkActive="is-active" class="nav__link">Kapcsolat</a></li>
+        <li><a routerLink="/rolunk" routerLinkActive="is-active" class="nav-link">Rólunk</a></li>
+        <li><a routerLink="/gyik" routerLinkActive="is-active" class="nav-link">GYIK</a></li>
+        <li><a routerLink="/galeria" routerLinkActive="is-active" class="nav-link">Galéria</a></li>
+        <li>
+          <a routerLink="/kapcsolat" routerLinkActive="is-active" class="nav-link">Kapcsolat</a>
+        </li>
       </ul>
     </nav>
 
-    <div class="site-header__actions">
-      <a routerLink="/foglalas" class="btn btn--primary btn--sm site-header__cta">Foglalás</a>
+    <div class="site-header-actions">
+      <a routerLink="/foglalas" class="btn btn-primary btn-sm site-header-cta">Foglalás</a>
 
       <button
         type="button"
@@ -71,8 +93,8 @@
         (click)="toggleMenu()"
       >
         <span class="sr-only">{{ menuOpen() ? 'Menü bezárása' : 'Menü megnyitása' }}</span>
-        <span class="menu-toggle__bar" aria-hidden="true"></span>
-        <span class="menu-toggle__bar" aria-hidden="true"></span>
+        <span class="menu-toggle-bar" aria-hidden="true"></span>
+        <span class="menu-toggle-bar" aria-hidden="true"></span>
       </button>
     </div>
   </div>
@@ -81,33 +103,55 @@
 <!-- Mobile navigation (rendered only while open, so it is out of the tab order otherwise) -->
 @if (menuOpen()) {
   <div id="mobile-menu" class="mobile-menu">
-    <nav class="container mobile-menu__inner" aria-label="Mobil navigáció">
-      <ul class="mobile-menu__list">
-        <li><a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" class="mobile-menu__link">Főoldal</a></li>
-        <li><a routerLink="/rolunk" routerLinkActive="is-active" class="mobile-menu__link">Rólunk</a></li>
-        <li><a routerLink="/gyik" routerLinkActive="is-active" class="mobile-menu__link">GYIK</a></li>
-        <li><a routerLink="/galeria" routerLinkActive="is-active" class="mobile-menu__link">Galéria</a></li>
-        <li><a routerLink="/kapcsolat" routerLinkActive="is-active" class="mobile-menu__link">Kapcsolat</a></li>
+    <nav class="container mobile-menu-inner" aria-label="Mobil navigáció">
+      <ul class="mobile-menu-list">
+        <li>
+          <a
+            routerLink="/"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="mobile-menu-link"
+            >Főoldal</a
+          >
+        </li>
+        <li>
+          <a routerLink="/rolunk" routerLinkActive="is-active" class="mobile-menu-link">Rólunk</a>
+        </li>
+        <li>
+          <a routerLink="/gyik" routerLinkActive="is-active" class="mobile-menu-link">GYIK</a>
+        </li>
+        <li>
+          <a routerLink="/galeria" routerLinkActive="is-active" class="mobile-menu-link">Galéria</a>
+        </li>
+        <li>
+          <a routerLink="/kapcsolat" routerLinkActive="is-active" class="mobile-menu-link"
+            >Kapcsolat</a
+          >
+        </li>
       </ul>
 
-      <div class="mobile-menu__group">
+      <div class="mobile-menu-group">
         <span class="eyebrow">Pályáink</span>
-        <ul class="mobile-menu__venues">
+        <ul class="mobile-menu-venues">
           @for (loc of locations; track loc.id) {
             <li>
-              <a [routerLink]="['/', loc.id]" routerLinkActive="is-active" class="mobile-menu__venue">
-                <span class="mobile-menu__venue-text">
+              <a
+                [routerLink]="['/', loc.id]"
+                routerLinkActive="is-active"
+                class="mobile-menu-venue"
+              >
+                <span class="mobile-menu-venue-text">
                   <strong>{{ loc.city }}</strong>
                   <span class="muted">{{ loc.venue }}</span>
                 </span>
-                <span class="pill" [class.pill--accent]="loc.indoor">{{ fieldType(loc) }}</span>
+                <span class="pill" [class.pill-accent]="loc.indoor">{{ fieldType(loc) }}</span>
               </a>
             </li>
           }
         </ul>
       </div>
 
-      <a routerLink="/foglalas" class="btn btn--primary btn--lg btn--block">Foglalás</a>
+      <a routerLink="/foglalas" class="btn btn-primary btn-lg btn-block">Foglalás</a>
     </nav>
   </div>
 }
@@ -119,24 +163,41 @@
 
 <!-- Footer -->
 <footer class="site-footer">
-  <div class="container site-footer__grid">
-    <div class="site-footer__brand">
+  <div class="container site-footer-grid">
+    <div class="site-footer-brand">
       <a routerLink="/" class="brand" aria-label="Paintball Alföldön – főoldal">
-        <span class="brand__mark" aria-hidden="true"></span>
-        <span class="brand__name">Paintball Alföldön</span>
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">Paintball Alföldön</span>
       </a>
-      <p>Több mint 20 év tapasztalat paintball, lézertag és csapatjátékok szervezésében, hét pályán az Alföldön.</p>
-      <a href="https://facebook.com/PaintballAlfoldon" target="_blank" rel="noopener" class="btn btn--secondary btn--sm">
-        <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <p>
+        Több mint 20 év tapasztalat paintball, lézertag és csapatjátékok szervezésében, hét pályán
+        az Alföldön.
+      </p>
+      <a
+        href="https://facebook.com/PaintballAlfoldon"
+        target="_blank"
+        rel="noopener"
+        class="btn btn-secondary btn-sm"
+      >
+        <svg
+          class="btn-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
           <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
         </svg>
         Facebook
       </a>
     </div>
 
-    <div class="site-footer__col">
-      <h2 class="site-footer__title">Navigáció</h2>
-      <ul class="site-footer__links">
+    <div class="site-footer-col">
+      <h2 class="site-footer-title">Navigáció</h2>
+      <ul class="site-footer-links">
         <li><a routerLink="/">Főoldal</a></li>
         <li><a routerLink="/rolunk">Rólunk</a></li>
         <li><a routerLink="/gyik">Gyakori kérdések</a></li>
@@ -146,20 +207,25 @@
       </ul>
     </div>
 
-    <div class="site-footer__col">
-      <h2 class="site-footer__title">Pályáink</h2>
-      <ul class="site-footer__links">
+    <div class="site-footer-col site-footer-col-venues">
+      <h2 class="site-footer-title">Pályáink</h2>
+      <ul class="site-footer-links">
         @for (loc of locations; track loc.id) {
           <li>
-            <a [routerLink]="['/', loc.id]" [attr.data-venue]="loc.id">{{ loc.city }} <span class="muted">· {{ loc.venue }}</span></a>
+            <a [routerLink]="['/', loc.id]" [attr.data-venue]="loc.id"
+              >{{ loc.city
+              }}<span class="site-footer-venue muted"
+                ><span aria-hidden="true"> · </span>{{ loc.venue }}</span
+              ></a
+            >
           </li>
         }
       </ul>
     </div>
 
-    <div class="site-footer__col">
-      <h2 class="site-footer__title">Elérhetőség</h2>
-      <ul class="site-footer__contact">
+    <div class="site-footer-col">
+      <h2 class="site-footer-title">Elérhetőség</h2>
+      <ul class="site-footer-contact">
         <li><a href="mailto:paintball@alfoldon.hu">paintball&#64;alfoldon.hu</a></li>
         <li><a href="tel:+36309771486">+36 30/977 14 86</a></li>
         <li><span>Hétfő–vasárnap, 06:00–22:00</span></li>
@@ -167,10 +233,46 @@
     </div>
   </div>
 
-  <div class="site-footer__bottom">
-    <div class="container site-footer__bottom-inner">
+  <div class="site-footer-bottom">
+    <div class="container site-footer-bottom-inner">
       <p>&copy; 2026 Paintball Alföldön. Minden jog fenntartva.</p>
-      <p>Szeged · Szentes · Szolnok · Kecskemét · Békéscsaba · Orosháza</p>
+      <p class="site-footer-cities">
+        Szeged · Szentes · Szolnok · Kecskemét · Békéscsaba · Orosháza
+      </p>
     </div>
   </div>
 </footer>
+
+<!-- Phones: booking and calling stay under the thumb on every page except the booking page itself -->
+@if (showActionBar()) {
+  <div class="action-bar" [class.is-hidden]="menuOpen()">
+    <a
+      href="tel:+36309771486"
+      class="btn btn-secondary btn-lg action-bar-call"
+      aria-label="Hívás: +36 30/977 14 86"
+    >
+      <svg
+        class="btn-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path
+          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"
+        />
+      </svg>
+      Hívás
+    </a>
+    <a
+      routerLink="/foglalas"
+      [queryParams]="bookingParams()"
+      class="btn btn-primary btn-lg action-bar-book"
+    >
+      {{ bookingParams() ? 'Foglalás erre a pályára' : 'Időpont foglalása' }}
+    </a>
+  </div>
+}

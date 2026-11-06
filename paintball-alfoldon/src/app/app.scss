@@ -14,7 +14,7 @@
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
 
-  &__inner {
+  &-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -22,14 +22,15 @@
     height: var(--header-h);
   }
 
-  &__actions {
+  &-actions {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  &__cta {
-    @media (max-width: 480px) {
+  /* Phones get the booking bar at the bottom instead */
+  &-cta {
+    @media (max-width: 640px) {
       display: none;
     }
   }
@@ -45,7 +46,7 @@
   letter-spacing: -0.02em;
   white-space: nowrap;
 
-  &__mark {
+  &-mark {
     flex: none;
     width: 10px;
     height: 10px;
@@ -61,17 +62,17 @@
     display: none;
   }
 
-  &__list {
+  &-list {
     display: flex;
     align-items: center;
     gap: 0.125rem;
   }
 
-  &__item {
+  &-item {
     position: relative;
   }
 
-  &__link {
+  &-link {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
@@ -92,13 +93,13 @@
     }
   }
 
-  &__chevron {
+  &-chevron {
     width: 14px;
     height: 14px;
     transition: transform var(--dur) var(--ease);
   }
 
-  &__toggle.is-active &__chevron {
+  &-toggle.is-active &-chevron {
     transform: rotate(180deg);
   }
 }
@@ -124,7 +125,7 @@
     translate: 0 0;
   }
 
-  &__panel {
+  &-panel {
     display: grid;
     gap: 2px;
     padding: 0.5rem;
@@ -134,7 +135,7 @@
     box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
   }
 
-  &__link {
+  &-link {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -154,17 +155,17 @@
     }
   }
 
-  &__text {
+  &-text {
     display: grid;
     line-height: 1.3;
   }
 
-  &__city {
+  &-city {
     font-size: 0.9375rem;
     font-weight: 600;
   }
 
-  &__venue {
+  &-venue {
     font-size: 0.8125rem;
     color: var(--fg-3);
   }
@@ -188,7 +189,7 @@
     background: var(--bg-2);
   }
 
-  &__bar {
+  &-bar {
     position: absolute;
     width: 20px;
     height: 2px;
@@ -208,12 +209,12 @@
     }
   }
 
-  &.is-open &__bar:nth-child(2) {
+  &.is-open &-bar:nth-child(2) {
     translate: 0 0;
     transform: rotate(45deg);
   }
 
-  &.is-open &__bar:nth-child(3) {
+  &.is-open &-bar:nth-child(3) {
     translate: 0 0;
     transform: rotate(-45deg);
   }
@@ -228,17 +229,17 @@
   overflow-y: auto;
   animation: menu-in var(--dur) var(--ease);
 
-  &__inner {
+  &-inner {
     display: grid;
     gap: 2rem;
     padding-block: 1.5rem 2.5rem;
   }
 
-  &__list {
+  &-list {
     display: grid;
   }
 
-  &__link {
+  &-link {
     display: block;
     padding: 0.9rem 0;
     border-bottom: 1px solid var(--line);
@@ -253,17 +254,17 @@
     }
   }
 
-  &__group {
+  &-group {
     display: grid;
     gap: 0.75rem;
   }
 
-  &__venues {
+  &-venues {
     display: grid;
     gap: 2px;
   }
 
-  &__venue {
+  &-venue {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -279,7 +280,7 @@
     }
   }
 
-  &__venue-text {
+  &-venue-text {
     display: flex;
     flex-wrap: wrap;
     gap: 0 0.5rem;
@@ -304,22 +305,57 @@
   border-top: 1px solid var(--line);
   background: var(--bg);
 
-  &__grid {
+  &-grid {
     display: grid;
     grid-template-columns: 1.6fr 1fr 1.3fr 1.2fr;
     gap: 2.5rem;
-    padding-block: clamp(3rem, 6vw, 4.5rem);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
 
     @media (max-width: 992px) {
       grid-template-columns: 1fr 1fr;
     }
 
-    @media (max-width: 560px) {
-      grid-template-columns: 1fr;
+    /* Phones: brand on top, navigation and contact side by side, venues in two columns below */
+    @media (max-width: 640px) {
+      gap: 2rem 1.25rem;
     }
   }
 
-  &__brand {
+  @media (max-width: 640px) {
+    &-brand {
+      grid-column: 1 / -1;
+      gap: 1rem;
+    }
+
+    &-col-venues {
+      grid-column: 1 / -1;
+      order: 1;
+
+      .site-footer-links {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem 1.25rem;
+      }
+
+      a {
+        display: grid;
+        line-height: 1.3;
+      }
+    }
+
+    &-venue {
+      font-size: 0.8125rem;
+
+      > span {
+        display: none;
+      }
+    }
+
+    &-cities {
+      display: none;
+    }
+  }
+
+  &-brand {
     display: grid;
     gap: 1.25rem;
     align-content: start;
@@ -331,16 +367,16 @@
     }
   }
 
-  &__title {
-    margin-bottom: 1.25rem;
+  &-title {
+    margin-bottom: 1rem;
     font: 500 0.75rem/1 var(--font-mono);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--fg-3);
   }
 
-  &__links,
-  &__contact {
+  &-links,
+  &-contact {
     display: grid;
     gap: 0.6rem;
     font-size: 0.9375rem;
@@ -358,13 +394,13 @@
     }
   }
 
-  &__bottom {
+  &-bottom {
     border-top: 1px solid var(--line);
     padding-block: 1.25rem;
     font-size: 0.8125rem;
   }
 
-  &__bottom-inner {
+  &-bottom-inner {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -372,6 +408,53 @@
 
     p {
       color: var(--fg-3);
+    }
+  }
+}
+
+/* ------------------------------------------------------- phone booking bar */
+.action-bar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  :host(.has-action-bar) {
+    --action-bar-h: calc(68px + env(safe-area-inset-bottom));
+    padding-bottom: var(--action-bar-h);
+  }
+
+  .action-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 80;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.625rem var(--gutter) calc(0.625rem + env(safe-area-inset-bottom));
+    background: rgba(0, 0, 0, 0.86);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    transition:
+      translate var(--dur) var(--ease),
+      opacity var(--dur) var(--ease);
+
+    &.is-hidden {
+      translate: 0 100%;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .btn {
+      min-height: 48px;
+    }
+
+    &-call {
+      flex: none;
+      padding-inline: 1.1rem;
+    }
+
+    &-book {
+      flex: 1;
     }
   }
 }
