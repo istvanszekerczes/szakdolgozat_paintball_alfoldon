@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.paintball.app.common.BookingRuleException;
 import com.paintball.app.common.NotFoundException;
+import com.paintball.app.schedule.CrewCapacity;
 
 /** Pályák on the dashboard: every venue (inactive ones too), their times and blocks. */
 @RestController
@@ -34,9 +35,12 @@ public class AdminVenueController {
 
     private final VenueRepository venueRepository;
     private final VenueBlockRepository blockRepository;
+    private final CrewCapacity crewCapacity;
     private final Clock clock;
 
-    public AdminVenueController(VenueRepository venueRepository, VenueBlockRepository blockRepository, Clock clock) {
+    public AdminVenueController(VenueRepository venueRepository, VenueBlockRepository blockRepository,
+            CrewCapacity crewCapacity, Clock clock) {
+        this.crewCapacity = crewCapacity;
         this.venueRepository = venueRepository;
         this.blockRepository = blockRepository;
         this.clock = clock;
@@ -59,6 +63,8 @@ public class AdminVenueController {
         venue.setTravelMinutes(request.travelMinutes());
         venue.setSetupMinutes(request.setupMinutes());
         venue.setTeardownMinutes(request.teardownMinutes());
+        // Other travel or setup times can change which car fits which game.
+        crewCapacity.assignCarsFromToday();
         return AdminVenueResponse.from(venue);
     }
 

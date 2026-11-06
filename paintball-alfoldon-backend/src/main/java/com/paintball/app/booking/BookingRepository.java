@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import com.paintball.app.venue.Venue;
 
@@ -30,6 +31,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
     @Override
     @EntityGraph(attributePaths = { "venue", "customer", "car", "employees" })
     List<Booking> findAll(Specification<Booking> spec, Sort sort);
+
+    /** Days from {@code from} on that have games in one of {@code statuses}. */
+    @Query("select distinct b.playDate from Booking b where b.playDate >= :from and b.status in :statuses")
+    List<LocalDate> findPlayDatesFrom(LocalDate from, Collection<BookingStatus> statuses);
 
     /** Games of one day with what the schedule needs (venue times, car, staff). */
     @EntityGraph(attributePaths = { "venue", "customer", "car", "employees" })

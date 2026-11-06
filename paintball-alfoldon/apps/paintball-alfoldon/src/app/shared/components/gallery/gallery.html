@@ -1,16 +1,16 @@
-<ul class="gallery" aria-label="Galéria">
+<ul class="gallery" [attr.aria-label]="'gallery.listAria' | translate">
   @for (item of items; track item.caption; let i = $index) {
     <li>
       <button
         type="button"
         class="tile"
         (click)="open(i)"
-        [attr.aria-label]="'Megnyitás: ' + item.caption"
+        [attr.aria-label]="'gallery.open' | translate: { caption: item.caption | translate }"
       >
         <span class="tile-media" aria-hidden="true">
           <span class="tile-index mono">{{ pad(i + 1) }}</span>
         </span>
-        <span class="tile-caption">{{ item.caption }}</span>
+        <span class="tile-caption">{{ item.caption | translate }}</span>
       </button>
     </li>
   }
@@ -22,14 +22,14 @@
       class="lightbox-dialog"
       role="dialog"
       aria-modal="true"
-      [attr.aria-label]="items[idx.value].caption"
+      [attr.aria-label]="items[idx.value].caption | translate"
     >
       <button
         #closeBtn
         type="button"
         class="lightbox-btn lightbox-close"
         (click)="close()"
-        aria-label="Bezárás"
+        [attr.aria-label]="'common.close' | translate"
       >
         <svg
           viewBox="0 0 24 24"
@@ -49,11 +49,16 @@
             >{{ pad(idx.value + 1) }} / {{ pad(items.length) }}</span
           >
         </div>
-        <figcaption class="lightbox-caption">{{ items[idx.value].caption }}</figcaption>
+        <figcaption class="lightbox-caption">{{ items[idx.value].caption | translate }}</figcaption>
       </figure>
 
       <div class="lightbox-nav">
-        <button type="button" class="lightbox-btn" (click)="prev()" aria-label="Előző kép">
+        <button
+          type="button"
+          class="lightbox-btn"
+          (click)="prev()"
+          [attr.aria-label]="'gallery.previous' | translate"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -66,7 +71,12 @@
             <path d="m15 18-6-6 6-6" />
           </svg>
         </button>
-        <button type="button" class="lightbox-btn" (click)="next()" aria-label="Következő kép">
+        <button
+          type="button"
+          class="lightbox-btn"
+          (click)="next()"
+          [attr.aria-label]="'gallery.next' | translate"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"

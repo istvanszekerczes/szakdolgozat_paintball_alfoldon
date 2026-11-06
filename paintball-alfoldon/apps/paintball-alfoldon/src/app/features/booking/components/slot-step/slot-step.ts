@@ -3,10 +3,11 @@ import { FieldTree, FormField } from '@angular/forms/signals';
 import { Availability, BookingDraft, shortTime } from '../../models/booking';
 import { PHONE_DISPLAY, PHONE_HREF } from '../../utils/booking-rules';
 import { FieldErrors, showsError } from '../field-errors/field-errors';
+import { TranslatePipe } from '../../../../core/i18n/translate-pipe';
 
 @Component({
   selector: 'app-slot-step',
-  imports: [FormField, FieldErrors],
+  imports: [FormField, FieldErrors, TranslatePipe],
   templateUrl: './slot-step.html',
   styleUrl: './slot-step.scss',
 })
@@ -27,6 +28,10 @@ export class SlotStep {
   protected readonly phoneHref = PHONE_HREF;
   protected readonly showsError = showsError;
   protected readonly short = shortTime;
+
+  protected hasRecommended(day: Availability): boolean {
+    return day.slots.some((slot) => slot.recommended);
+  }
 
   protected hasFreeSlot(day: Availability): boolean {
     return day.slots.some((slot) => slot.available);

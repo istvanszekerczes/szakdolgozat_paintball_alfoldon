@@ -1,10 +1,9 @@
 <section class="page-header">
   <div class="container">
-    <span class="eyebrow">Kapcsolat</span>
-    <h1 class="page-header-title">Beszéljünk a játékról</h1>
+    <span class="eyebrow">{{ 'contact.eyebrow' | translate }}</span>
+    <h1 class="page-header-title">{{ 'contact.title' | translate }}</h1>
     <p class="page-header-lead lead">
-      Céges csapatépítőt, születésnapot vagy legénybúcsút szervezel? Kérdésed van a felszerelésről?
-      Hívj vagy írj nekünk – e-mailre 24 órán belül válaszolunk.
+      {{ 'contact.lead' | translate }}
     </p>
   </div>
 </section>
@@ -12,19 +11,21 @@
 <section class="section">
   <div class="container channels">
     <article class="card channel">
-      <span class="eyebrow">Telefon</span>
+      <span class="eyebrow">{{ 'phoneChannel.eyebrow' | translate }}</span>
       <h2 class="channel-value">+36 30/977 14 86</h2>
-      <p>Hétfőtől vasárnapig 06:00–22:00, ünnepnapokon is.</p>
-      <a href="tel:+36309771486" class="btn btn-primary btn-lg btn-block">Hívás most</a>
+      <p>{{ 'phoneChannel.hours' | translate }}</p>
+      <a href="tel:+36309771486" class="btn btn-primary btn-lg btn-block">{{
+        'phoneChannel.action' | translate
+      }}</a>
     </article>
 
     <article class="card channel">
-      <span class="eyebrow">E-mail</span>
+      <span class="eyebrow">{{ 'emailChannel.eyebrow' | translate }}</span>
       <h2 class="channel-value">paintball&#64;alfoldon.hu</h2>
-      <p>Ajánlatkérésre és levelekre 24 órán belül válaszolunk.</p>
-      <a href="mailto:paintball@alfoldon.hu" class="btn btn-secondary btn-lg btn-block"
-        >E-mail küldése</a
-      >
+      <p>{{ 'emailChannel.text' | translate }}</p>
+      <a href="mailto:paintball@alfoldon.hu" class="btn btn-secondary btn-lg btn-block">{{
+        'emailChannel.action' | translate
+      }}</a>
     </article>
   </div>
 </section>

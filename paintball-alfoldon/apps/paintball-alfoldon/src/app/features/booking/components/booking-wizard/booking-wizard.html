@@ -4,8 +4,8 @@
       <app-booking-done [booking]="booking" (again)="startOver()" />
     </div>
   } @else {
-    <ol class="progress" aria-label="Foglalás lépései">
-      @for (s of steps; track s.label; let i = $index) {
+    <ol class="progress" [attr.aria-label]="'booking.stepsAria' | translate">
+      @for (s of steps; track s; let i = $index) {
         <li
           class="progress-item"
           [class.is-done]="i < step()"
@@ -15,12 +15,12 @@
           @if (i < step()) {
             <button type="button" class="progress-btn" (click)="goTo(i)">
               <span class="progress-num mono" aria-hidden="true">{{ i + 1 }}</span>
-              <span class="progress-label">{{ s.label }}</span>
+              <span class="progress-label">{{ 'booking.steps.' + s + '.label' | translate }}</span>
             </button>
           } @else {
             <span class="progress-btn">
               <span class="progress-num mono" aria-hidden="true">{{ i + 1 }}</span>
-              <span class="progress-label">{{ s.label }}</span>
+              <span class="progress-label">{{ 'booking.steps.' + s + '.label' | translate }}</span>
             </span>
           }
         </li>
@@ -28,22 +28,24 @@
     </ol>
 
     <h2 #stepHeading class="wizard-title" tabindex="-1">
-      <span class="eyebrow">{{ step() + 1 }}. lépés / {{ steps.length }}</span>
-      {{ steps[step()].title }}
+      <span class="eyebrow">{{
+        'booking.stepOf' | translate: { current: step() + 1, total: steps.length }
+      }}</span>
+      {{ 'booking.steps.' + steps[step()] + '.title' | translate }}
     </h2>
 
     <div class="wizard-body">
       @switch (step()) {
         @case (0) {
           @if (venuesLoading()) {
-            <p class="wizard-hint" aria-live="polite">Pályák betöltése…</p>
+            <p class="wizard-hint" aria-live="polite">{{ 'booking.venuesLoading' | translate }}</p>
           } @else if (venuesError()) {
             <p class="field-error" role="alert">
-              Nem sikerült betölteni a pályákat. Próbáld újra, vagy foglalj telefonon:
+              {{ 'booking.venuesError' | translate }}
               <a [href]="phoneHref">{{ phone }}</a
               >.
               <button type="button" class="btn btn-ghost btn-sm" (click)="reloadVenues()">
-                Újra
+                {{ 'common.retry' | translate }}
               </button>
             </p>
           } @else {
@@ -77,7 +79,7 @@
           <app-summary-step [draft]="form().value()" [venue]="venue()" (edit)="goTo($event)" />
           @if (sendFailed()) {
             <p class="field-error" role="alert">
-              Nem sikerült elküldeni a foglalást. Próbáld újra, vagy hívj minket:
+              {{ 'booking.sendFailed' | translate }}
               <a [href]="phoneHref">{{ phone }}</a
               >.
             </p>
@@ -89,13 +91,15 @@
     <div class="wizard-actions">
       @if (step() > 0) {
         <button type="button" class="btn btn-secondary" (click)="back()" [disabled]="sending()">
-          Vissza
+          {{ 'booking.back' | translate }}
         </button>
       }
       @if (step() === 0) {
-        <p class="wizard-hint">Válassz egy pályát a folytatáshoz.</p>
+        <p class="wizard-hint">{{ 'booking.pickVenueHint' | translate }}</p>
       } @else if (step() < steps.length - 1) {
-        <button type="button" class="btn btn-primary" (click)="next()">Tovább</button>
+        <button type="button" class="btn btn-primary" (click)="next()">
+          {{ 'booking.next' | translate }}
+        </button>
       } @else {
         <button
           type="button"
@@ -103,7 +107,7 @@
           (click)="send()"
           [disabled]="sending()"
         >
-          {{ sending() ? 'Küldés…' : 'Foglalás elküldése' }}
+          {{ (sending() ? 'booking.sending' : 'booking.send') | translate }}
         </button>
       }
     </div>

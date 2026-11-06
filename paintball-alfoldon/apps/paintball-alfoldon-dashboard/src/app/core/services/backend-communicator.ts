@@ -5,7 +5,7 @@ import { LoginResponse } from '../../features/auth/models/auth';
 import { AdminBooking, BookingFilter, BookingStatus } from '../../features/bookings/models/booking';
 import { Employee, EmployeeInput, Exclusion } from '../../features/employees/models/employee';
 import { Car, CarInput } from '../../features/resources/models/car';
-import { Alert, DaySchedule } from '../../features/schedule/models/schedule';
+import { Alert, DaySchedule, ScheduleProposal } from '../../features/schedule/models/schedule';
 import { AdminVenue, VenueBlock, VenueSettings } from '../../features/venues/models/venue';
 
 /** Base URL of the backend. Locally the API runs on :8080 and allows the dashboard origin :4300. */
@@ -49,18 +49,26 @@ export class BackendCommunicator {
     return this.http.patch<AdminBooking>(`${this.apiUrl}/bookings/${id}/status`, { status });
   }
 
-  /** Replaces the car and staff of a game; 409 with a message when someone is elsewhere or away. */
-  public assignBooking(id: number, carId: number | null, employeeIds: number[]) {
-    return this.http.put<AdminBooking>(`${this.apiUrl}/bookings/${id}/assignment`, {
-      carId,
-      employeeIds,
-    });
+  /** Replaces the staff of a game (the car is automatic); 409 with a message when someone is elsewhere or away. */
+  public assignBooking(id: number, employeeIds: number[]) {
+    return this.http.put<AdminBooking>(`${this.apiUrl}/bookings/${id}/assignment`, { employeeIds });
   }
 
   //       ---   Schedule related communications   ---
 
   public loadDaySchedule(date: string) {
     return this.http.get<DaySchedule>(`${this.apiUrl}/schedule`, { params: { date } });
+  }
+
+  public loadProposal(date: string) {
+    return this.http.get<ScheduleProposal>(`${this.apiUrl}/schedule/proposal`, {
+      params: { date },
+    });
+  }
+
+  /** Saves every assignment of the proposal, or none of them when one is refused (409). */
+  public applyProposal(items: { bookingId: number; employeeIds: number[] }[]) {
+    return this.http.post<void>(`${this.apiUrl}/schedule/proposal/apply`, items);
   }
 
   public loadAlerts() {

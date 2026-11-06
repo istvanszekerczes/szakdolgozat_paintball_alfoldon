@@ -1,5 +1,5 @@
 <div class="field">
-  <label for="bw-headcount" class="field-label">Létszám (fő)</label>
+  <label for="bw-headcount" class="field-label">{{ 'booking.headcount' | translate }}</label>
   <input
     id="bw-headcount"
     type="number"
@@ -15,19 +15,19 @@
     <app-field-errors [field]="form().headcount" errorId="bw-headcount-error" />
   } @else if (venue(); as v) {
     <p id="bw-headcount-hint" class="hint">
-      Ezen a pályán {{ v.minHeadcount }}–{{ v.maxHeadcount }} fő játszhat egyszerre.
+      {{ 'booking.headcountHint' | translate: { min: v.minHeadcount, max: v.maxHeadcount } }}
     </p>
   }
 </div>
 
 <div class="field">
-  <label for="bw-note" class="field-label">Megjegyzés (nem kötelező)</label>
+  <label for="bw-note" class="field-label">{{ 'booking.note' | translate }}</label>
   <textarea
     id="bw-note"
     class="input"
     rows="4"
     [formField]="form().note"
-    placeholder="Pl. születésnap, céges csapatépítő, kért kiegészítő program…"
+    [placeholder]="'booking.notePlaceholder' | translate"
     [attr.aria-invalid]="showsError(form().note)"
     [attr.aria-describedby]="showsError(form().note) ? 'bw-note-error' : 'bw-note-hint'"
   ></textarea>
@@ -35,7 +35,7 @@
     <app-field-errors [field]="form().note" errorId="bw-note-error" />
   } @else {
     <p id="bw-note-hint" class="hint">
-      {{ form().note().value().length }} / {{ noteMax }} karakter
+      {{ 'booking.noteCount' | translate: { count: form().note().value().length, max: noteMax } }}
     </p>
   }
 </div>

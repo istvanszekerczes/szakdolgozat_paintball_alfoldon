@@ -1,10 +1,9 @@
 <section class="page-header">
   <div class="container">
-    <span class="eyebrow">GYIK</span>
-    <h1 class="page-header-title">Gyakori kérdések</h1>
+    <span class="eyebrow">{{ 'faq.eyebrow' | translate }}</span>
+    <h1 class="page-header-title">{{ 'faq.title' | translate }}</h1>
     <p class="page-header-lead lead">
-      Mindent összeszedtünk, amit a játék előtt tudnod kell. Ha további kérdésed van, keress minket
-      bizalommal.
+      {{ 'faq.lead' | translate }}
     </p>
   </div>
 </section>
@@ -12,20 +11,23 @@
 <section class="section">
   <div class="container faq">
     <div class="faq-list">
-      @for (faq of faqs; track faq.q; let i = $index) {
-        <app-accordion [question]="faq.q" [answer]="faq.a" [index]="i" />
+      @for (faq of faqs; track faq; let i = $index) {
+        <app-accordion
+          [question]="'faq.items.' + faq + '.q' | translate"
+          [answer]="'faq.items.' + faq + '.a' | translate"
+          [index]="i"
+        />
       }
     </div>
 
     <aside class="card faq-help">
-      <span class="eyebrow">Segítség</span>
-      <h2 class="faq-help-title">További kérdésed van?</h2>
+      <span class="eyebrow">{{ 'faq.helpEyebrow' | translate }}</span>
+      <h2 class="faq-help-title">{{ 'faq.helpTitle' | translate }}</h2>
       <p>
-        Ha nem találtál választ a kérdésedre, vagy egyedi igényekkel érkeznél, szívesen segítünk
-        telefonon vagy e-mailben is.
+        {{ 'faq.helpText' | translate }}
       </p>
       <div class="faq-help-actions">
-        <a routerLink="/kapcsolat" class="btn btn-primary">Kapcsolatfelvétel</a>
+        <a routerLink="/kapcsolat" class="btn btn-primary">{{ 'common.contactUs' | translate }}</a>
         <a href="tel:+36309771486" class="btn btn-secondary">+36 30/977 14 86</a>
       </div>
     </aside>

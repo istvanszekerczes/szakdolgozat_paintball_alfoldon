@@ -1,23 +1,24 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Meta, Title } from '@angular/platform-browser';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { syncPageMeta } from '../../../../core/i18n/page-meta';
+import { TranslatePipe } from '../../../../core/i18n/translate-pipe';
+import { TranslationService } from '../../../../core/i18n/translation-service';
 
 @Component({
   selector: 'app-about',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })
-export class About implements OnInit {
-  private title = inject(Title);
-  private meta = inject(Meta);
+export class About {
+  private translationService = inject(TranslationService);
 
-  ngOnInit(): void {
-    this.title.setTitle('Rólunk – Az Underground Paintball története | Paintball Alföldön');
-    this.meta.updateTag({
-      name: 'description',
-      content:
-        'Ismerd meg a Paintball Alföldön történetét: versenyszerű paintball múlttal rendelkező játékmesterek, hét pálya az Alföldön és küldetésünk az aktív kikapcsolódásért.',
-    });
+  constructor() {
+    const t = (key: string, params?: Record<string, string>) =>
+      this.translationService.translate(key, params);
+    syncPageMeta(
+      () => t('common.titleSuffix', { title: t('about.metaTitle') }),
+      () => t('about.metaDescription'),
+    );
   }
 }

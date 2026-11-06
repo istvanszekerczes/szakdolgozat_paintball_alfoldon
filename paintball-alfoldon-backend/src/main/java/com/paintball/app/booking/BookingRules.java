@@ -3,6 +3,7 @@ package com.paintball.app.booking;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -15,6 +16,9 @@ import com.paintball.app.venue.Venue;
 @Component
 public class BookingRules {
 
+    /** Start times are on the half hour. */
+    private static final int START_STEP_MINUTES = 30;
+
     private final AppProperties.Booking settings;
     private final Clock clock;
 
@@ -25,6 +29,20 @@ public class BookingRules {
 
     public List<LocalTime> slotStarts() {
         return settings.slotStarts();
+    }
+
+    /**
+     * Every start time a game may have: each half hour from the first to the last fixed slot. The
+     * fixed slots are the usual offer; the times in between are offered when they pack a crew's day.
+     */
+    public List<LocalTime> startTimes() {
+        List<LocalTime> starts = settings.slotStarts();
+        LocalTime last = starts.get(starts.size() - 1);
+        List<LocalTime> out = new ArrayList<>();
+        for (LocalTime t = starts.get(0); !t.isAfter(last); t = t.plusMinutes(START_STEP_MINUTES)) {
+            out.add(t);
+        }
+        return out;
     }
 
     public LocalTime slotEnd(LocalTime start) {
@@ -54,7 +72,7 @@ public class BookingRules {
     }
 
     public void checkSlot(LocalTime start) {
-        if (!settings.slotStarts().contains(start)) {
+        if (!startTimes().contains(start)) {
             throw new BookingRuleException("Érvénytelen kezdési időpont: " + start);
         }
     }

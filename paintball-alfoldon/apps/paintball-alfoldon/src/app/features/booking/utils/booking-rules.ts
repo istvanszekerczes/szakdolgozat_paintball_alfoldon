@@ -19,10 +19,13 @@ export function isoDateFromToday(days: number, today = new Date()): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-/** Hungarian long date, e.g. `2026. november 12., csütörtök`. */
-export function formatDate(iso: string): string {
+/**
+ * Long date in the given locale, e.g. `2026. november 12., csütörtök` in Hungarian or
+ * `Thursday 12 November 2026` in English.
+ */
+export function formatDate(iso: string, locale = 'hu-HU'): string {
   const [y, m, d] = iso.split('-').map(Number);
-  return new Intl.DateTimeFormat('hu-HU', {
+  return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',

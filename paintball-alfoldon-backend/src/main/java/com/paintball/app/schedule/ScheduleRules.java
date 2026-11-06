@@ -16,13 +16,16 @@ import com.paintball.app.venue.Venue;
  * straight from one venue to the next (köztes út) instead of driving home in between; at the same
  * venue the equipment simply stays set up.
  * <p>
- * The road time between two venues is estimated as the longer of their travel times from the base:
- * never shorter than reality for venues on opposite sides of the base, and simple to explain.
- * Times are minutes of the day so that early starts never wrap around midnight.
+ * The first trip of the day starts at the base (the venue's travel time) and the last one ends there;
+ * between two games the car drives straight from the one venue to the next ({@link #transfer}). Times are minutes of the day so that early starts never wrap around midnight.
  */
 public final class ScheduleRules {
 
     private static final Comparator<Booking> BY_START = Comparator.comparing(Booking::getStartTime);
+    /** Roads are about this much longer than the straight line. */
+    private static final double ROAD_FACTOR = 1.3;
+    private static final int MIN_TRANSFER_MINUTES = 15;
+    private static final double EARTH_RADIUS_KM = 6371;
 
     private ScheduleRules() {
     }
@@ -103,8 +106,28 @@ public final class ScheduleRules {
         return out;
     }
 
+    /**
+     * Driving time straight from one venue to the next, e.g. Szentes → Kecskemét, without going back
+     * to the base. Estimated from the coordinates the same way as the travel times from the base were
+     * (V3 migration): straight-line distance × 1.3 for the roads, at 60 km/h (1 km a minute), rounded
+     * to 5 minutes and at least 15 minutes.
+     */
     static int transfer(Venue from, Venue to) {
-        return Math.max(from.getTravelMinutes(), to.getTravelMinutes());
+        if (from == to || (from.getId() != null && from.getId().equals(to.getId()))) {
+            return 0;
+        }
+        double km = distanceKm(from.getLatitude(), from.getLongitude(), to.getLatitude(), to.getLongitude());
+        int minutes = (int) Math.round(km * ROAD_FACTOR / 5) * 5;
+        return Math.max(MIN_TRANSFER_MINUTES, minutes);
+    }
+
+    /** Great-circle (haversine) distance. */
+    static double distanceKm(double lat1, double lon1, double lat2, double lon2) {
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double h = Math.pow(Math.sin(dLat / 2), 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.pow(Math.sin(dLon / 2), 2);
+        return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(h));
     }
 
     private static boolean sameVenue(Booking a, Booking b) {

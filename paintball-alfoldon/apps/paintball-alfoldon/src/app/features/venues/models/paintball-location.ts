@@ -1,5 +1,10 @@
+/** Extra activities a venue offers; their names live in the language files (`activities.<key>`). */
+export type ActivityKey =
+  'airsoft' | 'laserTag' | 'archeryTag' | 'bubbleFootball' | 'waterFootball' | 'bouncyCastle';
+
 /**
- * One paintball venue as the site shows it: route slug, texts for the page and the map position.
+ * One paintball venue as the site shows it: route slug, texts for the page (in the current
+ * language) and the map position.
  */
 export interface PaintballLocation {
   /** Route slug, e.g. `szeged-csarnok`. */
@@ -18,6 +23,7 @@ export interface PaintballLocation {
   minHeadcount: number;
   optHeadcount: string;
   maxHeadcount: number;
+  /** Names of the extra activities, in the current language. */
   extraActivities: string[];
   lat: number;
   lng: number;

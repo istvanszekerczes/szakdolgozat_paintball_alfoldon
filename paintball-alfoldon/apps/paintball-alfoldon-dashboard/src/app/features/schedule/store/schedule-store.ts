@@ -7,7 +7,7 @@ import { Observable, pipe, switchMap, tap } from 'rxjs';
 import { BackendCommunicator } from '../../../core/services/backend-communicator';
 import { errorMessage } from '../../../shared/utils/error-message';
 import { AdminBooking } from '../../bookings/models/booking';
-import { Alert, DaySchedule } from '../models/schedule';
+import { Alert, DaySchedule, ScheduleProposal } from '../models/schedule';
 
 type ScheduleState = {
   /** The day plan of one date: car timeline and who works. */
@@ -18,6 +18,10 @@ type ScheduleState = {
   alerts: Alert[];
   alertsLoading: boolean;
   alertsError: string | null;
+  /** The app's proposed car and staff for every game of the day. */
+  proposal: ScheduleProposal | null;
+  proposalLoading: boolean;
+  proposalError: string | null;
 };
 
 const initialState: ScheduleState = {
@@ -27,6 +31,9 @@ const initialState: ScheduleState = {
   alerts: [],
   alertsLoading: false,
   alertsError: null,
+  proposal: null,
+  proposalLoading: false,
+  proposalError: null,
 };
 
 export const ScheduleStore = signalStore(
@@ -90,12 +97,38 @@ export const ScheduleStore = signalStore(
       ),
     ),
 
-    assign(
-      bookingId: number,
-      carId: number | null,
-      employeeIds: number[],
-    ): Observable<AdminBooking> {
-      return backendCommunicator.assignBooking(bookingId, carId, employeeIds);
+    loadProposal: rxMethod<string>(
+      pipe(
+        tap(() => patchState(store, { proposalLoading: true, proposalError: null })),
+        switchMap((date) =>
+          backendCommunicator.loadProposal(date).pipe(
+            tapResponse({
+              next: (proposal) => patchState(store, { proposal, proposalLoading: false }),
+              error: (err) =>
+                patchState(store, {
+                  proposal: null,
+                  proposalLoading: false,
+                  proposalError: errorMessage(err),
+                }),
+            }),
+          ),
+        ),
+      ),
+    ),
+
+    applyProposal(proposal: ScheduleProposal): Observable<void> {
+      return backendCommunicator.applyProposal(
+        proposal.games
+          .filter((g) => g.changed)
+          .map((g) => ({
+            bookingId: g.bookingId,
+            employeeIds: g.staff.map((s) => s.id),
+          })),
+      );
+    },
+
+    assign(bookingId: number, employeeIds: number[]): Observable<AdminBooking> {
+      return backendCommunicator.assignBooking(bookingId, employeeIds);
     },
   })),
 );

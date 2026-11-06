@@ -1,0 +1,8 @@
+node_modules
+dist
+.angular
+.vscode
+.env
+.env.*
+!.env.example
+apps/paintball-alfoldon/src/environments/environment.ts

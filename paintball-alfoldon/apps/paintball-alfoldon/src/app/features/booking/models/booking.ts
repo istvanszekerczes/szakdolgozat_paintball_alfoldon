@@ -17,6 +17,8 @@ export interface AvailabilitySlot {
   start: string;
   end: string;
   available: boolean;
+  /** Fits best into the crew's day; may be a half-hour time between the usual slots. */
+  recommended: boolean;
 }
 
 export interface Availability {

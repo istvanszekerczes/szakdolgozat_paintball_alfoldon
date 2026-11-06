@@ -20,6 +20,14 @@
   <p class="error" role="alert">{{ error() }}</p>
 }
 
+<section class="card" aria-labelledby="javaslat-cim">
+  <div class="card-head">
+    <h2 id="javaslat-cim">Javasolt sofőrök</h2>
+    <span class="muted small">függő foglalásokkal együtt</span>
+  </div>
+  <app-proposal-panel [date]="date()" />
+</section>
+
 <section class="card" aria-labelledby="idovonal-cim">
   <div class="card-head"><h2 id="idovonal-cim">Autók</h2></div>
   @if (schedule(); as s) {

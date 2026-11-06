@@ -11,11 +11,13 @@
         <span class="venue-head">
           <span class="venue-city">{{ venue.city }}</span>
           <span class="pill" [class.pill-accent]="venue.indoor">{{
-            venue.indoor ? 'Fedett' : 'Szabadtéri'
+            (venue.indoor ? 'common.indoor' : 'common.outdoor') | translate
           }}</span>
         </span>
-        <span class="venue-name">{{ venue.name }}</span>
-        <span class="venue-meta mono">{{ venue.minHeadcount }}–{{ venue.maxHeadcount }} fő</span>
+        <span class="venue-name">{{ venueName(venue) }}</span>
+        <span class="venue-meta mono">{{
+          'common.people' | translate: { count: venue.minHeadcount + '–' + venue.maxHeadcount }
+        }}</span>
       </button>
     </li>
   }

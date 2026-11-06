@@ -3,6 +3,7 @@ package com.paintball.app.booking;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
@@ -13,6 +14,7 @@ import com.paintball.app.common.ConflictException;
 import com.paintball.app.common.NotFoundException;
 import com.paintball.app.customer.Customer;
 import com.paintball.app.customer.CustomerRepository;
+import com.paintball.app.schedule.CrewCapacity;
 import com.paintball.app.venue.Venue;
 import com.paintball.app.venue.VenueBlockRepository;
 import com.paintball.app.venue.VenueRepository;
@@ -24,16 +26,18 @@ public class BookingService {
     private final VenueRepository venueRepository;
     private final CustomerRepository customerRepository;
     private final VenueBlockRepository venueBlockRepository;
+    private final CrewCapacity crewCapacity;
     private final BookingRules rules;
     private final Clock clock;
 
     public BookingService(BookingRepository bookingRepository, VenueRepository venueRepository,
-            CustomerRepository customerRepository, VenueBlockRepository venueBlockRepository, BookingRules rules,
-            Clock clock) {
+            CustomerRepository customerRepository, VenueBlockRepository venueBlockRepository,
+            CrewCapacity crewCapacity, BookingRules rules, Clock clock) {
         this.bookingRepository = bookingRepository;
         this.venueRepository = venueRepository;
         this.customerRepository = customerRepository;
         this.venueBlockRepository = venueBlockRepository;
+        this.crewCapacity = crewCapacity;
         this.rules = rules;
         this.clock = clock;
     }
@@ -48,13 +52,19 @@ public class BookingService {
         rules.checkDate(request.date());
         rules.checkSlot(request.startTime());
         rules.checkHeadcount(venue, request.headcount());
-        if (bookingRepository.existsByVenueAndPlayDateAndStartTimeAndStatusIn(venue, request.date(),
-                request.startTime(), BookingStatus.OCCUPYING)) {
+        LocalTime end = rules.slotEnd(request.startTime());
+        CrewCapacity.Day day = crewCapacity.dayForUpdate(request.date());
+        if (day.venueBusy(venue, request.startTime(), end)) {
             throw new ConflictException("Ez az időpont már foglalt, kérjük válassz másikat.");
         }
         if (!venueBlockRepository.findOverlapping(venue, request.date().atTime(request.startTime()),
-                request.date().atTime(rules.slotEnd(request.startTime()))).isEmpty()) {
+                request.date().atTime(end)).isEmpty()) {
             throw new ConflictException("A pálya ebben az időpontban zárva van, kérjük válassz másikat.");
+        }
+        // No overbooking: every game of the day, this one included, must fit into the cars' days.
+        if (day.planWith(venue, request.date(), request.startTime(), end).isEmpty()) {
+            throw new ConflictException(
+                    "Erre az időpontra már nem tudunk csapatot küldeni, kérjük válassz másikat.");
         }
 
         Instant now = Instant.now(clock);
@@ -65,13 +75,16 @@ public class BookingService {
         booking.setContactPhone(request.phone().trim());
         booking.setPlayDate(request.date());
         booking.setStartTime(request.startTime());
-        booking.setEndTime(rules.slotEnd(request.startTime()));
+        booking.setEndTime(end);
         booking.setHeadcount(request.headcount());
         booking.setNote(blankToNull(request.note()));
         booking.setStatus(BookingStatus.PENDING);
         booking.setCreatedAt(now);
         booking.setUpdatedAt(now);
-        return bookingRepository.save(booking);
+        Booking saved = bookingRepository.save(booking);
+        // The car is not chosen by anyone: the day is split between the cars again with this game in it.
+        crewCapacity.assignCars(request.date());
+        return saved;
     }
 
     @Transactional(readOnly = true)
@@ -95,6 +108,11 @@ public class BookingService {
         }
         booking.setStatus(next);
         booking.setUpdatedAt(Instant.now(clock));
+        if (!BookingStatus.OCCUPYING.contains(next)) {
+            // A rejected or cancelled game frees its car; the rest of the day may now pack better.
+            booking.setCar(null);
+            crewCapacity.assignCars(booking.getPlayDate());
+        }
         return booking;
     }
 

@@ -99,20 +99,20 @@ class BookingApiIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.active").value(true));
 
-        // Same venue, back to back: one car and crew can do both games.
+        // Same venue, back to back: the app put both games on the same car, one crew does both.
         for (int id = 1; id <= 2; id++) {
             mvc.perform(put("/api/admin/bookings/" + id + "/assignment").header("Authorization", "Bearer " + token)
-                    .contentType(MediaType.APPLICATION_JSON).content("{\"carId\":1,\"employeeIds\":[1]}"))
+                    .contentType(MediaType.APPLICATION_JSON).content("{\"employeeIds\":[1]}"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.car.plate").value("ABC-123"))
+                    .andExpect(jsonPath("$.car.plate").value("AUTO-1"))
                     .andExpect(jsonPath("$.employees[0].name").value("Nagy Anna"));
         }
 
         mvc.perform(get("/api/admin/schedule").param("date", playDate.toString())
                 .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cars[0].segments[0].type").value("TRAVEL_OUT"))
-                .andExpect(jsonPath("$.cars[0].segments[0].start").value("09:00:00"))
+                .andExpect(jsonPath("$.cars[1].segments[0].type").value("TRAVEL_OUT"))
+                .andExpect(jsonPath("$.cars[1].segments[0].start").value("09:00:00"))
                 .andExpect(jsonPath("$.staff[0].from").value("09:00:00"))
                 .andExpect(jsonPath("$.staff[0].to").value("14:45:00"))
                 .andExpect(jsonPath("$.unassigned", hasSize(0)));
@@ -123,7 +123,7 @@ class BookingApiIntegrationTest {
                 .content("{\"dateFrom\":\"%s\",\"dateTo\":\"%s\",\"reason\":\"szabadság\"}".formatted(playDate, playDate)))
                 .andExpect(status().isCreated());
         mvc.perform(put("/api/admin/bookings/1/assignment").header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON).content("{\"carId\":1,\"employeeIds\":[1]}"))
+                .contentType(MediaType.APPLICATION_JSON).content("{\"employeeIds\":[1]}"))
                 .andExpect(status().isConflict());
         mvc.perform(get("/api/admin/alerts").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
@@ -155,6 +155,40 @@ class BookingApiIntegrationTest {
         mvc.perform(post("/api/admin/auth/login").contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"admin\",\"password\":\"new-password-1\"}"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void offersTheTimeThatPacksTheCrewsDayAndRefusesAThirdCar() throws Exception {
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON).content(bookingJson("10:00")))
+                .andExpect(status().isCreated());
+
+        // The crew ends in Szeged at 12:00; packing up, 15 min driving and setting up: the hall from 13:30.
+        mvc.perform(get("/api/venues/szeged-csarnok/availability").param("date", playDate.toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.slots[?(@.start == '13:30:00')].recommended").value(true))
+                .andExpect(jsonPath("$.slots[?(@.start == '14:00:00')].recommended").value(true))
+                .andExpect(jsonPath("$.slots[?(@.start == '08:00:00')].recommended").value(false))
+                .andExpect(jsonPath("$.slots[?(@.start == '08:00:00')].available").value(true))
+                .andExpect(jsonPath("$.slots[?(@.start == '14:00:00')].available").value(true));
+
+        // Two cars: two more games at 10:00 elsewhere would need a third one.
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON)
+                .content(bookingJson("10:00").replace("\"szeged\"", "\"szeged-csarnok\"")))
+                .andExpect(status().isCreated());
+        mvc.perform(post("/api/bookings").contentType(MediaType.APPLICATION_JSON)
+                .content(bookingJson("10:00").replace("\"szeged\"", "\"szentes\"")))
+                .andExpect(status().isConflict());
+        mvc.perform(get("/api/venues/szentes/availability").param("date", playDate.toString()))
+                .andExpect(jsonPath("$.slots[?(@.start == '10:00:00')].available").value(false));
+
+        String token = login();
+        mvc.perform(get("/api/admin/schedule/proposal").param("date", playDate.toString())
+                .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.fits").value(true))
+                .andExpect(jsonPath("$.games", hasSize(2)))
+                .andExpect(jsonPath("$.games[0].plate").value("AUTO-1"))
+                .andExpect(jsonPath("$.games[1].plate").value("AUTO-2"));
     }
 
     @Test

@@ -1,0 +1,67 @@
+# The whole app on one machine: docker compose up --build -d
+#   Site       http://localhost:4000
+#   Dashboard  http://localhost:4300 (admin / admin)
+#   API        http://localhost:8080
+#
+# Local use only: the passwords and the JWT secret below are development values, and every port
+# is published on 127.0.0.1 so other machines can't reach it.
+name: paintball-alfoldon
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: paintball
+      POSTGRES_USER: paintball
+      POSTGRES_PASSWORD: paintball
+    volumes:
+      - paintball-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paintball -d paintball"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build: ./paintball-alfoldon-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/paintball
+      DB_USERNAME: paintball
+      DB_PASSWORD: paintball
+      JWT_SECRET: dev-only-secret-change-me-in-production-0123456789
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin
+      CORS_PUBLIC_ORIGINS: http://localhost:4000
+      CORS_ADMIN_ORIGINS: http://localhost:4300
+    ports:
+      - "127.0.0.1:8080:8080"
+
+  site:
+    build:
+      context: ./paintball-alfoldon
+      args:
+        PROJECT: paintball-alfoldon
+        DIST_DIR: dist/apps/paintball-alfoldon
+        # Called from the visitor's browser, so this is the published port, not the service name.
+        API_URL: http://localhost:8080
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:4000:4000"
+
+  dashboard:
+    build:
+      context: ./paintball-alfoldon
+      args:
+        PROJECT: paintball-alfoldon-dashboard
+        DIST_DIR: dist/apps/paintball-alfoldon-dashboard
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:4300:4000"
+
+volumes:
+  paintball-db:

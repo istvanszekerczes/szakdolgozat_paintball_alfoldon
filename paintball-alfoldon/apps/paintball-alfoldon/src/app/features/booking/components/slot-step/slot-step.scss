@@ -53,3 +53,10 @@
   font-size: 0.75rem;
   color: var(--fg-3);
 }
+.slot.is-recommended:not(.is-selected) {
+  border-color: var(--accent-2);
+}
+.slot-recommended {
+  font-size: 0.75rem;
+  color: var(--accent-2);
+}

@@ -1,10 +1,9 @@
 <section class="page-header page-header-center">
   <div class="container">
-    <span class="eyebrow">Foglalás</span>
-    <h1 class="page-header-title">Időpont foglalása</h1>
+    <span class="eyebrow">{{ 'booking.eyebrow' | translate }}</span>
+    <h1 class="page-header-title">{{ 'booking.title' | translate }}</h1>
     <p class="page-header-lead lead">
-      Válassz pályát, időpontot és létszámot, és pár perc alatt elküldheted a foglalásod. Inkább
-      beszélnél velünk? Telefonon és e-mailben is foglalhatsz.
+      {{ 'booking.lead' | translate }}
     </p>
   </div>
 </section>
@@ -26,9 +25,10 @@
         <path d="M12 8v4M12 16h.01" />
       </svg>
       <p>
-        <strong>Fontos:</strong> előzetes időpontfoglalás szükséges, lehetőleg legalább
-        <strong>egy héttel a tervezett játék előtt</strong>, hogy a pályát és a felszerelést
-        garantálni tudjuk.
+        <strong>{{ 'booking.noticeImportant' | translate }}</strong>
+        {{ 'booking.noticeBefore' | translate }}
+        <strong>{{ 'booking.noticeStrong' | translate }}</strong
+        >{{ 'booking.noticeAfter' | translate }}
       </p>
     </div>
 
@@ -36,32 +36,35 @@
     @defer (on idle) {
       <app-booking-wizard />
     } @placeholder {
-      <div class="card booking-placeholder" aria-busy="true">Foglalási űrlap betöltése…</div>
+      <div class="card booking-placeholder" aria-busy="true">
+        {{ 'booking.formLoading' | translate }}
+      </div>
     }
 
-    <h2 class="booking-alt">Inkább telefonon vagy e-mailben?</h2>
+    <h2 class="booking-alt">{{ 'booking.altTitle' | translate }}</h2>
 
     <div class="channels">
       <article class="card channel">
-        <span class="eyebrow">Telefon</span>
+        <span class="eyebrow">{{ 'phoneChannel.eyebrow' | translate }}</span>
         <h2 class="channel-value">+36 30/977 14 86</h2>
-        <p>Hétfőtől vasárnapig 06:00–22:00, ünnepnapokon is.</p>
-        <a href="tel:+36309771486" class="btn btn-primary btn-lg btn-block">Hívás most</a>
+        <p>{{ 'phoneChannel.hours' | translate }}</p>
+        <a href="tel:+36309771486" class="btn btn-primary btn-lg btn-block">{{
+          'phoneChannel.action' | translate
+        }}</a>
       </article>
 
       <article class="card channel">
-        <span class="eyebrow">E-mail</span>
+        <span class="eyebrow">{{ 'emailChannel.eyebrow' | translate }}</span>
         <h2 class="channel-value">paintball&#64;alfoldon.hu</h2>
-        <p>Ajánlatkérésre és levelekre 24 órán belül válaszolunk.</p>
-        <a href="mailto:paintball@alfoldon.hu" class="btn btn-secondary btn-lg btn-block"
-          >E-mail küldése</a
-        >
+        <p>{{ 'emailChannel.text' | translate }}</p>
+        <a href="mailto:paintball@alfoldon.hu" class="btn btn-secondary btn-lg btn-block">{{
+          'emailChannel.action' | translate
+        }}</a>
       </article>
     </div>
 
     <p class="booking-hint">
-      Telefonon vagy e-mailben írd meg a tervezett dátumot, a létszámot és a választott pályát, így
-      azonnal pontos ajánlatot tudunk adni.
+      {{ 'booking.altHint' | translate }}
     </p>
   </div>
 </section>

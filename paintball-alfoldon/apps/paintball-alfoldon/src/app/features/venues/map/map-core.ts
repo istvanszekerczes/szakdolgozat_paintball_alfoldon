@@ -114,6 +114,26 @@ export const HU_LOCALE: Record<string, string> = {
   'CooperativeGesturesHandler.MobileHelpText': 'A térkép mozgatásához használj két ujjat',
 };
 
+/** English UI strings for MapLibre's built-in controls and overlays. */
+export const EN_LOCALE: Record<string, string> = {
+  'Map.Title': 'Map',
+  'Marker.Title': 'Map marker',
+  'Popup.Close': 'Close',
+  'NavigationControl.ZoomIn': 'Zoom in',
+  'NavigationControl.ZoomOut': 'Zoom out',
+  'NavigationControl.ResetBearing': 'Reset bearing to north',
+  'AttributionControl.ToggleAttribution': 'Toggle attribution',
+  'CooperativeGesturesHandler.WindowsHelpText': 'Use Ctrl + scroll to zoom the map',
+  'CooperativeGesturesHandler.MacHelpText': 'Use ⌘ + scroll to zoom the map',
+  'CooperativeGesturesHandler.MobileHelpText': 'Use two fingers to move the map',
+};
+
+/** MapLibre UI strings for a site language. */
+export const MAP_LOCALES: Record<'hu' | 'en', Record<string, string>> = {
+  hu: HU_LOCALE,
+  en: EN_LOCALE,
+};
+
 export interface BlackMapOptions {
   container: HTMLElement;
   center?: LngLatLike;
@@ -126,6 +146,8 @@ export interface BlackMapOptions {
   cooperativeGestures?: boolean;
   /** Basemap place labels to suppress (cities that get a labelled pin instead). */
   hideLabels?: readonly string[];
+  /** Texts of MapLibre's own controls; Hungarian unless given. */
+  locale?: Record<string, string>;
 }
 
 /**
@@ -145,7 +167,7 @@ export async function createBlackMap(ml: MapLibre, opts: BlackMapOptions): Promi
     dragRotate: false,
     pitchWithRotate: false,
     touchPitch: false,
-    locale: HU_LOCALE,
+    locale: opts.locale ?? HU_LOCALE,
     fadeDuration: prefersReducedMotion() ? 0 : 300,
   };
   // Only forward camera options that were actually provided; MapLibre treats an

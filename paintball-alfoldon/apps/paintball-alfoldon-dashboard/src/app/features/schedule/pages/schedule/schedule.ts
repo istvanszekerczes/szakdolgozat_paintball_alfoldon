@@ -6,11 +6,12 @@ import { addDays, fullDate, hm, today } from '../../../../shared/utils/format';
 import { AssignmentPanel } from '../../components/assignment-panel/assignment-panel';
 import { CarTimeline } from '../../components/car-timeline/car-timeline';
 import { StaffToday } from '../../components/staff-today/staff-today';
+import { ProposalPanel } from '../../components/proposal-panel/proposal-panel';
 
 /** Beosztás: pick a day, assign a car and staff to each accepted game, see the result on the timeline. */
 @Component({
   selector: 'app-schedule',
-  imports: [RouterLink, AssignmentPanel, CarTimeline, StaffToday],
+  imports: [RouterLink, AssignmentPanel, CarTimeline, StaffToday, ProposalPanel],
   templateUrl: './schedule.html',
   styleUrl: './schedule.scss',
 })

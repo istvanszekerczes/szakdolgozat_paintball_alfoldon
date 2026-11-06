@@ -1,0 +1,21 @@
+{
+  // Build output and caches: hidden from the explorer so VS Code doesn't report diagnostics on them.
+  "files.exclude": {
+    "**/dist": true,
+    "**/.angular": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.angular": true,
+    "paintball-alfoldon-backend/build": true,
+    "paintball-alfoldon-backend/bin": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/.angular/**": true,
+    "paintball-alfoldon-backend/build/**": true,
+    "paintball-alfoldon-backend/bin/**": true
+  }
+}

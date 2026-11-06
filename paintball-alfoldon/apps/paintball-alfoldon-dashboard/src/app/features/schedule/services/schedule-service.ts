@@ -2,6 +2,7 @@ import { Service, computed, inject } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { AdminBooking } from '../../bookings/models/booking';
 import { BookingService } from '../../bookings/services/booking-service';
+import { ScheduleProposal } from '../models/schedule';
 import { ScheduleStore } from '../store/schedule-store';
 
 /** Beosztás: assignments, the computed day plan and the alerts built on them. */
@@ -28,6 +29,40 @@ export class ScheduleService {
     this.store.loadDaySchedule(date);
   }
 
+  readonly proposal = computed(() => this.store.proposal());
+  readonly proposalLoading = computed(() => this.store.proposalLoading());
+  readonly proposalError = computed(() => this.store.proposalError());
+
+  /**
+   * Loads the app's proposed car and staff for every game of one date.
+   *
+   * @param date The day as `YYYY-MM-DD`.
+   * @returns void
+   */
+  loadProposal(date: string) {
+    this.store.loadProposal(date);
+  }
+
+  /**
+   * Saves the changed assignments of the proposal (all or none), then reloads the day.
+   *
+   * @param proposal The proposal the admin accepted.
+   * @returns An Observable that completes when the assignments are saved.
+   */
+  applyProposal(proposal: ScheduleProposal): Observable<void> {
+    return this.store.applyProposal(proposal).pipe(
+      tap(() => {
+        this.bookingService.loadBookings({
+          from: proposal.date,
+          to: proposal.date,
+          status: 'ACCEPTED',
+        });
+        this.store.refreshDaySchedule(proposal.date);
+        this.store.loadProposal(proposal.date);
+      }),
+    );
+  }
+
   /**
    * Loads the alerts the backend computed for the coming days.
    *
@@ -38,23 +73,21 @@ export class ScheduleService {
   }
 
   /**
-   * Saves the car and the staff of one game, then updates the booking lists and the day plan.
+   * Saves the staff of one game (its car is assigned automatically), then updates the booking lists and the day plan.
    *
    * @param booking The game to assign.
-   * @param carId The ID of the car, or null for no car.
    * @param employeeIds The IDs of the employees working on the game.
    * @returns An Observable of the updated booking.
    */
-  assign(
-    booking: AdminBooking,
-    carId: number | null,
-    employeeIds: number[],
-  ): Observable<AdminBooking> {
-    return this.store.assign(booking.id, carId, employeeIds).pipe(
+  assign(booking: AdminBooking, employeeIds: number[]): Observable<AdminBooking> {
+    return this.store.assign(booking.id, employeeIds).pipe(
       tap((updated) => {
         this.bookingService.replaceBooking(updated);
         if (this.store.daySchedule()?.date === updated.date) {
           this.store.refreshDaySchedule(updated.date);
+        }
+        if (this.store.proposal()?.date === updated.date) {
+          this.store.loadProposal(updated.date);
         }
       }),
     );

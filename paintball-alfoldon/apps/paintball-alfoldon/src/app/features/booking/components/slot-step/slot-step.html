@@ -1,5 +1,5 @@
 <div class="field">
-  <label for="bw-date" class="field-label">Dátum</label>
+  <label for="bw-date" class="field-label">{{ 'booking.date' | translate }}</label>
   <input
     id="bw-date"
     type="date"
@@ -13,29 +13,31 @@
   @if (showsError(form().date)) {
     <app-field-errors [field]="form().date" errorId="bw-date-error" />
   } @else {
-    <p id="bw-date-hint" class="hint">Online legalább egy héttel előre lehet foglalni.</p>
+    <p id="bw-date-hint" class="hint">{{ 'booking.dateHint' | translate }}</p>
   }
 </div>
 
 @if (dateReady()) {
   <fieldset class="slots">
-    <legend class="field-label">Kezdési időpont (2 órás játék)</legend>
+    <legend class="field-label">{{ 'booking.startTime' | translate }}</legend>
     @if (loading()) {
-      <p class="hint" aria-live="polite">Szabad időpontok betöltése…</p>
+      <p class="hint" aria-live="polite">{{ 'booking.slotsLoading' | translate }}</p>
     } @else if (loadError()) {
       <p class="field-error" role="alert">
-        Nem sikerült betölteni a szabad időpontokat.
-        <button type="button" class="btn btn-ghost btn-sm" (click)="retry.emit()">Újra</button>
+        {{ 'booking.slotsError' | translate }}
+        <button type="button" class="btn btn-ghost btn-sm" (click)="retry.emit()">
+          {{ 'common.retry' | translate }}
+        </button>
       </p>
     } @else if (availability(); as day) {
       @if (!day.bookable) {
         <p class="hint">
-          Erre a napra online nem lehet foglalni. Hívj minket: <a [href]="phoneHref">{{ phone }}</a
+          {{ 'booking.dayNotBookable' | translate }} <a [href]="phoneHref">{{ phone }}</a
           >.
         </p>
       } @else if (!hasFreeSlot(day)) {
         <p class="hint">
-          Ezen a napon minden időpont foglalt. Válassz másik napot, vagy hívj minket.
+          {{ 'booking.dayFull' | translate }}
         </p>
       } @else {
         <div class="slots-grid">
@@ -43,6 +45,7 @@
             <button
               type="button"
               class="slot"
+              [class.is-recommended]="slot.recommended"
               [class.is-selected]="slot.start === form().startTime().value()"
               [attr.aria-pressed]="slot.start === form().startTime().value()"
               [disabled]="!slot.available"
@@ -50,11 +53,16 @@
             >
               <span class="mono">{{ short(slot.start) }}–{{ short(slot.end) }}</span>
               @if (!slot.available) {
-                <span class="slot-taken">foglalt</span>
+                <span class="slot-taken">{{ 'booking.slotTaken' | translate }}</span>
+              } @else if (slot.recommended) {
+                <span class="slot-recommended">{{ 'booking.slotRecommended' | translate }}</span>
               }
             </button>
           }
         </div>
+        @if (hasRecommended(day)) {
+          <p class="hint">{{ 'booking.slotsRecommendedHint' | translate }}</p>
+        }
       }
     }
     <app-field-errors [field]="form().startTime" errorId="bw-time-error" />
@@ -62,5 +70,5 @@
 }
 
 @if (ruleError(); as message) {
-  <p class="field-error" role="alert">{{ message }}</p>
+  <p class="field-error" role="alert">{{ message | translate }}</p>
 }

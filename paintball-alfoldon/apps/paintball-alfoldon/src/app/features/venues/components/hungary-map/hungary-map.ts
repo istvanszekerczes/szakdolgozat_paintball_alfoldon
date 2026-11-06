@@ -6,13 +6,18 @@ import {
   ElementRef,
   PLATFORM_ID,
   computed,
+  effect,
   inject,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import type { Map as MapLibreMap, Marker, PaddingOptions, Popup } from 'maplibre-gl';
+import { TranslatePipe } from '../../../../core/i18n/translate-pipe';
+import { TranslationService } from '../../../../core/i18n/translation-service';
 import {
+  MAP_LOCALES,
   MapLibre,
   boundsOf,
   centroidOf,
@@ -67,6 +72,7 @@ type MapStatus = 'loading' | 'ready' | 'error';
  */
 @Component({
   selector: 'app-hungary-map',
+  imports: [TranslatePipe],
   templateUrl: './hungary-map.html',
   styleUrl: './hungary-map.scss',
 })
@@ -76,8 +82,10 @@ export class HungaryMap implements AfterViewInit {
   private location = inject(Location);
   private platformId = inject(PLATFORM_ID);
   private destroyRef = inject(DestroyRef);
+  private translationService = inject(TranslationService);
 
-  readonly venues = inject(LocationService).getLocations();
+  /** In the current language; a switch rebuilds the markers, whose labels are plain DOM. */
+  readonly venues = inject(LocationService).locations;
   readonly fieldType = LocationService.fieldType;
   readonly status = signal<MapStatus>('loading');
 
@@ -101,6 +109,11 @@ export class HungaryMap implements AfterViewInit {
     this.destroyRef.onDestroy(() => {
       this.popup?.remove();
       this.map?.remove();
+    });
+
+    effect(() => {
+      this.venues();
+      untracked(() => this.rebuildMarkers());
     });
   }
 
@@ -152,7 +165,7 @@ export class HungaryMap implements AfterViewInit {
   private async initMap(): Promise<void> {
     try {
       const container = this.mapContainer().nativeElement;
-      const bounds = boundsOf(this.venues);
+      const bounds = boundsOf(this.venues());
       const fit = () => this.fitOptions();
 
       const [ml] = await Promise.all([loadMapLibre(), waitForSize(container)]);
@@ -163,7 +176,8 @@ export class HungaryMap implements AfterViewInit {
         fitBoundsOptions: fit(),
         minZoom: 6,
         // Venue cities are labelled by their pins; keep the basemap from labelling them twice.
-        hideLabels: [...new Set(this.venues.map((v) => v.city))],
+        hideLabels: [...new Set(this.venues().map((v) => v.city))],
+        locale: MAP_LOCALES[this.translationService.language()],
       });
       this.map = map;
       this.popup = createPopup(ml);
@@ -197,11 +211,11 @@ export class HungaryMap implements AfterViewInit {
     const ml = this.ml!;
 
     const byCity = new Map<string, PaintballLocation[]>();
-    for (const venue of this.venues) {
+    for (const venue of this.venues()) {
       byCity.set(venue.city, [...(byCity.get(venue.city) ?? []), venue]);
     }
 
-    for (const venue of this.venues) {
+    for (const venue of this.venues()) {
       // Cities with one field are labelled by city; split-out cluster members by venue name.
       const shared = (byCity.get(venue.city)?.length ?? 1) > 1;
       const el = createMarkerElement({
@@ -220,7 +234,10 @@ export class HungaryMap implements AfterViewInit {
       if (venues.length < 2) continue;
       const center = centroidOf(venues);
       const el = createMarkerElement({
-        label: `${city} – ${venues.length} helyszín, kattints a nagyításhoz`,
+        label: this.translationService.translate('map.clusterLabel', {
+          city,
+          count: venues.length,
+        }),
         caption: city,
         count: venues.length,
       });
@@ -230,7 +247,7 @@ export class HungaryMap implements AfterViewInit {
         this.clearPaint();
         el.classList.add('is-active');
         this.showPopup(center, {
-          eyebrow: `${venues.length} helyszín`,
+          eyebrow: this.translationService.translate('map.placeCount', { count: venues.length }),
           title: city,
           meta: venues.map((v) => v.venue).join(' · '),
         });
@@ -248,6 +265,31 @@ export class HungaryMap implements AfterViewInit {
       });
       this.clusters.push(cluster);
     }
+  }
+
+  /**
+   * Replaces every marker after a language switch: their labels and captions are plain DOM built
+   * from the venue texts. The picked venue stays picked.
+   */
+  private rebuildMarkers(): void {
+    const map = this.map;
+    if (!map) return;
+
+    this.clearPaint();
+    for (const marker of this.onMap) marker.remove();
+    this.onMap.clear();
+    this.markers.clear();
+    this.clusters.length = 0;
+
+    // Venue objects are new after a switch; keep the pick by id.
+    const byId = (venue: PaintballLocation | null) =>
+      venue ? (this.venues().find((v) => v.id === venue.id) ?? null) : null;
+    this.hovered.set(byId(this.hovered()));
+    this.selected.set(byId(this.selected()));
+
+    this.buildMarkers(map);
+    this.syncClusters();
+    this.restore();
   }
 
   /** Shows either the cluster badge or the individual markers, depending on zoom. */
@@ -356,7 +398,7 @@ export class HungaryMap implements AfterViewInit {
     this.showPopup(position, {
       eyebrow: venue.venue,
       title: venue.city,
-      meta: `${this.fieldType(venue)} · ${venue.optHeadcount} fő`,
+      meta: `${this.translationService.translate(this.fieldType(venue))} · ${this.translationService.translate('common.people', { count: venue.optHeadcount })}`,
     });
   }
 

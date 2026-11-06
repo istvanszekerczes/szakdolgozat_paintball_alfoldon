@@ -3,16 +3,18 @@
     #mapContainer
     class="map-shell-canvas"
     role="region"
-    [attr.aria-label]="'Térkép: ' + location().city + ', ' + location().venue"
+    [attr.aria-label]="
+      'map.venueAria' | translate: { city: location().city, venue: location().venue }
+    "
   ></div>
 
   @switch (status()) {
     @case ('loading') {
-      <div class="map-shell-status" aria-live="polite">Térkép betöltése…</div>
+      <div class="map-shell-status" aria-live="polite">{{ 'map.loading' | translate }}</div>
     }
     @case ('error') {
       <div class="map-shell-status" role="status">
-        A térkép nem jeleníthető meg ebben a böngészőben.
+        {{ 'map.error' | translate }}
       </div>
     }
   }

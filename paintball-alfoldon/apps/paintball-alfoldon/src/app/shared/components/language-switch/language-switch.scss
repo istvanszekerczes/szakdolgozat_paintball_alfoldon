@@ -1,0 +1,30 @@
+.lang {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-pill);
+}
+
+.lang-btn {
+  min-width: 36px;
+  height: 30px;
+  padding: 0 0.55rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--fg-3);
+  transition:
+    color var(--dur) var(--ease),
+    background var(--dur) var(--ease);
+
+  &:hover {
+    color: var(--fg);
+  }
+
+  &.is-active {
+    background: var(--bg-3);
+    color: var(--fg);
+  }
+}

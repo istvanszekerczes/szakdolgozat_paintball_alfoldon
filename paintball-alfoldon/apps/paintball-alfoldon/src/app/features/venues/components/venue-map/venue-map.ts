@@ -12,7 +12,10 @@ import {
   viewChild,
 } from '@angular/core';
 import type { Map as MapLibreMap, Marker } from 'maplibre-gl';
+import { TranslatePipe } from '../../../../core/i18n/translate-pipe';
+import { TranslationService } from '../../../../core/i18n/translation-service';
 import {
+  MAP_LOCALES,
   createBlackMap,
   createMarker,
   createMarkerElement,
@@ -30,6 +33,7 @@ const VENUE_ZOOM = 15;
 /** Single-venue map with a labelled pin, used on the field detail pages. */
 @Component({
   selector: 'app-venue-map',
+  imports: [TranslatePipe],
   templateUrl: './venue-map.html',
   styleUrl: './venue-map.scss',
 })
@@ -39,6 +43,7 @@ export class VenueMap implements AfterViewInit {
 
   private readonly mapContainer = viewChild.required<ElementRef<HTMLDivElement>>('mapContainer');
   private platformId = inject(PLATFORM_ID);
+  private translationService = inject(TranslationService);
 
   private map?: MapLibreMap;
   private marker?: Marker;
@@ -72,6 +77,7 @@ export class VenueMap implements AfterViewInit {
         zoom: VENUE_ZOOM,
         minZoom: 8,
         hideLabels: [loc.city],
+        locale: MAP_LOCALES[this.translationService.language()],
       });
       this.map = map;
       // Re-centre the pin if the layout settles late, until the user takes over.

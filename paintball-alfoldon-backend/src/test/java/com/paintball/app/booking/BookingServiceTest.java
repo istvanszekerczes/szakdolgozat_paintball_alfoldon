@@ -3,7 +3,6 @@ package com.paintball.app.booking;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -20,12 +19,15 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.paintball.app.car.Car;
 import com.paintball.app.common.BookingRuleException;
 import com.paintball.app.common.ConflictException;
 import com.paintball.app.common.NotFoundException;
 import com.paintball.app.config.AppProperties;
 import com.paintball.app.customer.Customer;
 import com.paintball.app.customer.CustomerRepository;
+import com.paintball.app.schedule.CrewCapacity;
+import com.paintball.app.schedule.ScheduleTestData;
 import com.paintball.app.venue.Venue;
 import com.paintball.app.venue.VenueBlock;
 import com.paintball.app.venue.VenueBlockRepository;
@@ -41,6 +43,8 @@ class BookingServiceTest {
     private final VenueRepository venueRepository = mock(VenueRepository.class);
     private final CustomerRepository customerRepository = mock(CustomerRepository.class);
     private final VenueBlockRepository venueBlockRepository = mock(VenueBlockRepository.class);
+    private final CrewCapacity crewCapacity = mock(CrewCapacity.class);
+    private final Car car = ScheduleTestData.car(1, "ABC-123", 5);
     private BookingService service;
     private Venue venue;
 
@@ -52,7 +56,7 @@ class BookingServiceTest {
                         Duration.ofHours(2), "Europe/Budapest"),
                 null, null);
         service = new BookingService(bookingRepository, venueRepository, customerRepository,
-                venueBlockRepository,
+                venueBlockRepository, crewCapacity,
                 new BookingRules(properties, clock), clock);
 
         venue = new Venue();
@@ -64,6 +68,7 @@ class BookingServiceTest {
         when(customerRepository.findByEmailIgnoreCase(any())).thenReturn(Optional.empty());
         when(customerRepository.save(any())).thenAnswer(call -> call.getArgument(0));
         when(bookingRepository.save(any())).thenAnswer(call -> call.getArgument(0));
+        when(crewCapacity.dayForUpdate(any())).thenReturn(new CrewCapacity.Day(List.of(), List.of(car)));
     }
 
     @Test
@@ -90,10 +95,19 @@ class BookingServiceTest {
     }
 
     @Test
-    void rejectsStartTimeOutsideFixedSlots() {
-        assertThatThrownBy(() -> service.create(request(TODAY.plusDays(10), LocalTime.of(9, 0), 20)))
+    void rejectsStartTimeOffTheHalfHourOrOutsideTheDay() {
+        assertThatThrownBy(() -> service.create(request(TODAY.plusDays(10), LocalTime.of(9, 15), 20)))
                 .isInstanceOf(BookingRuleException.class)
                 .hasMessageContaining("időpont");
+        assertThatThrownBy(() -> service.create(request(TODAY.plusDays(10), LocalTime.of(10, 30), 20)))
+                .isInstanceOf(BookingRuleException.class);
+    }
+
+    @Test
+    void acceptsHalfHourStartBetweenTheFixedSlots() {
+        Booking booking = service.create(request(TODAY.plusDays(10), LocalTime.of(9, 30), 20));
+
+        assertThat(booking.getEndTime()).isEqualTo(LocalTime.of(11, 30));
     }
 
     @Test
@@ -105,12 +119,25 @@ class BookingServiceTest {
     }
 
     @Test
-    void rejectsTakenSlot() {
-        when(bookingRepository.existsByVenueAndPlayDateAndStartTimeAndStatusIn(eq(venue), any(), any(),
-                anyCollection())).thenReturn(true);
+    void rejectsTimeOverlappingAnotherGameOnTheVenue() {
+        Booking taken = ScheduleTestData.game(1, venue, TODAY.plusDays(10), "09:00", "11:00", BookingStatus.PENDING);
+        when(crewCapacity.dayForUpdate(any())).thenReturn(new CrewCapacity.Day(List.of(taken), List.of(car)));
 
         assertThatThrownBy(() -> service.create(request(TODAY.plusDays(10), LocalTime.of(8, 0), 20)))
-                .isInstanceOf(ConflictException.class);
+                .isInstanceOf(ConflictException.class)
+                .hasMessageContaining("foglalt");
+    }
+
+    @Test
+    void rejectsGameNoCarCanReach() {
+        // The only car is busy at another venue at the same time.
+        Venue other = ScheduleTestData.venue(9, "Tiszaliget", 135);
+        Booking busy = ScheduleTestData.game(1, other, TODAY.plusDays(10), "08:00", "10:00", BookingStatus.PENDING);
+        when(crewCapacity.dayForUpdate(any())).thenReturn(new CrewCapacity.Day(List.of(busy), List.of(car)));
+
+        assertThatThrownBy(() -> service.create(request(TODAY.plusDays(10), LocalTime.of(8, 0), 20)))
+                .isInstanceOf(ConflictException.class)
+                .hasMessageContaining("csapatot");
     }
 
     @Test

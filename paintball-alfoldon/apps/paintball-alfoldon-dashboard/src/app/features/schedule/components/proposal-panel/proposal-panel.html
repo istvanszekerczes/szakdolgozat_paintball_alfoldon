@@ -1,0 +1,53 @@
+@if (proposal(); as p) {
+  @if (!p.fits) {
+    <p class="error" role="alert">
+      Ezen a napon több játék van, mint amennyit az autók el tudnak vállalni. Mondj le vagy helyezz
+      át egy foglalást, vagy állíts be még egy autót.
+    </p>
+  } @else if (p.games.length === 0) {
+    <p class="empty">Ezen a napon nincs játék.</p>
+  } @else {
+    @for (g of p.games; track g.bookingId) {
+      <article class="row" [class.changed]="g.changed">
+        <span class="mono time">{{ hm(g.startTime) }}–{{ hm(g.endTime) }}</span>
+        <div class="grow">
+          <a class="link" [routerLink]="['/foglalasok', g.bookingId]">{{ g.venueName }}</a>
+          <span class="muted small">
+            {{ g.plate }} ·
+            {{ g.staff.length ? names(g) : 'nincs szabad dolgozó' }}
+          </span>
+        </div>
+        @if (g.status === 'PENDING') {
+          <app-status-badge [label]="statusLabels[g.status]" tone="warn" />
+        }
+        @if (g.changed) {
+          <app-status-badge label="Új" tone="info" />
+        }
+      </article>
+    }
+    @if (withoutStaff()) {
+      <p class="muted small">
+        {{ withoutStaff() }} játékhoz nem jutott szabad dolgozó: vegyél fel valakit, vagy oszd be
+        kézzel.
+      </p>
+    }
+    <div class="actions">
+      <span class="muted small">{{
+        changes() ? changes() + ' játékhoz kerül dolgozó.' : 'Minden játéknak van dolgozója.'
+      }}</span>
+      <button
+        class="btn btn-primary"
+        type="button"
+        [disabled]="!changes() || busy()"
+        (click)="apply()"
+      >
+        {{ busy() ? 'Mentés…' : 'Sofőrök beosztása' }}
+      </button>
+    </div>
+  }
+} @else if (loading()) {
+  <p class="muted">Betöltés…</p>
+}
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}

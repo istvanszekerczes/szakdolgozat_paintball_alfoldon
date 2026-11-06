@@ -1,17 +1,14 @@
 <fieldset class="panel" [disabled]="busy()">
   <legend>Beosztás</legend>
-  <label class="field">
+  <div class="field">
     Autó
-    <!-- [selected] per option, not [value] on the select: the options arrive after the booking. -->
-    <select class="input" (change)="carId.set(num($event))">
-      <option value="" [selected]="carId() === null">— nincs autó —</option>
-      @for (c of carOptions(); track c.id) {
-        <option [value]="c.id" [selected]="c.id === carId()">
-          {{ c.plate }} · {{ c.seats }} hely{{ c.active ? '' : ' (inaktív)' }}
-        </option>
-      }
-    </select>
-  </label>
+    @if (booking().car; as car) {
+      <strong>{{ car.plate }} · {{ car.seats }} hely</strong>
+    } @else {
+      <strong>Nincs autó erre az időre</strong>
+    }
+    <span class="muted small">Az autót a rendszer osztja be automatikusan.</span>
+  </div>
   <div class="field">
     Dolgozók
     <div class="staff">

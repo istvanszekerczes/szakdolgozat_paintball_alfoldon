@@ -1,7 +1,9 @@
-import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, computed, effect, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { map } from 'rxjs';
+import { TranslatePipe } from '../../../../core/i18n/translate-pipe';
 import { VenueMap } from '../../components/venue-map/venue-map';
 import { directionsUrl } from '../../map/map-core';
 import { PaintballLocation } from '../../models/paintball-location';
@@ -9,25 +11,30 @@ import { LocationService } from '../../services/location-service';
 
 @Component({
   selector: 'app-location',
-  imports: [RouterLink, VenueMap],
+  imports: [RouterLink, VenueMap, TranslatePipe],
   templateUrl: './location.html',
   styleUrl: './location.scss',
 })
-export class LocationPage implements OnInit {
+export class LocationPage {
   private route = inject(ActivatedRoute);
   private locationService = inject(LocationService);
   private title = inject(Title);
   private meta = inject(Meta);
-  private destroyRef = inject(DestroyRef);
 
-  readonly location = signal<PaintballLocation | null>(null);
+  /** Slug from the route data; route data can change without re-creating the page. */
+  private readonly id = toSignal(this.route.data.pipe(map((data) => data['id'] as string)));
+
+  /** The venue in the current language; follows language switches. */
+  readonly location = computed(() => {
+    const id = this.id();
+    return id ? (this.locationService.getLocationById(id) ?? null) : null;
+  });
   readonly fieldType = LocationService.fieldType;
 
-  ngOnInit(): void {
-    this.route.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data) => {
-      const loc = this.locationService.getLocationById(data['id']);
+  constructor() {
+    effect(() => {
+      const loc = this.location();
       if (!loc) return;
-      this.location.set(loc);
       this.title.setTitle(loc.title);
       this.meta.updateTag({ name: 'description', content: loc.metaDesc });
     });

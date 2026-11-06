@@ -43,19 +43,10 @@ import { GroupStep } from '../group-step/group-step';
 import { SlotStep } from '../slot-step/slot-step';
 import { SummaryStep } from '../summary-step/summary-step';
 import { VenueStep } from '../venue-step/venue-step';
+import { TranslatePipe } from '../../../../core/i18n/translate-pipe';
 
-interface WizardStep {
-  label: string;
-  title: string;
-}
-
-export const STEPS: readonly WizardStep[] = [
-  { label: 'Pálya', title: 'Melyik pályán játszanátok?' },
-  { label: 'Időpont', title: 'Mikor jönnétek?' },
-  { label: 'Létszám', title: 'Hányan lesztek?' },
-  { label: 'Adatok', title: 'Kapcsolattartó adatai' },
-  { label: 'Összegzés', title: 'Ellenőrizd és küldd el' },
-];
+/** Steps in order; their label and title live under `booking.steps.<step>` in the language files. */
+export const STEPS = ['venue', 'slot', 'group', 'contact', 'summary'] as const;
 
 /** Fields of the backend's `CreateBookingRequest`, mapped to the step that asks for them. */
 const STEP_OF_FIELD: Record<string, number> = {
@@ -77,7 +68,7 @@ const STEP_OF_FIELD: Record<string, number> = {
  */
 @Component({
   selector: 'app-booking-wizard',
-  imports: [VenueStep, SlotStep, GroupStep, ContactStep, SummaryStep, BookingDone],
+  imports: [VenueStep, SlotStep, GroupStep, ContactStep, SummaryStep, BookingDone, TranslatePipe],
   templateUrl: './booking-wizard.html',
   styleUrl: './booking-wizard.scss',
 })
@@ -97,7 +88,10 @@ export class BookingWizard {
   protected readonly step = signal(0);
   protected readonly sending = this.bookingService.sending;
   protected readonly done = this.bookingService.created;
-  /** Refusal by a booking rule (422) or a slot taken meanwhile (409); shown on the date step. */
+  /**
+   * Refusal by a booking rule (422) or a slot taken meanwhile (409); shown on the date step.
+   * The backend's own text, or a translation key when it sent none.
+   */
   protected readonly ruleError = signal<string | null>(null);
   /** The request never got an answer (offline, server down). */
   protected readonly sendFailed = signal(false);
@@ -127,50 +121,51 @@ export class BookingWizard {
   protected readonly availabilityError = this.bookingService.availabilityError;
 
   protected readonly form: FieldTree<BookingDraft> = form(this.model, (p) => {
-    required(p.venueSlug, { message: 'Válassz pályát.' });
+    // Messages are translation keys; FieldErrors translates them, filling `{min}`, `{max}` etc.
+    // from the error itself.
+    required(p.venueSlug, { message: 'booking.errors.venueRequired' });
 
-    required(p.date, { message: 'Válassz dátumot.' });
+    required(p.date, { message: 'booking.errors.dateRequired' });
     validate(p.date, ({ value }) => {
       const date = value();
       if (!date) return null;
       if (date < this.minDate) {
         return {
           kind: 'tooSoon',
-          message: `Online legalább ${MIN_DAYS_IN_ADVANCE} nappal előre lehet foglalni. Rövidebb határidőre hívj minket telefonon.`,
+          message: 'booking.errors.tooSoon',
         };
       }
-      if (date > this.maxDate)
-        return { kind: 'tooLate', message: 'Erre a dátumra még nem lehet foglalni.' };
+      if (date > this.maxDate) return { kind: 'tooLate', message: 'booking.errors.tooLate' };
       return null;
     });
-    required(p.startTime, { message: 'Válassz időpontot.' });
+    required(p.startTime, { message: 'booking.errors.timeRequired' });
 
-    required(p.headcount, { message: 'Add meg a létszámot.' });
+    required(p.headcount, { message: 'booking.errors.headcountRequired' });
     validate(p.headcount, ({ value }) => {
       const count = value();
       return count !== null && !Number.isInteger(count)
-        ? { kind: 'wholeNumber', message: 'A létszám egész szám legyen.' }
+        ? { kind: 'wholeNumber', message: 'booking.errors.wholeNumber' }
         : null;
     });
     min(p.headcount, () => this.venue()?.minHeadcount ?? 1, {
-      message: () => `Ezen a pályán legalább ${this.venue()?.minHeadcount ?? 1} fő játszhat.`,
+      message: 'booking.errors.headcountMin',
     });
     max(p.headcount, () => this.venue()?.maxHeadcount, {
-      message: () => `Ezen a pályán legfeljebb ${this.venue()?.maxHeadcount} fő játszhat.`,
+      message: 'booking.errors.headcountMax',
     });
     maxLength(p.note, NOTE_MAX_LENGTH, {
-      message: `A megjegyzés legfeljebb ${NOTE_MAX_LENGTH} karakter.`,
+      message: 'booking.errors.noteTooLong',
     });
 
-    required(p.name, { message: 'Add meg a neved.' });
+    required(p.name, { message: 'booking.errors.nameRequired' });
     validate(p.name, ({ value }) =>
-      value() && !value().trim() ? { kind: 'blank', message: 'Add meg a neved.' } : null,
+      value() && !value().trim() ? { kind: 'blank', message: 'booking.errors.nameRequired' } : null,
     );
-    maxLength(p.name, 200, { message: 'Legfeljebb 200 karakter.' });
-    required(p.email, { message: 'Add meg az e-mail címed.' });
-    email(p.email, { message: 'Érvénytelen e-mail cím.' });
-    required(p.phone, { message: 'Add meg a telefonszámod.' });
-    pattern(p.phone, PHONE_PATTERN, { message: 'Érvénytelen telefonszám.' });
+    maxLength(p.name, 200, { message: 'booking.errors.nameTooLong' });
+    required(p.email, { message: 'booking.errors.emailRequired' });
+    email(p.email, { message: 'booking.errors.emailInvalid' });
+    required(p.phone, { message: 'booking.errors.phoneRequired' });
+    pattern(p.phone, PHONE_PATTERN, { message: 'booking.errors.phoneInvalid' });
   });
 
   /** The fields each step must have valid before the visitor can go on. */
@@ -281,7 +276,7 @@ export class BookingWizard {
       return null;
     }
 
-    const detail: string = error.error?.detail ?? 'A foglalást nem sikerült elküldeni.';
+    const detail: string = error.error?.detail ?? 'booking.errors.sendFailed';
 
     if (error.status === 400) {
       const fieldErrors: Record<string, string> = error.error?.errors ?? {};

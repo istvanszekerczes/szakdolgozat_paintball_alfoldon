@@ -1,10 +1,9 @@
 <section class="page-header">
   <div class="container">
-    <span class="eyebrow">Galéria</span>
-    <h1 class="page-header-title">Képek a pályákról</h1>
+    <span class="eyebrow">{{ 'gallery.eyebrow' | translate }}</span>
+    <h1 class="page-header-title">{{ 'gallery.title' | translate }}</h1>
     <p class="page-header-lead lead">
-      Ízelítő a hangulatból és a felszerelésekből. A teljes albumokat minden játék után a
-      Facebook-oldalunkon tesszük közzé.
+      {{ 'gallery.lead' | translate }}
     </p>
   </div>
 </section>
@@ -12,8 +11,8 @@
 <section class="section">
   <div class="container gallery-page">
     <!--
-      INTEGRÁCIÓ: a valódi képek betöltéséhez (pl. Facebook Graph API vagy külső galéria)
-      a GalleryComponent "items" tömbjét kell feltölteni "src" értékekkel.
+      INTEGRATION: to show real photos (e.g. Facebook Graph API or an external gallery), fill in
+      "src" in the Gallery component's "items".
     -->
     <app-gallery />
 
@@ -31,17 +30,16 @@
         </svg>
       </span>
       <div class="fb-note-text">
-        <h2 class="fb-note-title">Friss képek minden játék után</h2>
+        <h2 class="fb-note-title">{{ 'gallery.fbTitle' | translate }}</h2>
         <p>
-          A játékmesterek által készített teljes albumokat a hivatalos
+          {{ 'gallery.fbBefore' | translate }}
           <a
             href="https://facebook.com/PaintballAlfoldon"
             target="_blank"
             rel="noopener"
             class="fb-note-link"
-            >Facebook-oldalunkon</a
-          >
-          tesszük közzé. Keresd meg magad és a csapatodat az akcióképek között!
+            >{{ 'gallery.fbLink' | translate }}</a
+          >{{ 'gallery.fbAfter' | translate }}
         </p>
       </div>
     </aside>

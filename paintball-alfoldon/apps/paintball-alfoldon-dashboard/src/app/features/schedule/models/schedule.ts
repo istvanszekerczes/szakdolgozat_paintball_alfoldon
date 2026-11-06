@@ -1,4 +1,5 @@
 import { EmploymentType } from '../../employees/models/employee';
+import { BookingStatus } from '../../bookings/models/booking';
 
 /** The computed day plan and the alerts built on it (see ScheduleController.java, AlertController.java). */
 export type SegmentType =
@@ -52,4 +53,25 @@ export interface Alert {
   detail: string;
   bookingId: number;
   date: string;
+}
+
+/** The app's proposed beosztás of a day (see ProposalService.java). Nothing is saved until applied. */
+export interface ScheduleProposal {
+  date: string;
+  /** False when the cars cannot do every game of the day (overbooked); then `games` is empty. */
+  fits: boolean;
+  games: ProposedGame[];
+}
+
+export interface ProposedGame {
+  bookingId: number;
+  venueName: string;
+  startTime: string;
+  endTime: string;
+  status: BookingStatus;
+  carId: number;
+  plate: string;
+  staff: { id: number; name: string }[];
+  /** Applying the proposal would change this game's assignment. */
+  changed: boolean;
 }

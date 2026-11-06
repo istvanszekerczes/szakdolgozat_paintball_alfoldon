@@ -1,21 +1,23 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Meta, Title } from '@angular/platform-browser';
+import { Component, inject } from '@angular/core';
+import { syncPageMeta } from '../../../../core/i18n/page-meta';
+import { TranslatePipe } from '../../../../core/i18n/translate-pipe';
+import { TranslationService } from '../../../../core/i18n/translation-service';
 
 @Component({
   selector: 'app-contact',
+  imports: [TranslatePipe],
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })
-export class Contact implements OnInit {
-  private title = inject(Title);
-  private meta = inject(Meta);
+export class Contact {
+  private translationService = inject(TranslationService);
 
-  ngOnInit(): void {
-    this.title.setTitle('Kapcsolat és ajánlatkérés | Paintball Alföldön');
-    this.meta.updateTag({
-      name: 'description',
-      content:
-        'Lépj kapcsolatba velünk: telefonszám, e-mail és elérhetőségi idő. Hívj minket 06:00 és 22:00 között, vagy írj e-mailt, és 24 órán belül válaszolunk.',
-    });
+  constructor() {
+    const t = (key: string, params?: Record<string, string>) =>
+      this.translationService.translate(key, params);
+    syncPageMeta(
+      () => t('common.titleSuffix', { title: t('contact.metaTitle') }),
+      () => t('contact.metaDescription'),
+    );
   }
 }

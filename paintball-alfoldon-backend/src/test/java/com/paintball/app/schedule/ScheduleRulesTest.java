@@ -42,7 +42,7 @@ class ScheduleRulesTest {
                 SegmentType.GAME, SegmentType.TEARDOWN, SegmentType.TRAVEL_BETWEEN, SegmentType.SETUP,
                 SegmentType.GAME, SegmentType.TEARDOWN, SegmentType.TRAVEL_HOME);
         Segment between = segments.get(4);
-        // packed up at 10:30, then the longer of the two travel times (135 min)
+        // packed up at 10:30, then straight from Szeged to Szolnok (135 min)
         assertThat(between.start()).isEqualTo(LocalTime.of(10, 30));
         assertThat(between.end()).isEqualTo(LocalTime.of(12, 45));
         assertThat(between.bookingId()).isEqualTo(2L);

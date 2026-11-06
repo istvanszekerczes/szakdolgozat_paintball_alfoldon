@@ -1,0 +1,16 @@
+<div class="lang" role="group" [attr.aria-label]="'language.label' | translate">
+  @for (language of translationService.languages; track language) {
+    <button
+      type="button"
+      class="lang-btn"
+      [class.is-active]="translationService.language() === language"
+      [attr.aria-pressed]="translationService.language() === language"
+      [attr.lang]="language"
+      [attr.title]="'language.' + language | translate"
+      (click)="translationService.setLanguage(language)"
+    >
+      <span aria-hidden="true">{{ language.toUpperCase() }}</span>
+      <span class="sr-only">{{ 'language.' + language | translate }}</span>
+    </button>
+  }
+</div>

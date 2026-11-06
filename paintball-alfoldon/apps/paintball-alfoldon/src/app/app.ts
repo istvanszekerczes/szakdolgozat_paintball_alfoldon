@@ -3,6 +3,7 @@ import {
   Component,
   DOCUMENT,
   HostListener,
+  afterNextRender,
   PLATFORM_ID,
   computed,
   effect,
@@ -12,11 +13,14 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
+import { TranslatePipe } from './core/i18n/translate-pipe';
+import { TranslationService } from './core/i18n/translation-service';
 import { LocationService } from './features/venues/services/location-service';
+import { LanguageSwitch } from './shared/components/language-switch/language-switch';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe, LanguageSwitch],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   host: {
@@ -28,7 +32,7 @@ export class App {
   private document = inject(DOCUMENT);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  readonly locations = inject(LocationService).getLocations();
+  readonly locations = inject(LocationService).locations;
   readonly fieldType = LocationService.fieldType;
 
   /** Full-screen navigation on small screens. */
@@ -46,10 +50,14 @@ export class App {
   /** On a venue page the bar books that venue, like the page's own button. */
   readonly bookingParams = computed(() => {
     const slug = this.path().slice(1);
-    return this.locations.some((loc) => loc.id === slug) ? { palya: slug } : null;
+    return this.locations().some((loc) => loc.id === slug) ? { palya: slug } : null;
   });
 
   constructor() {
+    // The prerendered page is Hungarian; switch to a saved language only once it has hydrated.
+    const translationService = inject(TranslationService);
+    afterNextRender(() => translationService.restoreSavedLanguage());
+
     this.router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),

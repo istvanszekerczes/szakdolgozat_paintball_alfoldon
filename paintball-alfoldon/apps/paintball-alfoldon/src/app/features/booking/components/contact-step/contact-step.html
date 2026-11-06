@@ -1,11 +1,11 @@
 <div class="field">
-  <label for="bw-name" class="field-label">Teljes név</label>
+  <label for="bw-name" class="field-label">{{ 'booking.name' | translate }}</label>
   <input
     id="bw-name"
     type="text"
     class="input"
     autocomplete="name"
-    placeholder="Pl. Szabó János"
+    [placeholder]="'booking.namePlaceholder' | translate"
     [formField]="form().name"
     [attr.aria-invalid]="showsError(form().name)"
     [attr.aria-describedby]="showsError(form().name) ? 'bw-name-error' : null"
@@ -15,14 +15,14 @@
 
 <div class="row">
   <div class="field">
-    <label for="bw-email" class="field-label">E-mail cím</label>
+    <label for="bw-email" class="field-label">{{ 'booking.email' | translate }}</label>
     <input
       id="bw-email"
       type="email"
       inputmode="email"
       class="input"
       autocomplete="email"
-      placeholder="Pl. janos@pelda.hu"
+      [placeholder]="'booking.emailPlaceholder' | translate"
       [formField]="form().email"
       [attr.aria-invalid]="showsError(form().email)"
       [attr.aria-describedby]="showsError(form().email) ? 'bw-email-error' : null"
@@ -31,14 +31,14 @@
   </div>
 
   <div class="field">
-    <label for="bw-phone" class="field-label">Telefonszám</label>
+    <label for="bw-phone" class="field-label">{{ 'booking.phone' | translate }}</label>
     <input
       id="bw-phone"
       type="tel"
       inputmode="tel"
       class="input"
       autocomplete="tel"
-      placeholder="Pl. +36 30 123 4567"
+      [placeholder]="'booking.phonePlaceholder' | translate"
       [formField]="form().phone"
       [attr.aria-invalid]="showsError(form().phone)"
       [attr.aria-describedby]="showsError(form().phone) ? 'bw-phone-error' : null"

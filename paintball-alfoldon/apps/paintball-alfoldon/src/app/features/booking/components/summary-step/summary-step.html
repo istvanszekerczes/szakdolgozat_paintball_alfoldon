@@ -1,38 +1,48 @@
 <dl class="summary">
   <div class="summary-row">
-    <dt>Pálya</dt>
-    <dd>{{ venue()?.city }} – {{ venue()?.name }}</dd>
-    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(0)">Módosítás</button>
+    <dt>{{ 'booking.summaryVenue' | translate }}</dt>
+    <dd>{{ venue()?.city }} – {{ venueName() }}</dd>
+    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(0)">
+      {{ 'common.edit' | translate }}
+    </button>
   </div>
   <div class="summary-row">
-    <dt>Időpont</dt>
+    <dt>{{ 'booking.summaryTime' | translate }}</dt>
     <dd>
       {{ date() }}, <span class="mono">{{ time() }}</span>
     </dd>
-    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(1)">Módosítás</button>
+    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(1)">
+      {{ 'common.edit' | translate }}
+    </button>
   </div>
   <div class="summary-row">
-    <dt>Létszám</dt>
-    <dd>{{ draft().headcount }} fő</dd>
-    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(2)">Módosítás</button>
+    <dt>{{ 'booking.summaryHeadcount' | translate }}</dt>
+    <dd>{{ 'common.people' | translate: { count: draft().headcount } }}</dd>
+    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(2)">
+      {{ 'common.edit' | translate }}
+    </button>
   </div>
   @if (draft().note.trim()) {
     <div class="summary-row">
-      <dt>Megjegyzés</dt>
+      <dt>{{ 'booking.summaryNote' | translate }}</dt>
       <dd class="summary-note">{{ draft().note }}</dd>
-      <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(2)">Módosítás</button>
+      <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(2)">
+        {{ 'common.edit' | translate }}
+      </button>
     </div>
   }
   <div class="summary-row">
-    <dt>Kapcsolattartó</dt>
+    <dt>{{ 'booking.summaryContact' | translate }}</dt>
     <dd>
       {{ draft().name }}<br />
       <span class="muted">{{ draft().email }} · {{ draft().phone }}</span>
     </dd>
-    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(3)">Módosítás</button>
+    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(3)">
+      {{ 'common.edit' | translate }}
+    </button>
   </div>
   <div class="summary-row">
-    <dt>Fizetés</dt>
-    <dd>Helyszínen fizetendő. Az árat a foglalás visszaigazolásakor pontosítjuk.</dd>
+    <dt>{{ 'booking.summaryPayment' | translate }}</dt>
+    <dd>{{ 'booking.summaryPaymentText' | translate }}</dd>
   </div>
 </dl>

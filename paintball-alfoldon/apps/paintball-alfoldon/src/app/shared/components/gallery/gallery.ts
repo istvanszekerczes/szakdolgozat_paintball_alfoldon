@@ -1,8 +1,10 @@
 import { Component, ElementRef, HostListener, effect, signal, viewChild } from '@angular/core';
+import { TranslatePipe } from '../../../core/i18n/translate-pipe';
 
 export interface GalleryItem {
   /** Reserved for real photos once an image source (e.g. Facebook albums) is wired in. */
   src?: string;
+  /** Translation key of the caption. */
   caption: string;
 }
 
@@ -12,18 +14,19 @@ export interface GalleryItem {
  */
 @Component({
   selector: 'app-gallery',
+  imports: [TranslatePipe],
   templateUrl: './gallery.html',
   styleUrl: './gallery.scss',
 })
 export class Gallery {
   readonly items: GalleryItem[] = [
-    { caption: 'Szeged – Boszorkánysziget, erdei pálya' },
-    { caption: 'Szeged – Katonai csarnok, fedett CQB pálya' },
-    { caption: 'Szentes – rekreációs zóna, szabadtéri pálya' },
-    { caption: 'Szolnok – Tiszaliget, fedett épületek' },
-    { caption: 'Kecskemét – Homokbánya, többszintes indoor pálya' },
-    { caption: 'Békéscsaba – Póstelek, erdei terep lövészárkokkal' },
-    { caption: 'Orosháza – volt katonai gyakorlótér' },
+    { caption: 'gallery.captions.szeged' },
+    { caption: 'gallery.captions.szegedHall' },
+    { caption: 'gallery.captions.szentes' },
+    { caption: 'gallery.captions.szolnok' },
+    { caption: 'gallery.captions.kecskemet' },
+    { caption: 'gallery.captions.bekescsaba' },
+    { caption: 'gallery.captions.oroshaza' },
   ];
 
   /** Wrapped in an object so `@if (active(); as idx)` also works for index 0. */

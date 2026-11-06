@@ -4,10 +4,10 @@
       <span class="eyebrow">{{ loc.venue }}</span>
       <h1 class="page-header-title">{{ loc.city }}</h1>
       <p class="page-header-lead lead">{{ loc.terrainType }}. {{ loc.address }}.</p>
-      <ul class="loc-meta" aria-label="Fő adatok">
-        <li class="pill" [class.pill-accent]="loc.indoor">{{ fieldType(loc) }}</li>
-        <li class="pill">Ajánlott {{ loc.optHeadcount }} fő</li>
-        <li class="pill">Max. {{ loc.maxHeadcount }} fő</li>
+      <ul class="loc-meta" [attr.aria-label]="'location.keyFactsAria' | translate">
+        <li class="pill" [class.pill-accent]="loc.indoor">{{ fieldType(loc) | translate }}</li>
+        <li class="pill">{{ 'location.recommended' | translate: { count: loc.optHeadcount } }}</li>
+        <li class="pill">{{ 'location.max' | translate: { count: loc.maxHeadcount } }}</li>
       </ul>
     </div>
   </section>
@@ -16,14 +16,14 @@
     <div class="container loc">
       <div class="loc-main">
         <div class="prose">
-          <h2>A pályáról</h2>
+          <h2>{{ 'location.aboutTitle' | translate }}</h2>
           <p class="lead">{{ loc.detailedDescription }}</p>
         </div>
 
         <div class="prose">
-          <h3>Kiegészítő programok</h3>
-          <p>A klasszikus paintball mellett ezen a pályán előzetes egyeztetés szerint elérhető:</p>
-          <ul class="tags" aria-label="Kiegészítő programok">
+          <h3>{{ 'location.extrasTitle' | translate }}</h3>
+          <p>{{ 'location.extrasText' | translate }}</p>
+          <ul class="tags" [attr.aria-label]="'location.extrasTitle' | translate">
             @for (activity of loc.extraActivities; track activity) {
               <li class="pill">{{ activity }}</li>
             }
@@ -32,9 +32,9 @@
 
         <div class="loc-map">
           <div class="loc-map-head">
-            <h3>Térkép</h3>
+            <h3>{{ 'location.mapTitle' | translate }}</h3>
             <a [href]="directions(loc)" target="_blank" rel="noopener" class="link-arrow">
-              Útvonalterv
+              {{ 'location.directions' | translate }}
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -54,43 +54,47 @@
 
       <aside class="loc-side">
         <div class="card specs-card">
-          <h2 class="specs-card-title">Adatok</h2>
+          <h2 class="specs-card-title">{{ 'location.specsTitle' | translate }}</h2>
           <dl class="specs">
             <div class="specs-row">
-              <dt>Cím</dt>
+              <dt>{{ 'location.address' | translate }}</dt>
               <dd>{{ loc.address }}</dd>
             </div>
             <div class="specs-row">
-              <dt>Terep</dt>
+              <dt>{{ 'location.terrain' | translate }}</dt>
               <dd>{{ loc.terrainType }}</dd>
             </div>
             <div class="specs-row">
-              <dt>Minimális létszám</dt>
-              <dd>{{ loc.minHeadcount }} fő</dd>
+              <dt>{{ 'location.minHeadcount' | translate }}</dt>
+              <dd>{{ 'common.people' | translate: { count: loc.minHeadcount } }}</dd>
             </div>
             <div class="specs-row">
-              <dt>Ajánlott létszám</dt>
-              <dd class="is-accent">{{ loc.optHeadcount }} fő</dd>
+              <dt>{{ 'location.optHeadcount' | translate }}</dt>
+              <dd class="is-accent">
+                {{ 'common.people' | translate: { count: loc.optHeadcount } }}
+              </dd>
             </div>
             <div class="specs-row">
-              <dt>Maximális létszám</dt>
-              <dd>{{ loc.maxHeadcount }} fő</dd>
+              <dt>{{ 'location.maxHeadcount' | translate }}</dt>
+              <dd>{{ 'common.people' | translate: { count: loc.maxHeadcount } }}</dd>
             </div>
             <div class="specs-row">
-              <dt>Koordináták</dt>
+              <dt>{{ 'location.coordinates' | translate }}</dt>
               <dd class="mono">{{ coords(loc) }}</dd>
             </div>
           </dl>
 
           <div class="specs-card-cta">
-            <p>Szeretnéd lefoglalni ezt a pályát a csapatodnak?</p>
+            <p>{{ 'location.ctaText' | translate }}</p>
             <a
               routerLink="/foglalas"
               [queryParams]="{ palya: loc.id }"
               class="btn btn-primary btn-block"
-              >Foglalás erre a pályára</a
+              >{{ 'common.bookThisVenue' | translate }}</a
             >
-            <a routerLink="/kapcsolat" class="btn btn-secondary btn-block">Árajánlatot kérek</a>
+            <a routerLink="/kapcsolat" class="btn btn-secondary btn-block">{{
+              'common.requestQuote' | translate
+            }}</a>
           </div>
         </div>
       </aside>

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.paintball.app.common.ConflictException;
 import com.paintball.app.common.NotFoundException;
+import com.paintball.app.schedule.CrewCapacity;
 
 /** Cars (Erőforrások → Autók). Simple enough that the controller talks to the repository directly. */
 @RestController
@@ -30,8 +31,10 @@ import com.paintball.app.common.NotFoundException;
 public class CarController {
 
     private final CarRepository carRepository;
+    private final CrewCapacity crewCapacity;
 
-    public CarController(CarRepository carRepository) {
+    public CarController(CarRepository carRepository, CrewCapacity crewCapacity) {
+        this.crewCapacity = crewCapacity;
         this.carRepository = carRepository;
     }
 
@@ -47,7 +50,10 @@ public class CarController {
     public CarResponse create(@Valid @RequestBody CarRequest request) {
         Car car = new Car();
         apply(car, request);
-        return CarResponse.from(carRepository.save(car));
+        Car saved = carRepository.save(car);
+        // One more car: the coming days are split between the cars again.
+        crewCapacity.assignCarsFromToday();
+        return CarResponse.from(saved);
     }
 
     @PutMapping("/{id}")
@@ -55,6 +61,7 @@ public class CarController {
     public CarResponse update(@PathVariable Long id, @Valid @RequestBody CarRequest request) {
         Car car = carRepository.findById(id).orElseThrow(() -> new NotFoundException("Nincs ilyen autó: " + id));
         apply(car, request);
+        crewCapacity.assignCarsFromToday();
         return CarResponse.from(car);
     }
 

@@ -5,31 +5,32 @@
       #mapContainer
       class="map-shell-canvas"
       role="region"
-      aria-label="Pályáink térképe az Alföldön"
+      [attr.aria-label]="'map.overviewAria' | translate"
     ></div>
 
     @switch (status()) {
       @case ('loading') {
-        <div class="map-shell-status" aria-live="polite">Térkép betöltése…</div>
+        <div class="map-shell-status" aria-live="polite">{{ 'map.loading' | translate }}</div>
       }
       @case ('error') {
         <div class="map-shell-status" role="status">
-          A térkép nem jeleníthető meg ebben a böngészőben. A pályákat a listából továbbra is
-          kiválaszthatod.
+          {{ 'map.error' | translate }} {{ 'map.errorList' | translate }}
         </div>
       }
     }
   </div>
 
   <!-- Venue list: accessible alternative to the map and its hover companion -->
-  <aside class="venue-map-list" aria-label="Pályák listája">
+  <aside class="venue-map-list" [attr.aria-label]="'map.listAria' | translate">
     <header class="venue-map-list-head">
-      <span class="eyebrow">Helyszínek</span>
-      <span class="venue-map-count mono">{{ venues.length }} pálya</span>
+      <span class="eyebrow">{{ 'map.listEyebrow' | translate }}</span>
+      <span class="venue-map-count mono">{{
+        'map.venueCount' | translate: { count: venues().length }
+      }}</span>
     </header>
 
     <ul class="venue-list">
-      @for (venue of venues; track venue.id) {
+      @for (venue of venues(); track venue.id) {
         <li>
           <a
             class="venue-list-item"
@@ -46,7 +47,9 @@
               <span class="venue-list-city">{{ venue.city }}</span>
               <span class="venue-list-venue">{{ venue.venue }}</span>
             </span>
-            <span class="pill" [class.pill-accent]="venue.indoor">{{ fieldType(venue) }}</span>
+            <span class="pill" [class.pill-accent]="venue.indoor">{{
+              fieldType(venue) | translate
+            }}</span>
             <svg
               class="venue-list-arrow"
               viewBox="0 0 24 24"
