@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generates `src/environments/environment.ts` from `.env` and `process.env`.
+ * Generates `apps/paintball-alfoldon/src/environments/environment.ts` from `.env` and `process.env`.
  *
  * The generated file is git-ignored so API keys never end up in source control.
  * Runs automatically via the `postinstall`, `prestart`, `prebuild`, `prewatch`
@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const envFile = resolve(root, '.env');
-const target = resolve(root, 'src/environments/environment.ts');
+const target = resolve(root, 'apps/paintball-alfoldon/src/environments/environment.ts');
 
 /** Minimal .env parser: KEY=value, `#` comments, optional single/double quotes. */
 function parseDotEnv(text) {
@@ -67,4 +67,4 @@ const source = env.mapStyleUrl
   : env.maptilerApiKey
     ? 'MapTiler (key present)'
     : 'CARTO Dark Matter (no key needed)';
-console.log(`[set-env] wrote src/environments/environment.ts → map provider: ${source}`);
+console.log(`[set-env] wrote apps/paintball-alfoldon/src/environments/environment.ts → map provider: ${source}`);

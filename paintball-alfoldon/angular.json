@@ -4,29 +4,30 @@
   "cli": {
     "packageManager": "npm"
   },
-  "newProjectRoot": "projects",
+  "newProjectRoot": "apps",
   "projects": {
-    "paintball_alfoldon": {
+    "paintball-alfoldon": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "apps/paintball-alfoldon",
+      "sourceRoot": "apps/paintball-alfoldon/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/apps/paintball-alfoldon",
+            "browser": "apps/paintball-alfoldon/src/main.ts",
+            "tsConfig": "apps/paintball-alfoldon/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "apps/paintball-alfoldon/public"
               },
               {
                 "glob": "maplibre-gl-worker.mjs",
@@ -41,9 +42,9 @@
             ],
             "styles": [
               "node_modules/maplibre-gl/dist/maplibre-gl.css",
-              "src/styles.scss"
+              "apps/paintball-alfoldon/src/styles.scss"
             ],
-            "server": "src/main.server.ts",
+            "server": "apps/paintball-alfoldon/src/main.server.ts",
             "outputMode": "server",
             "security": {
               "allowedHosts": [
@@ -53,7 +54,7 @@
               ]
             },
             "ssr": {
-              "entry": "src/server.ts"
+              "entry": "apps/paintball-alfoldon/src/server.ts"
             }
           },
           "configurations": {
@@ -84,10 +85,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "paintball_alfoldon:build:production"
+              "buildTarget": "paintball-alfoldon:build:production"
             },
             "development": {
-              "buildTarget": "paintball_alfoldon:build:development"
+              "buildTarget": "paintball-alfoldon:build:development"
             }
           },
           "defaultConfiguration": "development",
@@ -96,7 +97,10 @@
           }
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "apps/paintball-alfoldon/tsconfig.spec.json"
+          }
         }
       }
     },
@@ -179,7 +183,10 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "apps/paintball-alfoldon-dashboard/tsconfig.spec.json"
+          }
         }
       }
     }

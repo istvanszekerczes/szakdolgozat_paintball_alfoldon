@@ -48,4 +48,4 @@ Thumbs.db
 .env.local
 
 # Generated from .env by scripts/set-env.mjs
-/src/environments/environment.ts
+/apps/paintball-alfoldon/src/environments/environment.ts

@@ -4,8 +4,8 @@ Marketing site for a paintball operator with seven fields across the Great Hunga
 Angular 22 (standalone, signals, zoneless) with server-side rendering / prerendering, a dark-only
 minimal design system and a MapLibre GL venue map recolored to pure black.
 
-The workspace has two Angular CLI projects: the public site (`paintball_alfoldon`, used by default
-from the workspace root) and the admin dashboard (`paintball-alfoldon-dashboard`, in
+The workspace has two Angular CLI projects: the public site (`paintball-alfoldon`, in
+`apps/paintball-alfoldon`) and the admin dashboard (`paintball-alfoldon-dashboard`, in
 `apps/paintball-alfoldon-dashboard`). Node.js `^22.22.3`, `^24.15.0` or `>=26` is required.
 
 ## Features
@@ -21,16 +21,16 @@ Screenshots are in `docs/screenshots/`.
 ## Quick start
 
 ```bash
-npm install          # also generates src/environments/environment.ts (see "Configuration")
-npm test             # unit tests of both apps (Vitest)
+npm install          # also generates apps/paintball-alfoldon/src/environments/environment.ts (see "Configuration")
+npm test             # unit tests of the site (Vitest); npm run test:dashboard for the dashboard
 ```
 
 Public site:
 
 ```bash
 npm start            # dev server on http://localhost:4200
-npm run build        # production build + prerender → dist/paintball_alfoldon
-npm run serve:ssr:paintball_alfoldon   # serve the built SSR app on :4000
+npm run build        # production build + prerender → dist/apps/paintball-alfoldon
+npm run serve:ssr:site  # serve the built SSR app on :4000
 ```
 
 The booking wizard needs the backend on http://localhost:8080 (see "Booking wizard").
@@ -57,7 +57,7 @@ No configuration is required: the map uses CARTO's free **Dark Matter** vector t
 (attribution is shown on the map) and recolors them to black at load time.
 
 API keys are never hardcoded. `scripts/set-env.mjs` reads `.env` and `process.env` and writes
-`src/environments/environment.ts`, which is git-ignored. It runs automatically on
+`apps/paintball-alfoldon/src/environments/environment.ts`, which is git-ignored. It runs automatically on
 `npm install`, `npm start`, `npm run build`, `npm run watch` and `npm test`; run `npm run env` to
 regenerate it by hand (for example before a bare `ng serve`).
 
@@ -75,8 +75,8 @@ To get a MapTiler key: create a free account at <https://cloud.maptiler.com/>, o
 
 ## Rendering
 
-`src/app/app.routes.server.ts` prerenders every real page. Any other URL renders the 404 page on the server and
-answers with status 404, so production needs the Node server (`dist/paintball_alfoldon/server/server.mjs`) for that.
+`apps/paintball-alfoldon/src/app/app.routes.server.ts` prerenders every real page. Any other URL renders the 404 page on the server and
+answers with status 404, so production needs the Node server (`dist/apps/paintball-alfoldon/server/server.mjs`) for that.
 A new page must be added to both `app.routes.ts` and `app.routes.server.ts`; a test checks that they match.
 
 Group limits per field live in the database (`V2__seed_venues.sql`), and the wizard enforces them through the API.
@@ -86,7 +86,7 @@ Group limits per field live in the database (`V2__seed_venues.sql`), and the wiz
 
 `/foglalas` is a five-step wizard: field → date and slot → group → contact → summary. Venue pages link to it
 with `?palya=<slug>`, which preselects the field and starts on the date step. The code is in
-`src/app/features/booking/`. One Signal Form holds the whole booking, and each step validates its own fields
+`apps/paintball-alfoldon/src/app/features/booking/`. One Signal Form holds the whole booking, and each step validates its own fields
 before moving on. The page shell is prerendered, and the wizard itself loads in the browser through `@defer`.
 
 It uses three public endpoints: `GET /api/venues`, `GET /api/venues/{slug}/availability?date=` and
@@ -100,6 +100,8 @@ and 422 (a booking rule, e.g. less than a week ahead). The wizard sends the visi
   backend's `CORS_PUBLIC_ORIGINS`, or route `/api` to the backend on the same domain with a reverse proxy.
 
 ## Map architecture
+
+Paths are relative to `apps/paintball-alfoldon/`.
 
 ```
 src/app/map/
@@ -120,10 +122,10 @@ a hashed chunk in production): the style and attribution load but no tiles ever 
 Therefore `angular.json` copies `maplibre-gl-worker.mjs` and `maplibre-gl-shared.mjs` from
 `node_modules/maplibre-gl/dist` into the output root as assets, and `loadMapLibre()` in
 `map-core.ts` calls `setWorkerUrl()` with the root-relative worker URL (resolved against
-`<base href>`). `src/server.ts` serves both files with `Cache-Control: no-cache` so a MapLibre
+`<base href>`). `apps/paintball-alfoldon/src/server.ts` serves both files with `Cache-Control: no-cache` so a MapLibre
 upgrade never pairs a stale worker with a new main chunk. If you host the `browser/` folder on a
 static CDN instead of the Node server, keep those two files at the site root. After changing
-`angular.json` assets, restart `ng serve` so the dev server picks them up. Marker, popup and control styling lives in `src/styles.scss`
+`angular.json` assets, restart `ng serve` so the dev server picks them up. Marker, popup and control styling lives in `apps/paintball-alfoldon/src/styles.scss`
 (`.pb-marker`, `.pb-popup`, `.maplibregl-*`) because MapLibre renders outside Angular's view
 encapsulation. Accent colors come from the site's CSS custom properties.
 
@@ -134,6 +136,8 @@ reachable markers and list rows, Ctrl/⌘ + wheel zoom (no scroll hijacking), Hu
 labels, and an "Útvonalterv" directions link on field pages.
 
 ## Project layout
+
+Paths are relative to `apps/paintball-alfoldon/`.
 
 ```
 src/app/
