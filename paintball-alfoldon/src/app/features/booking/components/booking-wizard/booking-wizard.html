@@ -1,0 +1,111 @@
+<div class="card wizard">
+  @if (done(); as booking) {
+    <div #doneHost>
+      <app-booking-done [booking]="booking" (again)="startOver()" />
+    </div>
+  } @else {
+    <ol class="progress" aria-label="Foglalás lépései">
+      @for (s of steps; track s.label; let i = $index) {
+        <li
+          class="progress-item"
+          [class.is-done]="i < step()"
+          [class.is-current]="i === step()"
+          [attr.aria-current]="i === step() ? 'step' : null"
+        >
+          @if (i < step()) {
+            <button type="button" class="progress-btn" (click)="goTo(i)">
+              <span class="progress-num mono" aria-hidden="true">{{ i + 1 }}</span>
+              <span class="progress-label">{{ s.label }}</span>
+            </button>
+          } @else {
+            <span class="progress-btn">
+              <span class="progress-num mono" aria-hidden="true">{{ i + 1 }}</span>
+              <span class="progress-label">{{ s.label }}</span>
+            </span>
+          }
+        </li>
+      }
+    </ol>
+
+    <h2 #stepHeading class="wizard-title" tabindex="-1">
+      <span class="eyebrow">{{ step() + 1 }}. lépés / {{ steps.length }}</span>
+      {{ steps[step()].title }}
+    </h2>
+
+    <div class="wizard-body">
+      @switch (step()) {
+        @case (0) {
+          @if (venuesLoading()) {
+            <p class="wizard-hint" aria-live="polite">Pályák betöltése…</p>
+          } @else if (venuesError()) {
+            <p class="field-error" role="alert">
+              Nem sikerült betölteni a pályákat. Próbáld újra, vagy foglalj telefonon:
+              <a [href]="phoneHref">{{ phone }}</a
+              >.
+              <button type="button" class="btn btn-ghost btn-sm" (click)="reloadVenues()">
+                Újra
+              </button>
+            </p>
+          } @else {
+            <app-venue-step
+              [venues]="venues()"
+              [selected]="form.venueSlug().value()"
+              (picked)="pickVenue($event)"
+            />
+          }
+        }
+        @case (1) {
+          <app-slot-step
+            [form]="form"
+            [minDate]="minDate"
+            [maxDate]="maxDate"
+            [dateReady]="!!form.date().value() && form.date().valid()"
+            [availability]="availability() ?? undefined"
+            [loading]="availabilityLoading()"
+            [loadError]="availabilityError()"
+            [ruleError]="ruleError()"
+            (retry)="retryAvailability()"
+          />
+        }
+        @case (2) {
+          <app-group-step [form]="form" [venue]="venue()" />
+        }
+        @case (3) {
+          <app-contact-step [form]="form" />
+        }
+        @case (4) {
+          <app-summary-step [draft]="form().value()" [venue]="venue()" (edit)="goTo($event)" />
+          @if (sendFailed()) {
+            <p class="field-error" role="alert">
+              Nem sikerült elküldeni a foglalást. Próbáld újra, vagy hívj minket:
+              <a [href]="phoneHref">{{ phone }}</a
+              >.
+            </p>
+          }
+        }
+      }
+    </div>
+
+    <div class="wizard-actions">
+      @if (step() > 0) {
+        <button type="button" class="btn btn-secondary" (click)="back()" [disabled]="sending()">
+          Vissza
+        </button>
+      }
+      @if (step() === 0) {
+        <p class="wizard-hint">Válassz egy pályát a folytatáshoz.</p>
+      } @else if (step() < steps.length - 1) {
+        <button type="button" class="btn btn-primary" (click)="next()">Tovább</button>
+      } @else {
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          (click)="send()"
+          [disabled]="sending()"
+        >
+          {{ sending() ? 'Küldés…' : 'Foglalás elküldése' }}
+        </button>
+      }
+    </div>
+  }
+</div>

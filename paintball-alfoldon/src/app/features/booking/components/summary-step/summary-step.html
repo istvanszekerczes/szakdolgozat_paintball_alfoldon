@@ -1,0 +1,38 @@
+<dl class="summary">
+  <div class="summary-row">
+    <dt>Pálya</dt>
+    <dd>{{ venue()?.city }} – {{ venue()?.name }}</dd>
+    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(0)">Módosítás</button>
+  </div>
+  <div class="summary-row">
+    <dt>Időpont</dt>
+    <dd>
+      {{ date() }}, <span class="mono">{{ time() }}</span>
+    </dd>
+    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(1)">Módosítás</button>
+  </div>
+  <div class="summary-row">
+    <dt>Létszám</dt>
+    <dd>{{ draft().headcount }} fő</dd>
+    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(2)">Módosítás</button>
+  </div>
+  @if (draft().note.trim()) {
+    <div class="summary-row">
+      <dt>Megjegyzés</dt>
+      <dd class="summary-note">{{ draft().note }}</dd>
+      <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(2)">Módosítás</button>
+    </div>
+  }
+  <div class="summary-row">
+    <dt>Kapcsolattartó</dt>
+    <dd>
+      {{ draft().name }}<br />
+      <span class="muted">{{ draft().email }} · {{ draft().phone }}</span>
+    </dd>
+    <button type="button" class="btn btn-ghost btn-sm" (click)="edit.emit(3)">Módosítás</button>
+  </div>
+  <div class="summary-row">
+    <dt>Fizetés</dt>
+    <dd>Helyszínen fizetendő. Az árat a foglalás visszaigazolásakor pontosítjuk.</dd>
+  </div>
+</dl>

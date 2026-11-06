@@ -1,0 +1,50 @@
+<div class="wrap">
+  <form class="card box" (submit)="submit($event)">
+    <div class="brand">
+      <svg width="36" height="36" viewBox="0 0 28 28" aria-hidden="true">
+        <circle cx="14" cy="14" r="12" fill="none" stroke="var(--accent)" stroke-width="2.5" />
+        <circle cx="14" cy="14" r="4.5" fill="var(--accent)" />
+      </svg>
+      <div>
+        <h1>Paintball Alföldön</h1>
+        <p class="muted">Admin felület</p>
+      </div>
+    </div>
+
+    <label class="field">
+      Felhasználónév
+      <input
+        class="input"
+        name="username"
+        autocomplete="username"
+        required
+        [value]="username()"
+        (input)="username.set(value($event))"
+      />
+    </label>
+    <label class="field">
+      Jelszó
+      <input
+        class="input"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        required
+        [value]="password()"
+        (input)="password.set(value($event))"
+      />
+    </label>
+
+    @if (error()) {
+      <p class="error" role="alert">{{ error() }}</p>
+    }
+
+    <button
+      class="btn btn-primary submit"
+      type="submit"
+      [disabled]="busy() || !username() || !password()"
+    >
+      {{ busy() ? 'Bejelentkezés…' : 'Bejelentkezés' }}
+    </button>
+  </form>
+</div>

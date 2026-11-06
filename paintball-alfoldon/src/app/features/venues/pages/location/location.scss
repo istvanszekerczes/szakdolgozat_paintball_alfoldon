@@ -1,0 +1,143 @@
+.loc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.loc {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .loc {
+    grid-template-columns: 1fr;
+  }
+}
+
+.loc-main {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.loc-map {
+  display: grid;
+  gap: 1rem;
+}
+
+.loc-map-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.loc-side {
+  position: sticky;
+  top: calc(var(--header-h) + 1.5rem);
+}
+
+@media (max-width: 900px) {
+  .loc-side {
+    position: static;
+  }
+}
+
+.specs-card {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.specs-card-title {
+  font-size: 1.125rem;
+}
+
+.specs {
+  display: grid;
+  gap: 1rem;
+}
+
+.specs-row {
+  display: grid;
+  gap: 0.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.specs-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.specs dt {
+  font-size: 0.8125rem;
+  color: var(--fg-3);
+}
+
+.specs dd {
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.specs dd.is-accent {
+  color: var(--accent);
+}
+
+.specs dd.mono {
+  font-size: 0.9375rem;
+}
+
+.specs-card-cta {
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.specs-card-cta p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+}
+
+/* Phones: label and value on one line, and the booking bar at the bottom replaces the card's
+   own booking button */
+@media (max-width: 640px) {
+  .loc-main {
+    gap: 2rem;
+  }
+
+  .specs-card {
+    gap: 1.125rem;
+  }
+
+  .specs {
+    gap: 0.75rem;
+  }
+
+  .specs-row {
+    grid-template-columns: 8.5rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .specs-card-cta {
+    padding-top: 1rem;
+  }
+
+  .specs-card-cta p,
+  .specs-card-cta .btn-primary {
+    display: none;
+  }
+}

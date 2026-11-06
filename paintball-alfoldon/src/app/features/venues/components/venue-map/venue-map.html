@@ -1,0 +1,19 @@
+<div class="map-shell venue-map-single">
+  <div
+    #mapContainer
+    class="map-shell-canvas"
+    role="region"
+    [attr.aria-label]="'Térkép: ' + location().city + ', ' + location().venue"
+  ></div>
+
+  @switch (status()) {
+    @case ('loading') {
+      <div class="map-shell-status" aria-live="polite">Térkép betöltése…</div>
+    }
+    @case ('error') {
+      <div class="map-shell-status" role="status">
+        A térkép nem jeleníthető meg ebben a böngészőben.
+      </div>
+    }
+  }
+</div>

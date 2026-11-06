@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.venue-map-single {
+  height: 380px;
+}
+
+@media (max-width: 600px) {
+  .venue-map-single {
+    height: 300px;
+  }
+}
